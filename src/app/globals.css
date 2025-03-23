@@ -1,22 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-*: initial;
+  /* dark shadows */
+  --color-black-0: #d4d3d4;
+  --color-black-50: #b8b6b8;
+  --color-black-100: #9b999b;
+  --color-black-150: #7f7c7e;
+  --color-black-200: #625f61;
+  --color-black-250: #464244;
+  --color-black: #292526;
+  --color-black-350: #221f20;
+  --color-black-400: #1a191a;
+  --color-black-450: #131313;
+  --color-black-500: #0c0c0c;
+
+  /* lush green */
+  --color-green-0: #e8f3cc;
+  --color-green-50: #cdeaaa;
+  --color-green-100: #a8e089;
+  --color-green-150: #7cd66a;
+  --color-green-200: #4acb4d;
+  --color-green-250: #2cbf4a;
+  --color-green: #0eb24e;
+  --color-green-350: #00a022;
+  --color-green-400: #008600;
+  --color-green-450: #006300;
+  --color-green-500: #003800;
+
+  /* vermillion */
+  --color-red-0: #fbccff;
+  --color-red-50: #ffabf7;
+  --color-red-100: #fd8cdd;
+  --color-red-150: #fb6db8;
+  --color-red-200: #f74f89;
+  --color-red-250: #f33250;
+  --color-red: #ed1c16;
+  --color-red-350: #e50000;
+  --color-red-400: #cb0000;
+  --color-red-450: #b10000;
+  --color-red-500: #970000;
 }
 
 body {
