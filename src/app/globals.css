@@ -43,8 +43,39 @@
   --color-red-400: #cb0000;
   --color-red-450: #b10000;
   --color-red-500: #970000;
+
+  /* muted */
+  --color-muted-0: #fdfdfd;
+  --color-muted-50: #fafafa;
+  --color-muted-100: #eaeaea;
+  --color-muted-150: #e5e5e5;
+  --color-muted-200: #dfdfdf;
+  --color-muted-250: #d3d3d3;
+  --color-muted: #cccccc;
+  --color-muted-350: #c7c7c7;
+  --color-muted-400: #c3c3c3;
+  --color-muted-450: #bebebe;
+  --color-muted-500: #bababa;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.sekx__signup_cta--form-wrapper:focus-within label {
+  transform: translate(-14px, -18px) scale(0.76788);
+}
+.sekx__signup_cta--form-wrapper--on-blur label {
+  transform: translate(-14px, -18px) scale(0.76788);
+}
+
+.triangle-container {
+  width: 300px;
+  background: #4a90e2; /* Triangle color */
+  clip-path: polygon(50% 0, 0 100%, 100% 100%); /* Triangle shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black; /* Text color */
+  text-align: center;
 }
