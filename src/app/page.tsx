@@ -22,14 +22,22 @@ Home.Main = function Main() {
   const [inputText, setInputText] = useState("");
   const [focused, setFocused] = useState(0);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [unanimateOut, setUnanimateOut] = useState(false);
 
   const tooltipRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    const timeoutID = setTimeout(() => {
+      if (document.body.clientWidth < 768) {
+        setUnanimateOut(true);
+      }
+    }, 5000);
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      clearTimeout(timeoutID);
     };
   }, []);
 
@@ -59,7 +67,7 @@ Home.Main = function Main() {
         <p className="text-balance text-black-250 lg:text-lg">
           Join the world&apos;s modern, open source, one stop learning platform
         </p>
-        <div className="flex md:flex-row h-12 md:h-15 w-full items-center gap-2 md:gap-4 justify-center mt-10">
+        <div className="flex md:flex-row h-12 md:h-15 w-full items-center gap-2 md:gap-4 justify-center mt-10 transition-all duration-300 ease-in-out">
           <div className="flex w-full md:w-90 h-full border-1 rounded-md p-1 bg-muted-50 justify-between">
             <div
               className={cn(
@@ -97,7 +105,9 @@ Home.Main = function Main() {
             onClick={handleClick}
             className="bg-black-500 font-semibold text-sm md:text-lg text-muted-0 border-2 border-black-250 px-1 md:px-4 h-full flex items-center rounded-md relative"
           >
-            <span className="w-fit text-nowrap">Test your skills</span>{" "}
+            {!unanimateOut && (
+              <span className="w-fit text-nowrap">Test your skills</span>
+            )}{" "}
             <Plus className="text-muted-0 size-6 md:size-8" />
             {isTooltipVisible && (
               <div
