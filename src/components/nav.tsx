@@ -4,7 +4,7 @@ export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
   return (
     <nav
       id="nav__top"
-      className={`px-10 grid my-auto h-15 bg-muted-50 border-b border-muted-200 w-full ${
+      className={`px-2 md:px-10 grid my-auto h-15 bg-muted-50 border-b border-muted-200 w-full ${
         fixed && "fixed top-0 z-50"
       }`}
     >
