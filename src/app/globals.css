@@ -68,14 +68,3 @@ body {
 .sekx__signup_cta--form-wrapper--on-blur label {
   transform: translate(-14px, -18px) scale(0.76788);
 }
-
-.triangle-container {
-  width: 300px;
-  background: #4a90e2; /* Triangle color */
-  clip-path: polygon(50% 0, 0 100%, 100% 100%); /* Triangle shape */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black; /* Text color */
-  text-align: center;
-}

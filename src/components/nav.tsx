@@ -1,13 +1,20 @@
 import Link from "next/link";
 
-export const NavigationTop = () => {
+export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
   return (
-    <nav id="nav__top" className="px-10 bg-muted-50 border-b border-muted-200">
-      <h2 className="sr-only">Navigation Menu</h2>
-      <div className="flex justify-between items-center">
+    <nav
+      id="nav__top"
+      className={`px-10 grid my-auto h-15 bg-muted-50 border-b border-muted-200 w-full ${
+        fixed && "fixed top-0 z-50"
+      }`}
+    >
+      {/* <h2 className="sr-only">Navigation Menu</h2> */}
+      <div className="flex justify-between items-center  place-self-center w-full">
         <div>
           <Link href="/">
-            <span className="text-4xl font-semibold">Latern Pages</span>
+            <span className="text-3xl tracking-wide font-semibold text-black-350">
+              Latern Pages
+            </span>
           </Link>
         </div>
         <div>

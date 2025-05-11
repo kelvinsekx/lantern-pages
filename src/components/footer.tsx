@@ -1,64 +1,69 @@
 export const Footer = () => {
   return (
     <footer className="bg-green-0 pt-8 tracking-tight">
-      <div className="flex gap-6 py-8 font-medium text-black">
-        <div className="w-1/3 self-center pl-4">
-          <div>
+      <div className="flex flex-col md:gap-20 items-start md:flex-row gap-6 py-8 font-medium text-black px-2 md:px-10">
+        <div className="w-4/6 md:w-1/3">
+          <div className="mb-2">
             <b className="text-lg tracking-widest">Lantern Pages</b>
           </div>
           <p>
-            The University on auto-pilot. We leverage AI, custom and rewarding
+            The classrooms on auto-pilot. We leverage AI, custom and rewarding
             experiences to empower you to learn at your pace for free.
           </p>
         </div>
-        <hr className="opacity-0" />
-        <section className="space-y-1">
-          <header className="mb-2">
-            <b className="font-medium text-lg tracking-wide">Lantern Tracks</b>
-          </header>
-          <hr className="opacity-0" />
-          <section>
-            <header>
-              <b className="font-medium">Backend Development</b>
+        <div className="flex flex-wrap justify-between gap-y-5 w-5/6 md:w-2/3 ">
+          <section className="tracking-tighter">
+            <header className="mb-1 md:mb-2">
+              <b className="font-medium text-lg tracking-wider">
+                Lantern Tracks
+              </b>
+            </header>
+            <div className="space-y-1">
+              <section>
+                <header>
+                  <b className="font-medium tracking-wide">
+                    Backend development
+                  </b>
+                </header>
+                <ul>
+                  <li className="text-sm tracking-normal">Node</li>
+                </ul>
+              </section>
+              <hr className="opacity-0" />
+              <section>
+                <header>
+                  <b className="font-medium">Product management</b>
+                </header>
+              </section>
+              <section>
+                <header>
+                  <b className="font-medium tracking-wide">Languages</b>
+                </header>
+                <p className="text-sm tracking-normal">Itsekiri</p>
+              </section>
+            </div>
+          </section>
+
+          <section className="tracking-tighter">
+            <header className="mb-1 md:mb-2">
+              <b className="font-medium text-lg tracking-wider">Education</b>
             </header>
             <ul>
-              <li className="text-sm tracking-normal">Node</li>
+              <li>Mathematics</li>
+              <li>Unilag, economics edu</li>
             </ul>
           </section>
-          <hr className="opacity-0" />
-          <section>
-            <header>
-              <b className="font-medium">Product Management</b>
+
+          <section className="tracking-tighter">
+            <header className="mb-1 md:mb-2">
+              <b className="font-medium text-lg tracking-wider">Others</b>
             </header>
+            <p>Lantern roadmap</p>
+            <p>Premium subscriptions</p>
           </section>
-          <hr className="opacity-0" />
-          <section>
-            <header>
-              <b className="font-medium">Languages</b>
-            </header>
-            <p className="text-sm tracking-normal">Itsekiri</p>
-          </section>
-        </section>
-        <hr className="opacity-0" />
-        <section className="space-y-1">
-          <header className="mb-2">
-            <b className="font-medium text-lg tracking-wide">Education</b>
-          </header>
-          <ul>
-            <li>Mathematics</li>
-            <li>Unilag, Economics Edu</li>
-          </ul>
-        </section>
-        <hr className="opacity-0" />
-        <section>
-          <header className="mb-2">
-            <b className="font-medium text-lg tracking-wide">Others</b>
-          </header>
-          <p>Lantern Roadmap</p>
-          <p>Premium subscriptions</p>
-        </section>
+        </div>
       </div>
-      <hr className="opacity-0" />
+
       <div className=" text-green-500 flex gap-6 text-sm pl-4 py-6 bg-black-0">
         <p>&copy; Lantern Pages, Inc</p>
         <p>&copy; Privacy (latest, 2025)</p>

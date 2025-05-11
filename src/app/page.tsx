@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/utilities/cn";
 import Link from "next/link";
 
-const { useState } = React;
+const { useState, useRef, useEffect } = React;
 export default function Home() {
   return (
     <div>
@@ -21,22 +21,49 @@ export default function Home() {
 Home.Main = function Main() {
   const [inputText, setInputText] = useState("");
   const [focused, setFocused] = useState(0);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleClick = () => {
+    setIsTooltipVisible(!isTooltipVisible);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      tooltipRef.current &&
+      !tooltipRef.current.contains(event.target as Node) &&
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setIsTooltipVisible(false);
+    }
+  };
+
+  const languages = ["Backend"];
   return (
-    <div>
-      <div className="w-2/3 mx-auto py-4 text-center space-y-6">
-        <h1 className="text-3xl font-extrabold lg:text-5xl text-balance">
-          Learn and build your skills into world renowned in a battle tested,
-          fun and collaborative platform
+    <div className="py-10">
+      <div className="w-full px-4 md:p-0 md:w-2/3 mx-auto py-4 text-center space-y-6">
+        <h1 className="text-3xl font-extrabold lg:text-5xl text-balance tracking-tight">
+          Don&apos;t Just Learn, Understand.
+          <br /> Explore mastery.
         </h1>
         <p className="text-balance text-black-250 lg:text-lg">
           Join the world&apos;s modern, open source, one stop learning platform
         </p>
-        <div className="flex h-15 mx-auto w-fit items-center space-x-1.5">
-          <div className="flex h-full border-1 rounded-md p-1 bg-muted-50">
+        <div className="flex md:flex-row h-12 md:h-15 w-full items-center gap-2 md:gap-4 justify-center mt-10">
+          <div className="flex w-full md:w-90 h-full border-1 rounded-md p-1 bg-muted-50 justify-between">
             <div
               className={cn(
-                "flex rounded-md w-80 relative border-black sekx__signup_cta--form-wrapper px-2",
+                "flex rounded-md w-full relative border-black sekx__signup_cta--form-wrapper px-2",
                 {
                   "sekx__signup_cta--form-wrapper--on-blur":
                     !focused && inputText,
@@ -45,7 +72,7 @@ Home.Main = function Main() {
             >
               <label
                 htmlFor="inputSignup"
-                className="absolute top-[50%] -translate-y-1/2 scale-[1]"
+                className="absolute w-full left-0 top-[50%] -translate-y-1/2 scale-[1]"
               >
                 Enter your email
               </label>
@@ -61,16 +88,51 @@ Home.Main = function Main() {
                 />
               </span>
             </div>
-            <button className="bg-green px-8 text-muted-0 font-semibold rounded-md py-2 text-lg">
-              Sign up for latern
+            <button className="bg-green px-1 md:px-8 text-muted-0 h-full flex items-center justify-center font-semibold rounded-md py-2 text-base md:text-lg text-nowrap">
+              Sign up
             </button>
           </div>
-          <Link
-            href={"/test/backend"}
-            className="bg-black-500 font-semibold text-lg text-muted-0 border-2 border-black-250 px-4 h-full flex items-center rounded-md"
+          <button
+            ref={buttonRef}
+            onClick={handleClick}
+            className="bg-black-500 font-semibold text-sm md:text-lg text-muted-0 border-2 border-black-250 px-1 md:px-4 h-full flex items-center rounded-md relative"
           >
-            Test your skills <Plus size={32} className="text-muted-0" />
-          </Link>
+            <span className="w-fit text-nowrap">Test your skills</span>{" "}
+            <Plus className="text-muted-0 size-6 md:size-8" />
+            {isTooltipVisible && (
+              <div
+                ref={tooltipRef}
+                className="absolute top-full bg-muted-50 right-0 mt-2 rounded-md shadow-md z-10 border border-muted-200"
+              >
+                <ul className="rounded-md">
+                  {languages.map((lang) => (
+                    <li
+                      key={lang}
+                      className="hover:bg-muted-100 cursor-pointer text-left block text-black-250 hover:text-black-500 rounded-t-md"
+                    >
+                      <Link
+                        href={"/test/backend"}
+                        className="pl-2 pr-6 py-1 text-sm md:text-lg font-medium inline-block"
+                      >
+                        {lang}
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
+                    <div className="h-[0.5px] bg-black w-full" />
+                  </li>
+                  <li className="hover:bg-muted-100 cursor-pointer text-left block text-black-250 hover:text-black-500 rounded-b-md">
+                    <Link
+                      href={"/test/backend"}
+                      className="pl-2 pr-6 py-1 text-sm md:text-lg font-medium  inline-block text-nowrap"
+                    >
+                      Others coming soon
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </button>
         </div>
       </div>
     </div>
