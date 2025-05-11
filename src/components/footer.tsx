@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer className="bg-green-0 pt-8 tracking-tight">
-      <div className="flex flex-col md:gap-20 items-start md:flex-row gap-6 py-8 font-medium text-black px-2 md:px-10">
+      <div className="flex flex-col md:gap-20 items-start md:flex-row gap-6 py-8 text-black px-2 md:px-10">
         <div className="w-4/6 md:w-1/3">
           <div className="mb-2">
             <b className="text-lg tracking-widest">Lantern Pages</b>
