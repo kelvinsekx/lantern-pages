@@ -12,7 +12,7 @@ export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
       <div className="flex justify-between items-center  place-self-center w-full">
         <div>
           <Link href="/">
-            <span className="text-3xl tracking-wide font-semibold text-black-350">
+            <span className="text-xl md:text-3xl tracking-wide font-semibold text-black-350">
               Latern Pages
             </span>
           </Link>
