@@ -32,7 +32,7 @@ export const Footer = () => {
               <hr className="opacity-0" />
               <section>
                 <header>
-                  <b className="font-medium">Product management</b>
+                  <b>Product management</b>
                 </header>
               </section>
               <section>
