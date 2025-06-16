@@ -1,61 +1,14 @@
 import cuid2 from "@paralleldrive/cuid2";
 import { LibraryBig } from "lucide-react";
 
-const IKEA_STAGES = [
-  {
-    title: "Introduction to backend development",
-    description: "An overview and introduction to coding in Node",
-  },
-  {
-    title: "Hosting (cdn, https, domains, networking)",
-    description: "Learn how to deploy and host your backend services",
-  },
-  {
-    title: "Authentication (custom, social logins)",
-    description: "Implement secure user authentication methods",
-  },
-  {
-    title: "Blob storage (file uploads, urls, cdn-backed)",
-    description: "Store and serve user-uploaded files efficiently",
-  },
-  {
-    title: "Email",
-    description: "Integrate email sending and receiving functionality",
-  },
-  {
-    title: "Payments",
-    description: "Process payments and handle financial transactions",
-  },
-  {
-    title: "Monitoring",
-    description: "Track system performance and detect issues",
-  },
-  {
-    title: "Analytics",
-    description: "Collect and analyze user behavior data",
-  },
-  {
-    title: "Dev tools (CI/CD, staging)",
-    description: "Set up development workflows and deployment pipelines",
-  },
-  {
-    title: "Secrets",
-    description: "Manage sensitive configuration and API keys securely",
-  },
-  {
-    title: "Push Notifications",
-    description: "Send real-time notifications to user devices",
-  },
-  {
-    title: "Caching",
-    description: "Improve performance with data caching strategies",
-  },
-];
+import syllabus from "./syllabus.json";
+import { NavigationTop } from "@/components/nav";
 
 export default function LearnBackendPage() {
   return (
     <div>
-      <div className="sekx__banner bg-green flex justify-between py-20 px-12">
+      <NavigationTop />
+      <div className="sekx__banner bg-green flex justify-between p-20">
         <div className="space-y-5 text-[#fff] tracking-tight">
           <div>
             <p className="font-extrabold text-4xl">
@@ -76,7 +29,7 @@ export default function LearnBackendPage() {
       </div>
       <div className="sekx__list-stages">
         <ul>
-          {IKEA_STAGES.map((stage, index) => (
+          {syllabus.map((stage, index) => (
             <li
               key={cuid2.createId()}
               className="bg-muted-200 pt-10 flex flex-col"

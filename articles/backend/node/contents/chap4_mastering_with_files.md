@@ -1,0 +1,158 @@
+# Wrangling Files
+
+## Watching a File for Changes
+
+Watching a file in programming means monitoring it for changes. The changes can be in 3 forms: modifications, deletions, or creations. These experience is incomplete without triggering actions in response to these changes.
+
+### Why would you ever need to watch a file?
+
+You may be wondering why would you or anyone watch a file.
+But taking action whenever a file changes is useful in a number of ways:
+
+1. Auto-Reloading During Development
+   Restarting a server or refreshing a browser when code changes (e.g., nodemon in Node.js, webpack --watch).
+
+2. Log File Monitoring
+   Like Tracking new entries in log file. If there is a new log, sends an alert or email.
+
+3 Build Automation & CI/CD
+Triggering rebuilds when source files are modified (e.g., tsc --watch for TypeScript).
+
+To watch a file in NodeJS , you either use Node's built in `fs.watch` or libraries like `chokidar`.
+
+Open a terminal to begin. Create a new directory called `filesystem` and navigate into it.
+
+```bash
+$ mkdir filesystem
+$ cd filesystem
+```
+
+```bash
+'use strict';
+const fs = require('fs');
+fs.watch('target.txt', () => console.log('File changed!'));
+console.log('Now watching target.txt for changes...');
+```
+
+🐛🪲 For vim users: If you are using vim, you may experience some issues when you make changes to the target.txt file:
+
+1. Multiple "file changed" logs for one change.
+2. It stops responding after the first change.
+
+This bug is expected because how fs.watch behave in this environment. On writing to the file it replaces same file.
+
+Notice the code above uses **strict mode**. Also we required the "fs" module to be a local variable with a constant value. This value can never be assigned another value. The required() function pulls a module and retuns it.
+
+Learn more strict mode, const, require
+
+We then progressed to call the fs module's watch() method, which takes a path to a file and a callback function to invoke whenever the file changes.
+
+### Reading Command-Line Arguments
+
+Let's make our program more advanced by taking in a file to watch as a command-line argument. This will introduce the process global object and how node deals with exceptions.
+
+```bash
+const fs = require('fs')
+
+
+const filename = process.argv[2];
+
+if(!filename){
+    throw Error('A file to watch must be specified!')
+}
+fs.watch(filename, ()=> {
+    console.log(`File ${filename} changed!`)
+})
+console.log('Now watching ${filename} for changes...');
+```
+
+### Spawning a child process
+
+Why is it important to spawn a child process?
+Spawning a child is similar to opening up another command-line different from the original one used to run your node. This action is done for you by node so you can run any heavy stuff without blocking your main thread.
+
+```js
+"use strict";
+const fs = require("fs");
+const { spawn } = require("child_process");
+
+const filename = process.argv[2];
+
+if (!filename) {
+  throw Error("A file to watch must be specified");
+}
+
+fs.watch(filename, () => {
+  const ls = spawn("ls");
+  ls.stdout.pipe(process.stdout);
+});
+```
+
+## Capturing Data from an EventEmitter
+
+EventEmitter is a very important class in NodeJS. It provides a channel for events to be displatched and listeners to be notified. Many objects you'll encouter in Node.JS inherit from EventEmitter, like the Stream we saw in the last section.
+
+```js
+const fs = require("fs");
+const { spawn } = require("child_process");
+
+const filename = process.argv[2];
+
+if (!filename) {
+  throw Error("A file to watch must be specified");
+}
+fs.watch(filename, () => {
+  const ls = spawn("ls");
+  let output = "";
+
+  ls.stdout.on("data", (chunk) => (outout += chunk));
+  console.log([parts[0], parts[4], parts[9]]);
+});
+```
+
+## Reading and Writing Files Asynchronously
+
+Reading and writing files are fundamental operations in programming.There are two approaches to reading and writing files in Node:
+
+1. The simplest, to read in or write out the file at once. It is also called Buffered or Synchronous I/O.
+2. The other approach reads and writes by creating Streams or staging content in Buffered Chunks.
+
+### Read/Writing a File all at Once
+
+This approach loads the entire file into memory before processing it.
+
+#### How it works
+
+1.  The whole file is read into a temporary storage in RAM (buffer).
+2.  The program then works with the complete data
+3.  After doing whatever with the data, the entire file is written back (if modified)
+
+```js
+//read-file-at-once.js
+
+const fs = require("fs");
+
+// Reading a file all at once
+fs.readFile("fileName", "utf8", (err, data) => {
+  if (err) {
+    throw err;
+  }
+  console.log(data.toString());
+});
+
+// Writing a file all at once
+fs.writeFile("fileName", "New Content", (err) => {
+  if (err) throw Err;
+  console.log("File written successfully");
+});
+```
+
+#### Pros
+
+- Simple to use.
+- Good for small files where memory isn't a concern.
+
+#### Cons
+
+- Memory-heavy for large files (can crash the program if the file is too big).
+- Slower for larger files since everything must be loaded before processing.

@@ -1,0 +1,62 @@
+[
+  {
+    "title": "Introduction to backend development",
+    "description": "An overview and introduction to coding in Node",
+    "code": "BAC001"
+  },
+  {
+    "title": "Hosting (cdn, https, domains, networking)",
+    "description": "Learn how to deploy and host your backend services",
+    "code": "BAC002"
+  },
+  {
+    "title": "Authentication (custom, social logins)",
+    "description": "Implement secure user authentication methods",
+    "code": "BAC003"
+  },
+  {
+    "title": "Blob storage (file uploads, urls, cdn-backed)",
+    "description": "Store and serve user-uploaded files efficiently",
+    "code": "BAC004"
+  },
+  {
+    "title": "Email",
+    "description": "Integrate email sending and receiving functionality",
+    "code": "BAC005"
+  },
+  {
+    "title": "Payments",
+    "description": "Process payments and handle financial transactions",
+    "code": "BAC006"
+  },
+  {
+    "title": "Monitoring",
+    "description": "Track system performance and detect issues",
+    "code": "BAC007"
+  },
+  {
+    "title": "Analytics",
+    "description": "Collect and analyze user behavior data",
+    "code": "BAC008"
+  },
+  {
+    "title": "Dev tools (CI/CD, staging)",
+    "description": "Set up development workflows and deployment pipelines",
+    "code": "BAC009"
+  },
+  {
+    "title": "Secrets",
+    "description": "Manage sensitive configuration and API keys securely",
+    "code": "BAC010"
+  },
+  {
+    "title": "Push Notifications",
+    "description": "Send real-time notifications to user devices",
+    "code": "BAC011"
+  },
+  {
+    "title": "Caching",
+    "description": "Improve performance with data caching strategies",
+    "code": "BAC012"
+  }
+]
