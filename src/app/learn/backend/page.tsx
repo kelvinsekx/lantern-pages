@@ -4,7 +4,7 @@ import { LibraryBig } from "lucide-react";
 import syllabus from "./syllabus.json";
 import { NavigationTop } from "@/components/nav";
 
-export default function LearnBackendPage() {
+export default function ListSyllabusPage() {
   return (
     <div>
       <NavigationTop />
