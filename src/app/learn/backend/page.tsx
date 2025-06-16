@@ -3,8 +3,11 @@ import { LibraryBig } from "lucide-react";
 
 import syllabus from "./syllabus.json";
 import { NavigationTop } from "@/components/nav";
+import { getBlogPosts } from "@/utilities/mdx-utils";
+import Link from "next/link";
 
-export default function ListSyllabusPage() {
+export default async function ListSyllabusPage() {
+  const posts = await getBlogPosts("node");
   return (
     <div>
       <NavigationTop />
@@ -45,8 +48,15 @@ export default function ListSyllabusPage() {
                   <p className="text-black-250 text-lg">{stage.description}</p>
                   <p className="text-black-250 mt-8 flex items-baseline gap-2">
                     <LibraryBig />
-                    <span className="relative bottom-0.5">Articles...</span>
+                    {/* <span className="relative bottom-0.5">Articles...</span> */}
                   </p>
+                  {posts
+                    .filter((p) => p.metadata.syllabus_code === stage.code)
+                    .map((p) => (
+                      <Link href={p.slug} key={p.slug} className="block">
+                        {p.metadata.title}
+                      </Link>
+                    ))}
                 </section>
               </div>
               <div className="h-[1px] w-full bg-black mt-10"></div>
