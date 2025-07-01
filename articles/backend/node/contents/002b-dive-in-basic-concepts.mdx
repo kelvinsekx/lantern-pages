@@ -1,29 +1,29 @@
 ---
-title: "Dive into Basic Concepts"
+title: "Dive into basic concepts"
 description: ""
 published_date: "18/06/2025"
-last_updated_date: ""
+last_updated_date: "07/01/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
 This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that those complex things sit on. Skipping this phase will pose problems in the course and possibly in the future learning.
 
-Like the title suggest, this is a deep dive into the basic concepts Node is built on. Do not struggle with concepts that feel overly difficult or confusing. We've taken our time to have a separate module for some concepts like this.
+Like the title suggest, this is a deep dive into the basic concepts Node is built on. Don't over concentrate on concepts that feel overly difficult or confusing. We've taken our time to have a separate module for some concepts like this. Many you will see in the next modules.
 
 Let's dive in to these basics concepts.
 
 ## Console.log out
 
-Always see console.log in javascript as a web syntatic wrapper. This is becuase the console module do not exists in node like it is for browsers. It is wrapper for process.stdout.
+Always remember `console.log` in node is a web syntatic wrapper. This is because the console module is not identically as consistent as that of browsers. It is convenience for process.stdout.
 
 Node console is a global instance configured to write to process.stdout and process.stderr. This means it can be used without calling `require('node:console')`.
 
-Console.log can be used for debugging and display something to the user or drop in place user for process.stdout.
+Console.log can be used for debugging and display something to the user or drop in place use for process.stdout.
 
-> Again if process.stdout, process.stderr confuse you, don't mind it. We will see more of it and with lengthier explanation later into the course.
+> Again if process.stdout, process.stderr confuse you, don't mind it. You will see more of it and with lengthier explanation later.
 
-For a faster experiment, run the REPL
+Run the REPL by running `node` in a terminal without any argument.
 
 ```bash
 $ node
@@ -34,7 +34,7 @@ kelvin
 undefined
 ```
 
-In subsequent paragraphs and through out this course, I will be skipping these terminal details and jump straight at the sample code and possible outputs so that the example above is written as
+In subsequent paragraphs and through out this course, I will be skipping these terminal details and jump straight at the sample code and possible outputs so that the example above is written with fewer lines.
 
 ```bash
 console.log("kelvin") // kelvin
@@ -42,10 +42,12 @@ console.log("kelvin") // kelvin
 
 ## Command Arguments and Environment variables
 
-Command or Command-line are interchangeable. We will use them the same way throughtout our time here.
+### Command Arguments with `process.argv`
+
+Command-line is important to being a node developer.
 
 A Node program can read its command-line arguments from process.argv.
-Process.argv is an array that contains the command-line arguments passed when the Node.js process was launched. The first element of this array is always the path to the Node executable, followed by whatever follows the accompanies your node command.
+Process.argv is an array that contains the command-line arguments passed when the Node.js process was launched. The first element of this array is always the path to the Node executable, followed by whatever follows your node command.
 
 Run this in a REPL
 
@@ -53,12 +55,12 @@ Run this in a REPL
 process.argv // [ '/path/to/yours/versions/node/v21.6.0/bin/node' ]
 ```
 
-To explore more sophiscated examples, running node commands from REPL can be limiting. Henceforth and in subsequent examples, we would use the second way of running node we talked about in previous module, which is running Node on scripts.
+To explore more sophiscated examples, running node commands from REPL can be limiting. Henceforth, we would prefer script when running.
 
 For example, suppose you save this Node program to the file argv1.js:
 
 ```bash
-// File::/argv1.js
+// File:: argv1.js
 console.log(process.argv)
 ```
 
@@ -75,42 +77,47 @@ $ node argv1.js
 */
 ```
 
-I have attached the response from running `node argv1.js` into `/\*_ ... _/
-
-### A couple of things to note here
+#### A couple of things to note here
 
 1. By default when you run node via script method the second argument (argvs) is always the script name.
 2. The first and second elements of process.argv will be fully qualified filesystem paths to the Node executable and the file of JavaScript that is being executed, even if you did not type them that way.
 3. Command-line arguments that are intended for and interpreted by the Node executable itself are consumed by the Node executable and do not appear in process.argv
 
-### Environment variables with process.env
+### Environment variables with `process.env`
 
-Node programs can also take input from Unix-style environment variables. Node makes these available though the process.env variable.
+Node programs can also take input from Unix-style environment variables. These variables are available through the **process.env** variable.
 
-Process.env is an object. It contains your environment vairables. The property names of this object are environment variable names, and the property values (always strings) are the values of those variables.
+Process.env is an object. It contains your environment variables. The property names of this object are environment variable names, and the property values (always strings) are the values of those variables.
 
 Why do you need to know about process.env?
 
-1. Well perfect for configurations or vairables that might change between deployments.
-2. It is simpler alternative to hide sensitive informtation that would have otherwise be hardcoded.
+1. It is perfect for configurations or variables that might change between deployments.
+2. It is simpler alternative to hide sensitive information that would have otherwise be hardcoded.
 
-Using the REPL, run `process.env`. Its outout is a long object.
+Using the REPL, run `process.env`. Its output is a long object.
 
-To see why they exist, we can create some custom variables in a `.env` file. Exit the REPL and restart it. Find your newly defined variables there. If my guess is right, it means they are still not there. This is becuase you would manually load this file.
+To make our hands dirty, create some custom variables in a `.env` file.
 
-Using the REPL, run `node --env-file=.env`. Try the process again and you should see your custom variable.
+```bash
+//file:: .env
+PORTAL="SEKX_10001"
+```
+
+Exit the REPL and restart it. Then run `process.env`. Try find your newly defined variables. If my guess is right, you still can not find it in the output. This is because you would manually load this file.
+
+Run your REPL like this `node --env-file=.env`. It loads the .env file in your REPL environment. Try the process of displaying your process environment and you should see your custom variable now.
 
 ## Modules and npm (Node Package Manager)
 
-Node had its module system before javascript it own. This system is called CommonJS.
+Node had its module system before javascript own. This system is called CommonJS.
 
-The then Node's module system uses the require() function to import values into a module and the exports object or the module.exports property to export values from a module.
+The then Node's module system uses the `require()` function to import values into a module and the `exports` object or the `module.exports` property to export values from a module.
 
 In javascript, a module is typically a file. Not all programming languages behave this way. For some, multiple modules can exist in a single file.
 
 What is a module?
 
-In recent versions, after javascript rolled out it own module system, we now have 2 combines module systems available for us. This later module system is called ES6 module. These modules are not compatible so you would have to stick with one in your project. The recommendation is ES6 module. Always prefer this except you are working in a legacy and large coldbaase written in ComondJS.
+In recent versions, after javascript rolled out it own module system, we now have 2 combines module systems available for us. This later module system is called ES6 module, and the earlier one is commonjs module. These modules are not compatible so you are forced to stick with one in your project. The recommended one is ES6 module except you are working in a legacy and large codebase written in CommonJS.
 
 Common js
 
@@ -144,13 +151,13 @@ console.log(add(2, 4));
 
 The simplest way to tell Node what kind of module it is loading is to encode this information in the file extension. If you save your JavaScript code in a file that ends with .mjs, then Node will always load it as an ES6 module, will expect it to use import and export, and will not provide a require() function. And if you save your code in a file that ends with .cjs, then Node will always treat it as a CommonJS module, will provide a require() function, and will throw a SyntaxError if you use import or export declarations.
 
-For files that do not have an explicit .mjs or .cjs extension, Node looks for a file named package.json in the same directory as the file and then in each of the contain-ing directories. Once the nearest package.json file is found, Node checks for a top level type property in the JSON object. If the value of the type property is “module”, then Node loads the file as an ES6 module. If the value of that property is "commonjs", then Node loads the file as a CommonJS module. Note that you do not need to have a package.json file to run Node programs: when no such file is found (or when the file is found but it does not have a type property), Node defaults to using CommonJS modules. This package.json trick only becomes necessary if you want to use ES6 modules with Node and do not want to use the .mjs file extension.
+For files that do not have an explicit .mjs or .cjs extension, Node looks into the package.json file in the same directory as the file. Once the nearest package.json file is found, Node checks for a top level type property in the JSON object. If the value of the type property is "module", then Node loads the file as an ES6 module. If the value of that property is "commonjs", then Node loads the files as a CommonJS module. Note that you do not need to have a package.json file to run Node programs: when no such file is found (or when the file is found but it does not have a type property), Node defaults to using CommonJS modules.
 
 ## Node Manager Packager
 
 On installing node, it is accompanied with the Node Package Manager, NPM. NPM is the official package manager for the javascript language.
 
-NPM downloads and manage libraries you would be using in your code. It keep tracks of these dependencies (as well as other info about these dependencies) in a file names _package.json_ and package-lock.json in _the root directory_.
+NPM downloads and manage libraries you would be using in your code. It keep tracks of these dependencies (as well as other info about these dependencies) in files _package.json_ and package-lock.json in _the root directory_.
 
 Interesting Read: Libraries or API;
 
