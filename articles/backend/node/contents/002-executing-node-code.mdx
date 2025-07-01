@@ -1,0 +1,105 @@
+---
+title: "Introduction to executing node code"
+description: ""
+published_date: "16/06/2025"
+last_updated_date: ""
+syllabus_code: "BAC001"
+authors: "kelvinsekx"
+---
+
+If you have Node installed on your computer, you should have the commands `node` and `npm` available in your environment. Make sure the Node version is a recent one (20.x or higher). You can verify that by opening a terminal and running the command `node -v`.
+
+If the prompt returns something around "command 'node' not found, ..." instead of a version number, you don't have the node command. Follow this link on instructions to download it.
+
+## How to develop your applications
+
+There are broadly two ways of executing node commands.
+
+1. **an interactive shell/mode**, also called REPL
+2. **a script** by passing the first name of the file to node command
+
+## Your first node in a REPL
+
+The interactive shells are for simple commands. They are not intended to run complete applications. They are more suited for testing functionalities of individual code snippets.
+
+REPL stands for Read-Eval-Print-Loop. It is a convenient way to quickly test javascript and node code.
+
+Notice how we used REPL and interactive shell interchangeably.
+
+### Waits
+
+```bash
+$ node
+Welcome to Node.js v<your_number>
+...
+>
+```
+
+### Reads
+
+```bash
+$ node
+Welcome to Node.js v<your_number>
+...
+> Math.random()
+```
+
+### Evaluate and Prints
+
+```bash
+$ node
+Welcome to Node.js v<your_number>
+...
+> Math.random()
+> 0.0893322323219892
+>
+```
+
+Node will read the line, evaluate and print the result, and loop over these three things for everything you type until you exit the session. To exit press the key `Ctrl + D` or `CTRL + C` twice or type ".exit" in the REPL.
+
+Let's run same code as a script next.
+
+## Your first node in a Script
+
+Create a new directory and then `cd` into it:
+
+```bash
+$ mkdir node-example-1
+$ cd node-example-1
+```
+
+Open up your code editor and create a file name test.js. Put the same `Math.random()` line into it:
+
+```bash
+//file: node-example-1/test.js
+
+Math.random()
+```
+
+To execute that script, in the terminal, type the following command:
+
+```bash
+$ node test.js
+```
+
+You will notice the command will basically do nothing because we did not output anything in that script. To output something, you can use the global `console` object, which is similar to the one available in browsers.
+
+```bash
+//file: node-example-1/test.js
+
+console.log(
+    Math.random()
+)
+```
+
+Executing node-example-1/test.js will output a random number. We're using both Javascript (`Math` object) and an object from the Node API (`console`).
+
+## A little diversion to talk `console`
+
+The `console` object in node is similar to the one available in browsers but they are not the same.
+
+The `console.log` method is a mask that writes the value of its arguments to the default standard output stream (stdout) of the running process.
+
+The console object is one of many top-level global scope objects that we can access in Node without needing to declare any dependencies. Similar to how the global windows object in browsers can be accessed with the globalThis property, in Node, the globalThis property is the global object and the console object is part of it. All properties of globalThis can be accessed directly: for example, `console.log` instead of `globalThis.console.log` which also works.
+
+If the preceeding paragraphs confuses you, again we will talk about this in other chapters.

@@ -10,6 +10,13 @@ type Metadata = {
   authors: string;
 };
 
+export interface TPost {
+  metadata: Metadata;
+  slug: string;
+  content: string;
+  id: string;
+}
+
 function parseFrontmatter(fileContent: string) {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
   const match = frontmatterRegex.exec(fileContent);
@@ -33,9 +40,13 @@ function getMDXFiles(dir: fs.PathLike) {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
 }
 
-export function readMDXFile(filePath: fs.PathOrFileDescriptor) {
-  const rawContent = fs.readFileSync(filePath, "utf-8");
-  return parseFrontmatter(rawContent);
+export function readMDXFile(filePath: string) {
+  if (fs.existsSync(filePath)) {
+    const rawContent = fs.readFileSync(filePath, "utf-8");
+    return parseFrontmatter(rawContent);
+  } else {
+    return { content: "", metadata: {} as Metadata };
+  }
 }
 
 function getMDXData(dir: string, whichPost: string) {
@@ -43,19 +54,23 @@ function getMDXData(dir: string, whichPost: string) {
   return mdxFiles.map((file) => {
     const { metadata, content } = readMDXFile(path.join(dir, file));
     const slug =
-      "backend/" + whichPost + "/" + path.basename(file, path.extname(file));
+      "/learn/backend/" +
+      whichPost +
+      "/" +
+      path.basename(file, path.extname(file));
 
     return {
       metadata,
       slug,
       content,
+      id: path.basename(file, path.extname(file)),
     };
   });
 }
 
 export function getBlogPosts(slug: string) {
   return getMDXData(
-    path.join(process.cwd(), "src", "articles", "backend", slug, "contents"),
+    path.join(process.cwd(), "articles", "backend", slug, "contents"),
     slug
   );
 }
