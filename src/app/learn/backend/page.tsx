@@ -3,8 +3,36 @@ import { LibraryBig } from "lucide-react";
 
 import syllabus from "./syllabus.json";
 import { NavigationTop } from "@/components/nav";
+import { getBlogPosts } from "@/utilities/mdx-utils";
+import Link from "next/link";
 
-export default function LearnBackendPage() {
+export default async function ListSyllabusPage() {
+  const posts = await getBlogPosts("node");
+  const sortedPosts = posts.sort((a, b) => {
+    const extractParts = (str: string) => {
+      const slice = str.match(/[^/]+$/);
+      if (!slice) {
+        throw new Error("Invalid path to slice");
+      }
+      const m = slice[0].match(/^(\d+)([a-z]?)-/i);
+      if (!m) {
+        throw new Error("Invalid string format to match");
+      }
+      return {
+        num: parseInt(m[1], 10),
+        letter: m[2] || "",
+      };
+    };
+
+    const partA = extractParts(a.slug);
+    const partB = extractParts(b.slug);
+
+    if (partA.num !== partB.num) {
+      return partA.num - partB.num;
+    }
+
+    return partA.letter.localeCompare(partB.letter);
+  });
   return (
     <div>
       <NavigationTop />
@@ -38,15 +66,28 @@ export default function LearnBackendPage() {
                 <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black text-[#fff] text-3xl">
                   {index + 1}
                 </div>
-                <section className="pl-10 space-y-2">
+                <section className="pl-10 space-y-1">
                   <header className="text-black-400 text-3xl font-semibold tracking-tight">
                     {stage.title}
                   </header>
-                  <p className="text-black-250 text-lg">{stage.description}</p>
+                  <p className="text-black-150 text-lg font-medium">
+                    {stage.description}
+                  </p>
                   <p className="text-black-250 mt-8 flex items-baseline gap-2">
                     <LibraryBig />
-                    <span className="relative bottom-0.5">Articles...</span>
                   </p>
+                  {sortedPosts
+                    .filter((p) => p.metadata.syllabus_code === stage.code)
+                    .sort()
+                    .map((p) => (
+                      <Link
+                        href={p.slug}
+                        key={p.slug}
+                        className="block hover:text-black-150 active:text-black"
+                      >
+                        {p.metadata.title}
+                      </Link>
+                    ))}
                 </section>
               </div>
               <div className="h-[1px] w-full bg-black mt-10"></div>

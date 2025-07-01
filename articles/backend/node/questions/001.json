@@ -1,0 +1,25 @@
+{
+  "1": {
+    "question": "Node is a language",
+    "options": ["Yes", "No"],
+    "type": "polar",
+    "answer": 1
+  },
+  "2": {
+    "question": "Javascript now runs only on the browser",
+    "options": ["Yes", "No"],
+    "type": "polar",
+    "answer": 1
+  },
+  "3": {
+    "question": "What options best describe Node?",
+    "options": [
+      "open source",
+      "single threaded",
+      "multi-threaded",
+      "main thread blocking"
+    ],
+    "type": "multi",
+    "answer": [1, 2, 3]
+  }
+}
