@@ -41,17 +41,11 @@ export default async function BlogPage({ params }: { params: Params }) {
             <MDXRemote source={content} />
           </article>
           <hr />
-          <div className="text-black-100">
-            <p>Last update 2024-0-34</p>
+          <div className="text-black-100 font-normal pl-1 md:p-0">
+            <p>Last update {metadata.last_updated_date}</p>
             <p>
               This page was contributed to by{" "}
-              <a
-                className="text-[#1875f2]"
-                href="https://github.com/kelvinsekx"
-              >
-                kelvinsekx
-              </a>
-              ,{" "}
+              <a href="https://github.com/kelvinsekx">kelvinsekx</a>,{" "}
             </p>
           </div>
         </div>
