@@ -12,6 +12,7 @@ export default async function Page(props: { params: Params }) {
   const { metadata, content } = await readMDXFile(
     `${path.join(
       process.cwd(),
+      "src",
       "articles",
       "backend",
       slug,

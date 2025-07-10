@@ -1,28 +1,34 @@
-import path from "node:path";
 import { NavigationTop } from "@/components/nav";
 import { ArticleSideBar } from "./components/sidebar";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
-import { getBlogPosts, readMDXFile } from "@/utilities/mdx-utils";
+import { MDXRemote, type MDXRemoteOptions } from "next-mdx-remote-client/rsc";
+import { getBlogPosts, getPostInformation } from "@/utilities/mdx-utils";
+import { AsideNote } from "@/components/aside-note";
 
 type Params = Promise<{ slug: string; article_slug: string }>;
 
 export default async function BlogPage({ params }: { params: Params }) {
   const { slug, article_slug } = await params;
-  const { metadata, content } = await readMDXFile(
-    `${path.join(
-      process.cwd(),
-      "articles",
-      "backend",
-      slug,
-      "contents",
-      article_slug + ".mdx"
-    )}`
+  const { metadata, content } = await getPostInformation(
+    (
+      await params
+    ).article_slug
   );
 
   const posts = await getBlogPosts(slug);
   const relatedPosts = posts.filter(
     (p) => p.metadata.syllabus_code == metadata.syllabus_code
   );
+
+  const options: MDXRemoteOptions = {
+    disableImports: true, // import statements in MDX don't work in pages router
+    parseFrontmatter: true,
+    scope: {
+      // readingTime: readingTime(source, 100).text,
+      props: { foo: "props in scope is working" },
+    },
+    // vfileDataIntoScope: "toc", // the "remark-flexible-toc" plugin produces vfile.data.toc
+  };
+
   return (
     <div>
       <NavigationTop fixed />
@@ -38,10 +44,15 @@ export default async function BlogPage({ params }: { params: Params }) {
             <h1 className="text-5xl font-black tracking-tight py-10">
               {metadata.title}
             </h1>
-            <MDXRemote source={content} />
+            <MDXRemote
+              source={content}
+              options={options}
+              components={{
+                AsideNote,
+              }}
+            />
           </article>
-          <hr />
-          <div className="text-black-100 font-normal pl-1 md:p-0">
+          <div className="text-black-150 pl-2.5 md:p-0">
             <p>Last update {metadata.last_updated_date}</p>
             <p>
               This page was contributed to by{" "}
