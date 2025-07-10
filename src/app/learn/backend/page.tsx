@@ -36,7 +36,7 @@ export default async function ListSyllabusPage() {
   return (
     <div>
       <NavigationTop />
-      <div className="sekx__banner bg-green flex flex-col md:flex-row justify-between gap-y-10 p-10 lg:p-20">
+      <div className="sekx__banner bg-green flex flex-col md:flex-row justify-between gap-y-10 py-10 px-4 md:p-10 lg:p-20">
         <div className="space-y-5 text-[#fff] tracking-tight">
           <div>
             <p className="font-extrabold text-4xl">
@@ -63,8 +63,8 @@ export default async function ListSyllabusPage() {
               className="bg-muted-200 pt-10 flex flex-col"
             >
               <div className="flex px-3.5 md:px-12">
-                <div className="w-20 h-20 text-muted-0 rounded-full bg-black border-2 border-black">
-                  <div className="flex w-full h-full justify-center items-center text-3xl md:text-5xl">
+                <div className="w-12 h-12 md:w-20 md:h-20 text-muted-0 rounded-full bg-black border-2 border-black">
+                  <div className="flex w-full h-full justify-center items-center text-2xl md:text-4xl">
                     {index + 1}
                   </div>
                 </div>
