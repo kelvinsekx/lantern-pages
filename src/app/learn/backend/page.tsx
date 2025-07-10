@@ -36,7 +36,7 @@ export default async function ListSyllabusPage() {
   return (
     <div>
       <NavigationTop />
-      <div className="sekx__banner bg-green flex justify-between p-20">
+      <div className="sekx__banner bg-green flex flex-col md:flex-row justify-between gap-y-10 p-10 lg:p-20">
         <div className="space-y-5 text-[#fff] tracking-tight">
           <div>
             <p className="font-extrabold text-4xl">
@@ -45,7 +45,7 @@ export default async function ListSyllabusPage() {
           </div>
           <div>An indepth and production ready guide</div>
         </div>
-        <div className="border bg-[#fff] border-muted rounded-2xl px-5 py-10 mr-20">
+        <div className="border bg-[#fff] border-muted rounded-2xl w-fit px-5 py-10 mr-6 lg:mr-20">
           <div className="text-black-400 font-semibold text-xl">
             <span className="text-black">0%</span> Completed
           </div>
@@ -62,11 +62,13 @@ export default async function ListSyllabusPage() {
               key={cuid2.createId()}
               className="bg-muted-200 pt-10 flex flex-col"
             >
-              <div className="flex px-12">
-                <div className="w-20 h-20 flex items-center justify-center rounded-full bg-black text-[#fff] text-3xl">
-                  {index + 1}
+              <div className="flex px-3.5 md:px-12">
+                <div className="w-20 h-20 text-muted-0 rounded-full bg-black border-2 border-black">
+                  <div className="flex w-full h-full justify-center items-center text-3xl md:text-5xl">
+                    {index + 1}
+                  </div>
                 </div>
-                <section className="pl-10 space-y-1">
+                <section className="pl-5 md:pl-10 space-y-1 flex-1">
                   <header className="text-black-400 text-3xl font-semibold tracking-tight">
                     {stage.title}
                   </header>

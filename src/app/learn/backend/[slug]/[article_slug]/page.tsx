@@ -52,8 +52,7 @@ export default async function BlogPage({ params }: { params: Params }) {
               }}
             />
           </article>
-          <hr />
-          <div className="text-black-100 font-normal pl-1 md:p-0">
+          <div className="text-black-150 pl-2.5 md:p-0">
             <p>Last update {metadata.last_updated_date}</p>
             <p>
               This page was contributed to by{" "}
