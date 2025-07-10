@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+// import { getFrontmatter } from "next-mdx-remote-client/utils";
 
 type Metadata = {
   title: string;
@@ -70,7 +71,7 @@ function getMDXData(dir: string, whichPost: string) {
 
 export function getBlogPosts(slug: string) {
   return getMDXData(
-    path.join(process.cwd(), "articles", "backend", slug, "contents"),
+    path.join(process.cwd(), "src", "articles", "backend", slug, "contents"),
     slug
   );
 }
@@ -110,3 +111,29 @@ export function formatDate(date: string, includeRelative = false) {
 
   return `${fullDate} (${formattedDate})`;
 }
+
+export const getSourceSync = (filename: string): string | undefined => {
+  const sourcePath = path.join(
+    process.cwd(),
+    "src",
+    "articles",
+    "backend",
+    "node",
+    "contents",
+    filename + ".mdx"
+  );
+  if (!fs.existsSync(sourcePath)) return;
+  return sourcePath;
+};
+
+export const getPostInformation = async (
+  filename: string
+): Promise<{
+  metadata: Metadata;
+  content: string;
+}> => {
+  const source = getSourceSync(filename);
+
+  if (!source) return { metadata: {} as Metadata, content: "" };
+  return await readMDXFile(source);
+};
