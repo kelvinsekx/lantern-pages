@@ -3,6 +3,7 @@ import { ArticleSideBar } from "./components/sidebar";
 import { MDXRemote, type MDXRemoteOptions } from "next-mdx-remote-client/rsc";
 import { getBlogPosts, getPostInformation } from "@/utilities/mdx-utils";
 import { AsideNote } from "@/components/aside-note";
+import { LongAside } from "@/components/long-aside";
 
 type Params = Promise<{ slug: string; article_slug: string }>;
 
@@ -49,6 +50,7 @@ export default async function BlogPage({ params }: { params: Params }) {
               options={options}
               components={{
                 AsideNote,
+                LongAside,
               }}
             />
           </article>

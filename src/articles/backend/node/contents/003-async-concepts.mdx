@@ -42,9 +42,11 @@ console.log("What do you want from me")
 
 If `filesystem.read` is not async, it will take 10 secs before we can print "what do you want from me".
 
-## Async in series and parallel
+<LongAside subject={'A little beyond: Async in series and parallel'}>
 
-An example where this shine is trying to read all the files in a directory.
+Although most of our examples while doing asyn operations would be with a sigle identity, in rare cases, often than not, you would have to make async operations for multiple things at a time. For example an array of items.
+
+An example where this shine is trying to read all the files in a directory. You can either do these async operations in series or parallel. Let's make an example of reading a folder and list the length of the files in the directory/folder.
 
 We might be tempted to do this.
 
@@ -64,6 +66,8 @@ fs.readdir('foldername', (err, files){
 
 The problem with our former example is that the length of files would not come in the order of the files in our directory.
 
+To solve this, we can make the operations in series. One after another, and what else algorithm shines here if not recursion. See example below:
+
 ```bash
 import fs from "fs";
 import path from "path";
@@ -73,11 +77,11 @@ fs.readdir("ddd", (err, files)=>{
 
   function readFiles(i){
     if(i >=files.length) return; // exit
-   fs.readFile(path.join("ddd", files[i]), (err, content)=> {
-    if(err) throw new Error(err);
-    console.log(content.toString())
-    readFiles(i+1)
-  })
+    fs.readFile(path.join("ddd", files[i]), (err, content)=> {
+        if(err) throw new Error(err);
+        console.log(content.toString())
+        readFiles(i+1)
+    })
  }
 
  readFiles(0)
@@ -85,4 +89,29 @@ fs.readdir("ddd", (err, files)=>{
 })
 ```
 
-There are a number of ways to solve this but I prefer to use recursion. The problem with this approach of mine is that the async operations are not made at parallel. Instead they are made one after the other which can be slow too except in cases line we do where the files in dir aren't much.
+There are a number of ways to solve this aside doing the operations one step at a time. The problem with this approach of mine is that the async operations are not made at parallel. Instead they are made one after the other which can be slow too except in cases like we do where the files in dir aren't much.
+
+```bash
+import fs from "fs";
+import path from "path";
+
+fs.readdir("ddd", (err, files)=>{
+  if(err) throw new Error(err);
+  const results = [];
+  let isRemaining = files.length;
+
+  files.forEach((file, index)=> {
+    --isRemaining
+    fs.readFile(path.join("ddd",file), (err, readContent)=>{
+      if(err) throw new Error(err);
+      results[index] = readContent;
+
+      if(!isRemaining) console.log(results.toString());
+    })
+  })
+})
+```
+
+This way all the files are called in parallel and their results saved based off their indexes so that we can access them orderly.
+
+</LongAside>
