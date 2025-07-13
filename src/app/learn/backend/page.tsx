@@ -85,7 +85,7 @@ export default async function ListSyllabusPage() {
                       <Link
                         href={p.slug}
                         key={p.slug}
-                        className="block hover:text-black-150 active:text-black"
+                        className="block hover:text-black-150 active:text-black w-fit"
                       >
                         {p.metadata.title}
                       </Link>

@@ -5,8 +5,8 @@
     "code": "BAC001"
   },
   {
-    "title": "Hosting (cdn, https, domains, networking)",
-    "description": "Learn how to deploy and host your backend services",
+    "title": "Database persistency (relational & non-relational)",
+    "description": "Implement secure user authentication methods",
     "code": "BAC002"
   },
   {
@@ -15,48 +15,53 @@
     "code": "BAC003"
   },
   {
+    "title": "Hosting (cdn, https, domains, networking)",
+    "description": "Learn how to deploy and host your backend services",
+    "code": "BAC004"
+  },
+  {
     "title": "Blob storage (file uploads, urls, cdn-backed)",
     "description": "Store and serve user-uploaded files efficiently",
-    "code": "BAC004"
+    "code": "BAC005"
   },
   {
     "title": "Email",
     "description": "Integrate email sending and receiving functionality",
-    "code": "BAC005"
+    "code": "BAC006"
   },
   {
     "title": "Payments",
     "description": "Process payments and handle financial transactions",
-    "code": "BAC006"
+    "code": "BAC007"
   },
   {
     "title": "Monitoring",
     "description": "Track system performance and detect issues",
-    "code": "BAC007"
+    "code": "BAC008"
   },
   {
     "title": "Analytics",
     "description": "Collect and analyze user behavior data",
-    "code": "BAC008"
+    "code": "BAC009"
   },
   {
     "title": "Dev tools (CI/CD, staging)",
     "description": "Set up development workflows and deployment pipelines",
-    "code": "BAC009"
+    "code": "BAC010"
   },
   {
     "title": "Secrets",
     "description": "Manage sensitive configuration and API keys securely",
-    "code": "BAC010"
+    "code": "BAC011"
   },
   {
     "title": "Push Notifications",
     "description": "Send real-time notifications to user devices",
-    "code": "BAC011"
+    "code": "BAC012"
   },
   {
     "title": "Caching",
     "description": "Improve performance with data caching strategies",
-    "code": "BAC012"
+    "code": "BAC013"
   }
 ]
