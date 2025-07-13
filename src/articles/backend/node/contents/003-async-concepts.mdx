@@ -8,19 +8,23 @@ authors: "kelvinsekx"
 ---
 
 Node is fundamentally built on async and the event loop fundamentals. When we say things run in async in Node, we mean they run asynchronously.
-Async is both a concept and keyword in Node. We will discuss what the keyword does later in this chapter. For now, we will focus on understanding it as a core concept Node is built on.
+Async is both a concept and keyword in Node. We will discuss what the keyword does later in this chapter. For now, let's focus on understanding it as a core concept.
 
-Async means tasks are not forced to wait after another. If something wants more time, it should have while the rest of the tasks go on with their responsibilites.
+Async means tasks are not forced to wait after another. If something wants more time, it should have it while the program goes on with the rest of the tasks.
 
-For example, **the process of sewing by one person is synchronous**. As a taylor, you can not stich a cloth until they are cut in pieces patterns. After cutting, you would have to weave (depending on the material) before sewing and so on. In a nutshell, you can not go on with another process until the first is done.
+For example, **the process of sewing by one person synchronously**. As a taylor, you can not stich a cloth until they are cut in pieces patterns. After cutting, you would have to weave (depending on the material) before sewing and so on. In a nutshell, you can not go on with another process until the first is done.
 
-But let's use another example with Bakers. This process can be async. For example, you may be spreading cream while the machine is mixing the cake. If it is done to taste, you can leave what you are doing to go back to the mixed cake.
+But let's use another example with **a Baker who bakes asynchromously**. They start by spreading cream while the machine is mixing the cake. If it is done to taste, you can leave what you are doing to go back to the mixed cake.
 
-These scenarios represent Async and Sync concepts well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time or slow.
+These scenarios represent Async and Sync concepts well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time or slow. These kind of operations are taken off the execution flow;
+
+Asyn is expressed in 3 broad patterns in javascript and node: Callbacks, Promise and Async/Await.
 
 ## Callbacks
 
-One of node.js style of empowering us to do things asynchromously is with callbacks. Callbacks are functions that are called after a task is done.
+Before javascript as a language empowered us with an intuitive way of handling async tasks, Node gave us Callbacks.
+
+Callbacks are functions that are called after an async task is done.
 
 Using our baking example, imagine giving an instruction that if the bake is done smoothing, a sound should peep.
 
@@ -32,15 +36,35 @@ cake("be mixing", (err, done){
 })
 ```
 
-A popular computer example would be reading from the drive or filesystem. Until recently faster computers, it takes a substantial time to read from drives. You don't want to delay your entire program waiting for a feedback from your drive.
+A popular computer example would be reading from the drive or filesystem. Until recently with faster computers, it takes a substantial time to read from drives. You don't want to delay your entire program waiting for a feedback from your drive.
+
+**Synchronously reading a file**
 
 ```bash
+let fileName
 console.log("Hello")
-filesystem.read('file', (err, done)) // takes 10 secs
-console.log("What do you want from me")
+// prints "Hello" -> GoToNextLine
+
+fileName = filesystem.SyncRead('file')
+// takes 10 secs -> call done() -> GoToNextLine
+
+console.log(fileName)
+// prints "FileName.txt" -> ends
 ```
 
-If `filesystem.read` is not async, it will take 10 secs before we can print "what do you want from me".
+**ASynchronously reading a file**
+
+```bash
+let fileName
+console.log("Hello")
+// prints "Hello" -> GoToNextLine
+
+filesystem.AsyncRead('file', (err, done))
+// leaves execution flow -> GoToNextLine immediately -> takes 10 secs in background -> call done()
+
+console.log(fileName)
+// prints undefined -> ends
+```
 
 <LongAside subject={'A little beyond: Async in series and parallel'}>
 
