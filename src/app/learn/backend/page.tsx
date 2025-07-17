@@ -1,5 +1,5 @@
 import cuid2 from "@paralleldrive/cuid2";
-import { LibraryBig } from "lucide-react";
+import { LibraryBig, LinkIcon } from "lucide-react";
 
 import syllabus from "./syllabus.json";
 import { NavigationTop } from "@/components/nav";
@@ -37,15 +37,16 @@ export default async function ListSyllabusPage() {
     <div>
       <NavigationTop />
       <div className="sekx__banner bg-green flex flex-col md:flex-row justify-between gap-y-10 py-10 px-4 md:p-10 lg:p-20">
-        <div className="space-y-5 text-[#fff] tracking-tight">
+        <div className="space-y-5 text-[#fff] tracking-tight md:max-w-2/3">
           <div>
-            <p className="font-extrabold text-4xl">
-              Learn backend Development <span className="text-xs">Node</span>
+            <p className="font-extrabold text-5xl md:leading-16">
+              Learn backend Development{" "}
+              <span className="text-lg md:text-xl">Node</span>
             </p>
           </div>
           <div>An indepth and production ready guide</div>
         </div>
-        <div className="border bg-[#fff] border-muted rounded-2xl w-fit px-5 py-10 mr-6 lg:mr-20">
+        <div className="border bg-[#fff] border-muted rounded-2xl w-fit px-5 py-10 lg:mr-20 mx-auto">
           <div className="text-black-400 font-semibold text-xl">
             <span className="text-black">0%</span> Completed
           </div>
@@ -85,9 +86,10 @@ export default async function ListSyllabusPage() {
                       <Link
                         href={p.slug}
                         key={p.slug}
-                        className="block hover:text-black-150 active:text-black w-fit"
+                        className="block hover:text-black-150 active:text-black md:text-lg w-fit group"
                       >
-                        {p.metadata.title}
+                        {p.metadata.title}{" "}
+                        <LinkIcon className="inline stroke-muted group-hover:stroke-black" />
                       </Link>
                     ))}
                 </section>
