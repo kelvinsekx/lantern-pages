@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const Footer = () => {
   return (
     <footer className="bg-muted-200 pt-8 tracking-tight">
@@ -12,53 +14,58 @@ export const Footer = () => {
           </p>
         </div>
         <div className="flex flex-wrap justify-between gap-y-5 w-5/6 md:w-2/3 ">
-          <section className="tracking-tighter">
-            <header className="mb-1 md:mb-2">
-              <b className="font-medium text-lg tracking-wider">
-                Lantern Tracks
-              </b>
-            </header>
-            <div className="space-y-1">
-              <section>
-                <header>
-                  <b className="font-medium tracking-wide">
-                    Backend development
-                  </b>
-                </header>
-                <ul>
-                  <li className="text-sm tracking-normal">Node</li>
-                </ul>
-              </section>
-              <hr className="opacity-0" />
+          <LinkGroup>
+            <>
+              <LinkGroupTitle>Lantern Tracks</LinkGroupTitle>
+              <div className="space-y-2">
+                <LinkGroup>
+                  <LinkGroupSubTitle>Backend development</LinkGroupSubTitle>
+                  <ul>
+                    <li>
+                      <GroupLinkItem href="/learn/backend">Node</GroupLinkItem>
+                    </li>
+                  </ul>
+                </LinkGroup>
 
-              <p>Product management</p>
+                <div>
+                  <GroupLinkItem>Product management</GroupLinkItem>
+                </div>
 
-              <section>
-                <header>
-                  <b className="font-medium tracking-wide">Languages</b>
-                </header>
-                <p className="text-sm tracking-normal">Itsekiri</p>
-              </section>
-            </div>
-          </section>
+                <LinkGroup>
+                  <LinkGroupSubTitle>Languages</LinkGroupSubTitle>
+                  <GroupLinkItem>Itsekiri</GroupLinkItem>
+                </LinkGroup>
+              </div>
+            </>
+          </LinkGroup>
 
-          <section className="tracking-tighter">
-            <header className="mb-1 md:mb-2">
-              <b className="font-medium text-lg tracking-wider">Education</b>
-            </header>
-            <ul>
-              <li>Mathematics</li>
-              <li>Unilag, economics edu</li>
-            </ul>
-          </section>
+          <LinkGroup>
+            <>
+              <LinkGroupTitle>Education</LinkGroupTitle>
+              <ul>
+                <li>
+                  <GroupLinkItem>Mathematics</GroupLinkItem>
+                </li>
+                <li>
+                  <GroupLinkItem>Unilag, economics edu</GroupLinkItem>
+                </li>
+              </ul>
+            </>
+          </LinkGroup>
 
-          <section className="tracking-tighter">
-            <header className="mb-1 md:mb-2">
-              <b className="font-medium text-lg tracking-wider">Others</b>
-            </header>
-            <p>Lantern roadmap</p>
-            <p>Premium subscriptions</p>
-          </section>
+          <LinkGroup>
+            <>
+              <LinkGroupTitle>Others</LinkGroupTitle>
+              <ul>
+                <li>
+                  <GroupLinkItem>Lantern roadmap</GroupLinkItem>
+                </li>
+                <li>
+                  <GroupLinkItem>Premium subscriptions</GroupLinkItem>
+                </li>
+              </ul>
+            </>
+          </LinkGroup>
         </div>
       </div>
 
@@ -69,3 +76,32 @@ export const Footer = () => {
     </footer>
   );
 };
+
+const LinkGroup = ({ children }: React.ComponentPropsWithoutRef<"section">) => (
+  <section className="tracking-tighter">{children}</section>
+);
+
+const LinkGroupTitle = ({
+  children,
+}: React.ComponentPropsWithoutRef<"header">) => (
+  <header className="mb-1 md:mb-2 text-green">
+    <b className="font-semibold text-lg tracking-wider">{children}</b>
+  </header>
+);
+
+const LinkGroupSubTitle = ({
+  children,
+}: React.ComponentPropsWithoutRef<"header">) => (
+  <header>
+    <b className="font-medium text-lg tracking-wide">{children}</b>
+  </header>
+);
+
+const GroupLinkItem = ({
+  children,
+  href = "/",
+}: React.ComponentPropsWithoutRef<"a">) => (
+  <Link href={href} className="text-sm tracking-normal">
+    {children}
+  </Link>
+);
