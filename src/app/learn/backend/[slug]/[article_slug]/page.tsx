@@ -1,9 +1,11 @@
-import { NavigationTop } from "@/components/nav";
-import { ArticleSideBar } from "./components/sidebar";
 import { MDXRemote, type MDXRemoteOptions } from "next-mdx-remote-client/rsc";
 import { getBlogPosts, getPostInformation } from "@/utilities/mdx-utils";
+
+import { NavigationTop } from "@/components/nav";
+import { ArticleSideBar } from "./components/sidebar";
 import { AsideNote } from "@/components/aside-note";
 import { LongAside } from "@/components/long-aside";
+import { LightBold } from "@/components/custom-bold";
 
 type Params = Promise<{ slug: string; article_slug: string }>;
 
@@ -41,7 +43,7 @@ export default async function BlogPage({ params }: { params: Params }) {
         />
 
         <div className="space-y-10 md:mr-10 py-10 w-full md:w-[calc(100%-25%-10%)] absolute right-0 top-[50px]">
-          <article className="prose prose-slate prose-h2:mt-8 prose-h2:mb-2 prose-h2:tracking-tight prose-strong:text-black-250 shadow-inner border border-muted-200 rounded-3xl p-5 md:p-10 space-y-5 block max-w-[69ch] prose-hr:border-black-50">
+          <article className="prose prose-slate prose-h2:mt-8 prose-h2:mb-2 prose-h2:tracking-tight prose-strong:text-[#000] shadow-inner border border-muted-200 rounded-3xl p-5 md:p-10 space-y-5 block max-w-[69ch] prose-hr:border-black-50 prose-strong:font-medium lg:prose-strong:font-semibold">
             <h1 className="text-5xl font-black tracking-tight py-10">
               {metadata.title}
             </h1>
@@ -51,6 +53,7 @@ export default async function BlogPage({ params }: { params: Params }) {
               components={{
                 AsideNote,
                 LongAside,
+                LightBold,
               }}
             />
           </article>
