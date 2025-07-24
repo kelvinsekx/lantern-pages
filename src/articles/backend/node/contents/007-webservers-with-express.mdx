@@ -1,10 +1,227 @@
 ---
-title: "Webservers with Express"
+title: "Webserver with Express"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "24/07/2025"
+last_updated_date: "24/07/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-## Webservers with Express
+The most popular Node.js web framework is Express.js. It is intended for the development of web applications and APIs. Virtually all the popular meta-frameworks and solutions are built on Express like Nest, Next, Nuxt etc.
+
+Express saves developers time and empower them to work on what truly matters. It can be time-consuming to create a backend from scratch using node's `createServer` utilities only. Writing all the boilerplate code from port configuration, route handling etc distracts from the important task of focus on the business logic for an application.
+
+## Create your first program
+
+The following program will listen on port 2999 when ran. The application will responde to any client request on port:2999 irrespective of the HTTP request type. If you make a HTTP POST or HTTP GET request, the response will print "Hi, our request has been received".
+
+```bash
+import express from "express";
+
+const app = express();
+
+app.all('/', (req, res)=> res.send("Hi, your request has been received"));
+
+app.listen(2999, ()=> console.log("App started on 2999"));
+```
+
+1. We imported the express package
+2. Create our server/application base
+3. Register a route for all Routes.Methods
+4. Bind the server to a port so that others can connect to it on port 2999
+
+You can run the server with CURL if you are on a linux environment.
+
+```bash
+$: curl -X GET localhost:2999 // HTTP GET
+$: curl -X POST localhost:2999 // HTTP POST
+```
+
+## Routes
+
+Routes are one of the most important building block in Express. It consist of the application request **HTTP type**, **URL** and **accompanied route handler**. When a route is matched, **one or more** handler functions for that route are called.
+
+In short, routing involves how the server respond to different requests (URI paths) made by clients.
+
+```bash
+<app-base>.METHOD(<URL-PATH>, HANDLER)
+app.get('/login', handleLogin)
+```
+
+**The HTTP type** can be HTTP GET, HTTP POST, HTTP PUT, HTTP DELETE. Learn more about HTTP methods.
+
+**The URL path** is the endpoint that should be matched.
+
+**The accompanied handler** is specified by the method as callback that is called when it detects a match from the client's request.
+
+We can now extend our previous example to do more with express routes.
+
+```bash
+import express from "express"
+
+const app = express()
+
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
+```
+
+Now that we've have made the changes, if you try connect the server from a post request you should see an error: an html error response with "Not Found"
+
+```bash
+curl -X POST localhost:2999 // HTTP POST will throw error
+```
+
+This is because we have changed the route to only accept HTTP GET and not just any method. A route path can take multiple HTTP methods. Learn more about routing here.
+
+## NotFound
+
+We can change our NotFound handler to send a text and not an html response like it is doing.
+
+```bash
+import express from "express"
+
+const app = express()
+
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+app.use((req, res)=> res.send("Oops! Not Found"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
+```
+
+## Middlewares
+
+Almost everything you will do in Express feels like a middleware. The core application object (`app` base) and the routing mechanism are built on the concepts of middleware.
+
+For example, when you define the routes in Express using **app.get()**, **app.post()** e.t.c, the handlers passed to these functions are in essence middleware. They can receive **req**, **res** and **next** ( though next can be optional) parameters.
+
+A middleware function is any function that has access to these parameters of **`request` object (req)** and **`response` object (res)**, and the **`next` function**.
+
+A middleware runs at the time between when your program gets the request and before sending a response to the client.
+
+These functions can:
+
+- Execute any code
+- Make changes to the request ad response objects
+- End the request-response cycle (by sending a response)
+- Call the next middleware function in the stack(using `next()`)
+
+### Types of Middlewares
+
+Express categories middleware into 5 categories:
+
+1. Appication-level/Global middleware
+   These kind of middlewares are applied to the entirenapp using `app.use()`.
+
+2. Router-level middleware
+   This one is bound to `express.Router()` instances. It is used to apply a subset of routes.
+
+3. Error handling middleware
+   This is a special function that takes four arguments (`err`, `req`, `res` `next`). They are designed to catch and handle errors.
+
+4. Built-in middleware
+   Functions like `Express.static` (for serving static files), `Express.json` (for parsing JSON request bodies) and `Express.urlencoded` (for parsing URL-enconded bodies). These are pre-built and available out of the box for you.
+
+5. Third-party middleware
+   These are modules developed by the community and can be installed using the npm package (e.g cookie-parser, body-parser, express-session, multer).
+
+Let's make a popular logger and use it globally
+
+```bash
+import express from "express"
+
+const app = express()
+
+app.use(logger)
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+app.use((req, res)=> res.send("Oops! Not Found"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
+
+/**
+*
+*/
+function logger(req, res, next){
+    console.log(req.originalUrl)
+    next()
+}
+```
+
+## Collecting Data Records
+
+We typically send data over the server using the HTTP POST method. While there are other alternatives, this is one of the secure ways to go about it.
+
+You can then have access to these data on the req object using the body property (req.body).
+
+Using our simple app example, add a login route. We will print to the console the req.body and send just about any text telling us we successfully got the req.body
+
+```bash
+import express from "express";
+
+const app = express()
+
+app.use(logger)
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+app.post('/login', (req, res)=> {
+  console.log(req.body);
+  res.send('We received your creds. We will get back to you!')
+})
+app.use((req, res)=> res.status(404).send("Opps! Nothing Found"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
+
+/**
+ *
+ *
+ * /
+function logger(req, res, next){
+  console.log(req.originalUrl, '--', new Date())
+  next()
+}
+```
+
+You can hit the endpoint with curl.
+
+```bash
+$: curl --request POST --header "Content-Type: application/json" localhost:2999/login --data '{ "name" : "kelvinsekx" }'
+```
+
+The req.body will return **undefined**. This is because express won't auto parse your req.body. We need a middleware to handle this. We will be using the built in `Express.json` middleware for this. A popular alternative is to use the BodyParser.
+
+```bash
+import express from "express";
+
+const app = express()
+
+app.use(express.json())
+
+app.use(logger)
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+app.post('/login', (req, res)=> {
+  console.log(req.body);
+  res.send('We received your creds. We will get back to you!')
+})
+app.use((req, res)=> res.status(404).send("Opps! Nothing Found"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
+
+/**
+ *
+ *
+ * /
+function logger(req, res, next){
+  console.log(req.originalUrl, '--', new Date())
+  next()
+}
+```
+
+## Conclusion
+
+Our goal for this lesson is to make a simple introduction and examples to the core concepts on building a server with Express.
+
+Although not important to progress to the next lesson see an advanced module where we built a complete filebased persistent restful server with Express.
