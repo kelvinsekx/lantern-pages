@@ -24,7 +24,7 @@ export const ArticleSideBar = async ({
           </div>
         </div>
         <div className="text-base mt-5 px-5 space-y-3 text-black-350">
-          <p className="text-xl font-semibold text-black-350 tracking-tight">
+          <p className="text-xl font-normal text-black-350 tracking-tight">
             {" "}
             Articles in {category}
           </p>
