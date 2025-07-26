@@ -2,29 +2,27 @@
 title: "Introduction to Executing Node Code"
 description: ""
 published_date: "16/06/2025"
-last_updated_date: "17/07/2025"
+last_updated_date: "26/07/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
 If you have Node installed on your computer, you should have the commands `node` and `npm` available in your environment. Make sure the Node version is a recent one (20.x or higher). You can verify that by opening a terminal and running the command `node -v`.
 
-If the prompt returns something around "command 'node' not found, ..." instead of a version number, you don't have the node command. Follow this link on instructions to download it.
+If the prompt returns something around "command 'node' not found, ..." instead of a version number, you don't have the node command. <a href='https://nodejs.org/en/download'>Follow this link on instructions to download node</a>.
 
-## How to develop your applications
+## How to execute your applications
 
-There are broadly two ways of executing node commands.
+There are broadly two ways of executing node commands or codes.
 
-1. **an interactive shell/mode**, also called REPL
+1. **an interactive shell/mode**, also called REPL (Read-Eval-Print-Loop)
 2. **a script** by passing the first name of the file to node command
 
 ## Your first node in a REPL
 
-The interactive shells are for simple commands. They are not intended to run complete long programs. They are more suited for testing functionalities of individual code snippets.
+REPL and interactive shell can be used interchangeably. They are for simple commands. They are not intended to run complete long programs. They are more suited for testing functionalities of individual code snippets.
 
-REPL stands for Read-Eval-Print-Loop. It is a convenient way to quickly test javascript and node code.
-
-REPL and interactive shell can be used interchangeably.
+To get in REPL mode, run `node` in a terminal (type **node** and press `Enter`) without any argument.
 
 ### REPL in action
 
@@ -59,20 +57,20 @@ Welcome to Node.js v<your_number>
 
 **4. Start from 1. Again (Loops)**
 
-Node will read the line, evaluate and print the result, and loop over these three things for everything you type until you exit the session. To exit press the key `Ctrl + D` or `CTRL + C` twice or type ".exit" and hit enter in the REPL.
+Node will read the line, evaluate and print the result, and loop over these three things for everything you type until you exit the session. To exit, press the key `Ctrl + D` or `CTRL + C` twice or type ".exit" and hit enter in the REPL.
 
-Let's run same code as a script next.
+Let's run the same code as a script next.
 
-## Your first node in a Script
+## Your first node in a script
 
-Create a new directory and then `cd` into it:
+`mkdir` (Make a new directory) and `cd` (change directory) into it:
 
 ```bash
 $ mkdir node-example-1
 $ cd node-example-1
 ```
 
-Open up your code editor and create a file name "test.js". Put the same `Math.random()` line into it:
+Open up the directory in your favorite code editor and create a file name "test.js". Put the same `Math.random()` line into it:
 
 ```bash
 //file: node-example-1/test.js
@@ -98,7 +96,7 @@ console.log(
 
 Executing node-example-1/test.js will output a random number. We're using both JavaScript (`Math` object) and an object from the Node API (`console`). Taa daa!
 
-## A little diversion to talk `console`
+<LongAside subject="A little diversion to talk `console`">
 
 The `console` object in node is similar to the one available in browsers but they are not the same.
 
@@ -108,6 +106,14 @@ The console object is one of many top-level global scope objects that we can acc
 
 If the preceeding paragraphs confuses you, again we will talk about this in other chapters.
 
+</LongAside>
+
 ## In Conclusion
 
 At the end of this lesson, you should be familiar with the two ways on how to run your node commands. Congratulations. Nothing is too small to celebrate.
+
+## References
+
+### Footnotes
+
+1. [Nodejs.org how to use the nodejs repl](https://nodejs.org/en/learn/command-line/how-to-use-the-nodejs-repl) _Pasted on Sat, Jul 26, 2025._

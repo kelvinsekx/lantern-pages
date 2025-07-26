@@ -7,24 +7,24 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that complex things sit on. Skipping this phase may pose problems later in the course.
+An usual intro. This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that complex things sit on. Skipping this phase may pose problems later in the course.
 
-As you progress, don't over concentrate on concepts that feel overly difficult or confusing. We'll have a separate module for concepts like this. Many you will see time and time again.
+As you progress, don't over concentrate on concepts that feel overly difficult or confusing. We'll have a modules or sections where you will usually discuss these concepts.
 
 ## Console.log out
 
-`console.log` in node is a web syntatic wrapper. This is because the console module is not identically as consistent as that of browsers. It is a syntatic convenience for process.stdout.
+`console.log` in node is a web syntatic wrapper. It is a convenience for process.stdout.
 
 Node console is a global instance configured to write to process.stdout and process.stderr. Because it is global instance, it can be used without calling `require('node:console')`.
 
 Console.log can be used for debugging and display something to the user or drop in place use for process.stdout.
 
 <AsideNote>
-  Again if process.stdout, process.stderr confuse you, don't mind it. You will
-  see more of it and with lengthier explanation later.
+  If process.stdout, process.stderr confuse you, don't mind it. You will see
+  more of it and with lengthier explanation later.
 </AsideNote>
 
-Run the REPL by running `node` in a terminal without any argument.
+Let's run some examples in the REPL.
 
 ```bash
 $ node
@@ -35,7 +35,7 @@ kelvin
 undefined
 ```
 
-In subsequently and through out this course, I will skip these terminal details and jump straight at the sample code and outputs so that the example above is written with fewer lines.
+In subsequent examples and the rest of the course, I will skip these terminal details and jump straight at the sample code and outputs so that the example above is written with fewer lines.
 
 ```bash
 console.log("kelvin") // kelvin
@@ -54,12 +54,12 @@ Run this in a REPL
 process.argv // [ '/path/to/yours/versions/node/v21.6.0/bin/node' ]
 ```
 
-To explore more sophiscated examples, running node commands from REPL can be limiting. So let's do script here.
+To explore an example, running node commands from REPL can be limiting for our case. So let's do script here.
 
 For example, suppose you save this Node program to the file argv1.js:
 
 ```bash
-// File:: argv1.js
+// File: argv1.js
 console.log(process.argv)
 ```
 
@@ -76,11 +76,25 @@ $ node argv1.js
 */
 ```
 
-#### A couple of things to note here
+#### A couple of things to keep in mind
 
 1. By default when you run node via script method the second argument (argvs) is always the script name.
 2. The first and second elements of process.argv will be fully qualified filesystem paths to the Node executable and the file of JavaScript that is being executed.
 3. Command-line arguments that are intended for and interpreted by the Node executable itself are consumed by the Node executable and do not appear in process.argv
+
+<LongAside subject="Arguments not in process.argv">
+Arguments intended for the Node runtime (and not your script) don't appear in the process.argv. Node parses and use them before loading the JavaScript file and do not need to pass them to your program.
+
+| Flag      | Purpose                                     |
+| --------- | ------------------------------------------- |
+| --inspect | Enable the debugger                         |
+| --require | preload a module before running your script |
+
+If you want to access all arguments including those used by node, you can use `process.execArgv`.
+
+Popular examples of Node-specific arguments
+
+</LongAside>
 
 ### Environment variables with `process.env`
 

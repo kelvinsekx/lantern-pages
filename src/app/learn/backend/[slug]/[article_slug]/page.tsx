@@ -1,5 +1,6 @@
 import { MDXRemote, type MDXRemoteOptions } from "next-mdx-remote-client/rsc";
 import { getBlogPosts, getPostInformation } from "@/utilities/mdx-utils";
+import { plugins } from "@/utilities/mdx-plugins";
 
 import { NavigationTop } from "@/components/nav";
 import { ArticleSideBar } from "./components/sidebar";
@@ -29,6 +30,9 @@ export default async function BlogPage({ params }: { params: Params }) {
       props: { foo: "props in scope is working" },
     },
     // vfileDataIntoScope: "toc", // the "remark-flexible-toc" plugin produces vfile.data.toc
+    mdxOptions: {
+      ...plugins,
+    },
   };
 
   return (
@@ -42,8 +46,8 @@ export default async function BlogPage({ params }: { params: Params }) {
         />
 
         <div className="space-y-10 md:mr-10 py-10 w-full md:w-[calc(100%-25%-10%)] absolute right-0 top-[50px]">
-          <article className="prose prose-slate prose-h2:mt-8 prose-h2:mb-2 prose-h2:font-semibold prose-h2:text-lg prose-h2:tracking-tight prose-h3:text-base prose-strong:text-[#000] shadow-inner border border-muted-200 rounded-3xl p-5 md:p-10 space-y-5 block max-w-[79ch] prose-hr:border-black-50 prose-strong:font-medium lg:prose-strong:font-semibold">
-            <h1 className="text-5xl font-normal tracking-tight">
+          <article className="prose prose-slate prose-h2:mt-8 prose-h2:mb-2 prose-h2:font-semibold prose-h2:text-lg prose-h2:tracking-tight prose-h3:text-base prose-strong:text-[#000] prose-strong:font-semibold shadow-inner border border-muted-200 rounded-3xl p-5 md:p-10 space-y-5 block max-w-[82ch] prose-hr:border-black-50 ">
+            <h1 className="text-3xl md:text-4xl font-normal tracking-tight">
               {metadata.title}
             </h1>
             <MDXRemote
