@@ -7,26 +7,33 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Node is fundamentally built on async and the event loop fundamentals. When we say things run in async in Node, we mean they run asynchronously.
-Async is both a concept and keyword in Node. We will discuss what the keyword does later in this chapter. For now, let's focus on understanding it as a core concept.
+Node and the entire JavaScript ecosystem is built on async and the event loop fundamentals. The mastery of these topics can be liberating. But they can also be more of abstractions than concrete especially if you are new to coding.
 
-Async means tasks are not forced to wait after another. If something wants more time, it should have it while the program goes on with the rest of the tasks.
+## What's Async
 
-For example, **the process of sewing by one person synchronously**. As a taylor, you can not stich a cloth until they are cut in pieces patterns. After cutting, you would have to weave (depending on the material) before sewing and so on. In a nutshell, you can not go on with another process until the first is done.
+When we say an operation or task runs async in Node, we mean they run **asynchronously**. This kind of tasks usually take more time to complete.
+Async is both a concept and keyword in Node ( and JavaScript). We will discuss its pov as a keyword later in this lesson.
+
+Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. Thanks to async, tasks are not forced to wait after another. If a task takes more time (i.e async), it should be moved to a separate lane while the rest of program goes on interrupted.
+
+Examples of async tasks ( or operations) are writing/reading a file, network fetches.
+
+<LongAside subject="Explanation with some layman examples">
+  For example, **the process of sewing by one person synchronously**. As a taylor, you can not stich a cloth until they are cut in pieces patterns. After cutting, you would have to weave (depending on the material) before sewing and so on. In a nutshell, you can not go on with another process until the first is done.
 
 But let's use another example with **a Baker who bakes asynchromously**. They start by spreading cream while the machine is mixing the cake. If it is done to taste, you can leave what you are doing to go back to the mixed cake.
 
-These scenarios represent Async and Sync concepts well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time or slow. These kind of operations are taken off the execution flow;
+These scenarios represent Async and Sync concepts well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time or slow. These kind of operations are taken off the execution flow.
 
-Asyn is expressed in 3 broad patterns in javascript and node: Callbacks, Promise and Async/Await.
+</LongAside>
+
+Async events are handled by handlers. These handlers can be expressed in 3 broad patterns: **Callbacks**, **Promises** (and Async/Await) and **Listeners**.
 
 ## Callbacks
 
-Before javascript as a language empowered us with an intuitive way of handling async tasks, Node gave us Callbacks.
+Before JavaScript empowered us with an intuitive way of handling async tasks, Node gave us Callbacks. Callbacks are functions that are called after an async task is done.
 
-Callbacks are functions that are called after an async task is done.
-
-Using our baking example, imagine giving an instruction that if the bake is done smoothing, a sound should peep.
+Imagine giving an instruction that if the bake is done smoothing, a sound should peep.
 
 ```bash
 cake("be mixing", (err, done){
@@ -36,16 +43,18 @@ cake("be mixing", (err, done){
 })
 ```
 
-A popular computer example would be reading from the drive or filesystem. Until recently with faster computers, it takes a substantial time to read from drives. You don't want to delay your entire program waiting for a feedback from your drive.
+Another example would be reading from the drive or filesystem. Until recently with faster computers, it takes a substantial time to read from drives. You don't want to delay your entire program waiting for a feedback from your drive.
 
 **Synchronously reading a file**
 
 ```bash
+import {readFileSync} from "fs";
+
 let fileName
 console.log("Hello")
 // prints "Hello" -> GoToNextLine
 
-fileName = filesystem.SyncRead('file')
+fileName = readFileSync('file.txt')
 // takes 10 secs -> call done() -> GoToNextLine
 
 console.log(fileName)
@@ -55,11 +64,13 @@ console.log(fileName)
 **ASynchronously reading a file**
 
 ```bash
+import {readFileSync} from "fs";
+
 let fileName
 console.log("Hello")
 // prints "Hello" -> GoToNextLine
 
-filesystem.AsyncRead('file', (err, done))
+readFileSync('file', (err, done))
 // leaves execution flow -> GoToNextLine immediately -> takes 10 secs in background -> call done()
 
 console.log(fileName)

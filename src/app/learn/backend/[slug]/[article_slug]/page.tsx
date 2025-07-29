@@ -59,8 +59,11 @@ export default async function BlogPage({ params }: { params: Params }) {
               }}
             />
           </article>
-          <div className="text-black-200 pl-2.5 md:p-0">
-            <p>Last update {metadata.last_updated_date}</p>
+          <div className="text-black-200 pl-2.5 md:p-0 [&_span]:text-black">
+            <p>
+              <span>Published on</span> {metadata.published_date},{" "}
+              <span>Last update</span> {metadata.last_updated_date}
+            </p>
             <p>
               This page was contributed to by{" "}
               <a href="https://github.com/kelvinsekx">kelvinsekx</a>,{" "}
