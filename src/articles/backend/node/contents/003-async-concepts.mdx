@@ -7,14 +7,16 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Node and the entire JavaScript ecosystem is built on async and the event loop fundamentals. The mastery of these topics can be liberating. But they can also be more of abstractions than concrete especially if you are new to coding.
+Node and the entire JavaScript ecosystem is built on async and the event loop fundamentals. The mastery of these topics can be liberating, but they can also feel more like abstractions especially if you are new to programming.
 
 ## What's Async
 
-When we say an operation or task runs async in Node, we mean they run **asynchronously**. This kind of tasks usually take more time to complete.
+When we say an operation or task runs async in Node, we mean they run **asynchronously**. This kind of tasks usually take more time to complete ( i.e long running operations).
 Async is both a concept and keyword in Node ( and JavaScript). We will discuss its pov as a keyword later in this lesson.
 
-Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. Thanks to async, tasks are not forced to wait after another. If a task takes more time (i.e async), it should be moved to a separate lane while the rest of program goes on interrupted.
+Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. And when they are done, it cedes control back to the main event loop to handle ( instead of blocking this loop).
+
+Thanks to async, tasks are not forced to wait after another. If a task takes more time (i.e async), it should be moved to a separate lane while the rest of program goes on un-interrupted.
 
 Examples of async tasks ( or operations) are writing/reading a file, network fetches.
 
@@ -61,17 +63,28 @@ console.log(fileName)
 // prints "FileName.txt" -> ends
 ```
 
-**ASynchronously reading a file**
+<AsideNote note="Callback style">
+I make these mistakes myself so I think it is
+important to put a little more attention here.
+
+When writing a callback function for an async operation in node, it is important to keep these two vital points in mind:
+
+1.  Node's callback style is referred to as "error-first callback style". Callbacks must always **have an error as its first argument**.
+2.  Callback functions would usually be the last argument for an async function. See the example below.
+
+</AsideNote>
+
+**Asynchronously reading a file**
 
 ```bash
-import {readFileSync} from "fs";
+import { readFile } from "fs";
 
 let fileName
 console.log("Hello")
 // prints "Hello" -> GoToNextLine
 
-readFileSync('file', (err, done))
-// leaves execution flow -> GoToNextLine immediately -> takes 10 secs in background -> call done()
+readFile('file', (err, done)=> {})
+// leaves execution flow -> GoToNextLine immediately -> takes 10 secs in background -> call done() if successful (i.e no error)
 
 console.log(fileName)
 // prints undefined -> ends
@@ -150,3 +163,49 @@ fs.readdir("ddd", (err, files)=>{
 This way all the files are called in parallel and their results saved based off their indexes so that we can access them orderly.
 
 </LongAside>
+
+**Callbacks are great but they have their limitations** like the pyramid of doom ( also known as Callback Hell). In addition, Callback handlers weren't symbolic to async operations <RefN>2</RefN>. In fact, it can be confusing sometimes because non-blocking functions use them too. They can also have major concerns with coupling.
+
+The community brought about **Promises** that can help handle these limitations better. Let's talk about it next.
+
+## Promises
+
+Instead of passing callback functions as argument to an async ops to handle the error and success in same place, a Promise is an object that allows us to handle (or better still watch for) success or error and separately chain multiple async calls to handle these events (instead of nesting with callbacks).
+
+Let's promisify our previous async code
+
+```bash
+import { readFile } from 'fs';
+
+let filename;
+//console.log(filename);
+
+function promisify(fn){
+  return function(file, cb = ()=>{}){
+   return new Promise((resolve, reject)=>{
+      fn(file, (err, data)=> {
+        if(err) reject(err);
+        else resolve(data)
+      })
+    })
+  }
+}
+
+const promisifiedReadFile = promisify(readFile);
+promisifiedReadFile('note.txt')
+  .then(data => console.log(data.toString()))
+  .catch(e => console.log(e))
+```
+
+## The Event Loop
+
+When dealing with async operations, it can sometimes be important to understand how multiple asyc operations and their handlers are managed or in what order they get back to the main thread. To answer these questions, we need to understand **The call stack**, **event queues** and the **the event loop**.
+
+## References
+
+### Footnotes
+
+1. [Definition for Promises](https://martinfowler.com/bliki/JavascriptPromise.html) _Pasted on Tue, Jul 29, 2025._
+2. [A stackoverflow thread where devs are confused with the role of callback in sync ops](https://stackoverflow.com/questions/37473227/why-not-just-call-a-function-from-another-function-instead-of-using-a-callback) _Pasted on Sat, Aug 02, 2025._
+3. [Why Promises over Callbacks](https://www.blinkingcaret.com/2014/07/14/promises-vs-callbacks/) _Pasted on Tue, Jul 29, 2025._
+4. [Pyramid of doom and troubles with additional indentation](<https://en.wikipedia.org/wiki/Pyramid_of_doom_(programming)>) _Pasted on Tue, Jul 29, 2025._
