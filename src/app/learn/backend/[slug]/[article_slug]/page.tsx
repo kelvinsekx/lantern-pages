@@ -6,6 +6,7 @@ import { NavigationTop } from "@/components/nav";
 import { ArticleSideBar } from "./components/sidebar";
 import { AsideNote } from "@/components/aside-note";
 import { LongAside } from "@/components/long-aside";
+import { RefN } from "@/components/ref-num";
 
 type Params = Promise<{ slug: string; article_slug: string }>;
 
@@ -56,6 +57,7 @@ export default async function BlogPage({ params }: { params: Params }) {
               components={{
                 AsideNote,
                 LongAside,
+                RefN,
               }}
             />
           </article>
