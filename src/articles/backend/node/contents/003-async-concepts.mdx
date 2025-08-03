@@ -172,13 +172,12 @@ The community brought about **Promises** that can help handle these limitations 
 
 Instead of passing callback functions as argument to an async ops to handle the error and success in same place, a Promise is an object that allows us to handle (or better still watch for) success or error and separately chain multiple async calls to handle these events (instead of nesting with callbacks).
 
-Let's promisify our previous async code
+Let's promisify our previous callback code. Promisifying is the transformation of callback based methods to promise.
 
 ```bash
 import { readFile } from 'fs';
 
 let filename;
-//console.log(filename);
 
 function promisify(fn){
   return function(file, cb = ()=>{}){
@@ -197,9 +196,90 @@ promisifiedReadFile('note.txt')
   .catch(e => console.log(e))
 ```
 
-## The Event Loop
+The promisify function we used in the code above is in fact available for us as node util.
+
+```bash
+import { readFile } from 'node:fs';
+import { promisify } from 'node:util';
+
+let filename;
+
+const promisifiedReadFile = promisify(readFile);
+promisifiedReadFile('note.txt')
+  .then(data => console.log(data.toString()))
+  .catch(e => console.log(e))
+```
+
+### The Async keyword
+
+Chaining promise handlers can be simpllified even more to feel like a sync ops. There is the Async/Await keywords, they do these things:
+
+1. improve readability of async codes.
+2. simplifies variable scopes around async codes.
+3. improve error handling.
+
+```bash
+import { readFile } from 'node:fs';
+import { promisify } from 'node:util';
+
+let filename;
+
+const promisifiedReadFile = promisify(readFile);
+
+try {
+  const data = await promisifiedReadFile('note.txt');
+  console.log(data.toString());
+}catch(err){
+  console.log(err)
+}
+```
+
+<LongAside subject="The Event Loop">
 
 When dealing with async operations, it can sometimes be important to understand how multiple asyc operations and their handlers are managed or in what order they get back to the main thread. To answer these questions, we need to understand **The call stack**, **event queues** and the **the event loop**.
+
+</LongAside>
+
+## Listeners and Event Emitters
+
+Another handler method that takes the game to a different elvel is the use of Event Listeners created with Emitter object.
+
+An Emitter object has two main features:
+
+1. Emitting named events
+2. Registering ( and unregistering) listener functions.
+
+To create an event emitter object, we can instantiate from the EventEmitter class or any class that extends it.
+
+```bash
+import fs from 'node:fs';
+import {EventEmitter} from 'node:events'
+
+class ReaderEmitter extends EventEmitter {
+  readFile(file){
+    fs.readFile(file, (err, data)=> {
+      if(err){
+        this.emit('error', err);
+        return
+      }
+      this.emit('data', data.toString());
+    })
+  }
+}
+
+const reader = new ReaderEmitter();
+
+reader.on('data', data => { console.log(data) });
+reader.on('error', err=> { throw new Error(err) });
+
+reader.readFile('note.txt')
+```
+
+## Questions to research on
+
+- How exactly does an handler function get executed in the main thread after its async operation is done outside the main event loop?
+- If JS runs on a single thread, what thread does an async operation run on?
+- When a function is called/completed, it reference gets popped out of the call stack. How does JavaScript knows if an async task is completed? What is used to identify its reference?
 
 ## References
 
