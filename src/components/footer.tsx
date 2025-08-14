@@ -13,7 +13,7 @@ export const Footer = () => {
             experiences to empower you to learn at your pace for free.
           </p>
         </div>
-        <div className="flex flex-wrap justify-between gap-y-5 w-5/6 md:w-2/3 ">
+        <div className="flex flex-wrap justify-between gap-x-2.5 gap-y-5 w-5/6 md:w-2/3 ">
           <LinkGroup>
             <>
               <LinkGroupTitle>Lantern Tracks</LinkGroupTitle>
@@ -93,7 +93,9 @@ const LinkGroupSubTitle = ({
   children,
 }: React.ComponentPropsWithoutRef<"header">) => (
   <header>
-    <b className="font-medium text-lg tracking-wide">{children}</b>
+    <b className="font-medium md:font-semibold text-[15px] tracking-wide">
+      {children}
+    </b>
   </header>
 );
 

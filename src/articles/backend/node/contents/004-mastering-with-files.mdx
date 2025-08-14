@@ -1,124 +1,124 @@
 ---
 title: "Mastering with Files"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "12/08/2025"
+last_updated_date: "12/08/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-To help us cement previous topics, we would be building simple doses of projects around files. At the end of this lesson you would have mastered reading, writing to files, directory and other file operations like with streams.
+To help us cement concepts like async, event loop, process.argv from preceeding lessons, we would learn and build simple programs around files. At the end of this lesson, you should have mastered file operations such as reading, writing to files ( and directory).
 
-## Watching a File for Changes
+One of the important targets of read and write operations is the file system. The use of files and file system can be seen everywhere, for instance when you upload files ( images, documents, audios, videos), the server is responsible for processing and storing them and managing their permissions. With how popular tasks like these are, it is only important to thoroughly understand them.
 
-Watching a file in programming means monitoring it for changes. The changes can be in 3 forms: modifications, deletions, or creations. These experience is incomplete without triggering actions in response to these changes.
+## Asynchronous and synchronous functions
 
-### Why would you ever need to watch a file?
+There are broadly two ways for handling file operations: Async and Sync. Both versions exist out of the box from Node. In version 10+ of Node, they added a promise-based API too. While the Sync versions returns a value, the Async's are handled with callbacks ( or promises).
 
-You may be wondering why would you or anyone watch a file.
-But taking action whenever a file changes is useful in a number of ways:
+## Actions with files and directories
 
-1. Auto-Reloading During Development
-   Restarting a server or refreshing a browser when code changes (e.g., nodemon in Node.js, webpack --watch).
+There are **core actions** that can be performed on files and directories like [Create](), [Read](), [Write](), [Update]() and [Watch](). Others are Delete ( to remove files and directories), Rename ( to change the name of a file or directory), Move ( to move a file or directory to another location), Copy ( to duplicate a file).
 
-2. Log File Monitoring
-   Like Tracking new entries in log file. If there is a new log, sends an alert or email.
+**Auxiliary actions** are for getting files information such as to check existence ( verifies if a file or directory exists), confirm if you have permissions to a certain action and get stat ( get details of a file like size, creation date, modification date).
 
-3 Build Automation & CI/CD
-Triggering rebuilds when source files are modified (e.g., tsc --watch for TypeScript).
+## Auxiliary Actions
 
-To watch a file in NodeJS , you either use Node's built in `fs.watch` or libraries like `chokidar`.
+For this lesson, we would categorize auxiliary operations as tasks that check for existence of files, permissions and get stats.
 
-Open a terminal to begin. Create a new directory called `filesystem` and navigate into it.
+If you have a logic to be based on some characteristics of a file, you can **use the `fs.stat` to get stats about a file**. It returns an object with details of the file. A few properties from the fs.stat object are `stats.size` that returns the size of the file in bytes; `stats.mtime` that returns the last modification time of the file; `stats.birthtime` returns the creation time of the file; `stats.isFile()` returns true if the file is a regular file; `stats.isDirectory()` returns true if the file is a directory.
 
-```bash
-$ mkdir filesystem
-$ cd filesystem
-```
+**To check if a file exist**, you don't need any special method. Instead attempt the operation and then cater for the absence of the file in the error block. This style of exception handling is called "Easier to Ask for Forgiveness than Permission (EAFP)"
 
-```bash
-'use strict';
-const fs = require('fs');
-fs.watch('target.txt', () => console.log('File changed!'));
-console.log('Now watching target.txt for changes...');
-```
+<LongAside subject="EAFP vs LBYL">
+LBYL (Look Before You Leap) vs EAFP (Easier to Ask for Forgiveness than Permission) are contrasting idioms with regards to error checking before code execution.
 
-🐛🪲 For vim users: If you are using vim, you may experience some issues when you make changes to the target.txt file:
+EAFP is preferred for file operations because it avoids race
+conditions. A race condition can occur when you check if a file exits, and
+then before you can perform your action, another process deletes the file. In
+this scenario, your program would think the action still exists and would
+attempt the action resulting in an error. By directly attempting the action
+and handling the error, you ensure the atomicity and avoid this potential
+issue.
 
-1. Multiple "file changed" logs for one change.
-2. It stops responding after the first change.
+LBYL is the opposite of EAFP where you check for a condition before performing the original action. E.g check if a file exist before reading its content.
 
-This bug is expected because how fs.watch behave in this environment. On writing to the file it replaces same file.
+</LongAside>
 
-Notice the code above uses **strict mode**. Also we required the "fs" module to be a local variable with a constant value. This value can never be assigned another value. The required() function pulls a module and retuns it.
+## Read
 
-Learn more strict mode, const, require
+There is a classic low level way of reading a file. It is not used for simple reading but understanding how it works can help you appreciate easier methods like `fs.readFile` and `fs.createReadStream` used for reading small and larger files respectively. These easier methods open the file, operate it and then close it for you.
 
-We then progressed to call the fs module's watch() method, which takes a path to a file and a callback function to invoke whenever the file changes.
+We are going to start off reading a file using `fs.read` that can be elaborated as `fs.read(fd, buffer, offset, length, position, callback)`. With this method, we'll dablle into details from opening, to operating and closing the file.
 
-### Reading Command-Line Arguments
+To use `fs.read`:
 
-Let's make our program more advanced by taking in a file to watch as a command-line argument. This will introduce the process global object and how node deals with exceptions.
+1. You first need to open the file, and
+2. You must close it with fs.close
 
 ```bash
-const fs = require('fs')
+import fs from 'fs';
 
-
-const filename = process.argv[2];
-
-if(!filename){
-    throw Error('A file to watch must be specified!')
-}
-fs.watch(filename, ()=> {
-    console.log(`File ${filename} changed!`)
+const filename = 'note.txt'
+fs.open(filename, (err, fd)=> {
+  if(err) throw err;
+  fs.fstat(fd, (err, stats)=> {
+    if(err) throw err;
+    const size = stats.size;
+    const buffer = new Buffer.alloc(size);
+    fs.read(fd, buffer, 0, size, 0, (err, data, content)=> {
+      if(err) throw err;
+      fs.close(fd, (err)=> {
+          if(err) throw err;
+          console.log({
+            content: content.toString()
+          })
+        }
+      )
+    })
+  })
 })
-console.log('Now watching ${filename} for changes...');
 ```
 
-### Spawning a child process
+Like it was previously mentioned, `fs.read` is a verbose and low level method that shouldn't be used except you know what are doing. The code above can be rewritten with `fs.readFile` or `fs.createReadStream`. It is less verbose and simple.
 
-Why is it important to spawn a child process?
-Spawning a child is similar to opening up another command-line different from the original one used to run your node. This action is done for you by node so you can run any heavy stuff without blocking your main thread.
+```bash
+// using fs.readFile
+import fs from 'node:fs'
 
-```js
-"use strict";
-const fs = require("fs");
-const { spawn } = require("child_process");
+const filename = 'note.txt'
+fs.readFile(filename, (err, content)=> {
+  if(err) throw err;
+  console.log({
+    content: content.toString()
+  })
+})
+```
+
+```bash
+// using fs.createReadStream
+import fs from 'node:fs'
 
 const filename = process.argv[2];
-
-if (!filename) {
-  throw Error("A file to watch must be specified");
-}
-
-fs.watch(filename, () => {
-  const ls = spawn("ls");
-  ls.stdout.pipe(process.stdout);
-});
+const fsStream = fs.createReadStream(filename);
+fsStream.on('data', data => { console.log(data) });
+fsStream.on('error', err => { throw err })
 ```
 
-## Capturing Data from an EventEmitter
+## Write | Update | Create | Watch
 
-EventEmitter is a very important class in NodeJS. It provides a channel for events to be displatched and listeners to be notified. Many objects you'll encouter in Node.JS inherit from EventEmitter, like the Stream we saw in the last section.
+Similar to how we accomplished the read style, **the simplest and common way to write a file** is to use the `fs.writeFile(path, data, [encoding], (err))` or synchronously with `fs.writeFileSync(filename, [data, ...options])` and there is the stream counterpart with `fs.createWriteStream`. Like `fs.read`, we have `fs.write`. We are going to neglect them in this lesson but you can go learn more about them yourself.
 
-```js
-const fs = require("fs");
-const { spawn } = require("child_process");
+In Node.js, **"updating" a file** can mean many things:
 
-const filename = process.argv[2];
+1. read an existing content, make changes and write it back;
+2. replace ( or overwrite) the entire file ( or content);
+3. or append new content.
 
-if (!filename) {
-  throw Error("A file to watch must be specified");
-}
-fs.watch(filename, () => {
-  const ls = spawn("ls");
-  let output = "";
+To overwrite the entire file, use the `fs.writeFile` method. To append new content to the file, use `fs.appendFile`. And to Read, Modify, Write back, first use the `fs.readFile` to read the content, modify the read content and implement `fs.writeFile` in its callback.
 
-  ls.stdout.on("data", (chunk) => (outout += chunk));
-  console.log([parts[0], parts[4], parts[9]]);
-});
-```
+To create a new file is relatively easier with `fs.writeFile`, if the file do not exist, it will create it for you.
 
+<AsideNote>
 ## Reading and Writing Files Asynchronously
 
 Reading and writing files are fundamental operations in programming.There are two approaches to reading and writing files in Node:
@@ -126,8 +126,7 @@ Reading and writing files are fundamental operations in programming.There are tw
 1. The simplest, to read in or write out the file at once. It is also called Buffered or Synchronous I/O.
 2. The other approach reads and writes by creating Streams or staging content in Buffered Chunks.
 
-### Read/Writing a File all at Once
-
+<LongAside subject="Read/Writing a File all at Once">
 This approach loads the entire file into memory before processing it.
 
 #### How it works
@@ -136,10 +135,8 @@ This approach loads the entire file into memory before processing it.
 2.  The program then works with the complete data
 3.  After doing whatever with the data, the entire file is written back (if modified)
 
-```js
-//read-file-at-once.js
-
-const fs = require("fs");
+```bash
+import fs from "node:fs";
 
 // Reading a file all at once
 fs.readFile("fileName", "utf8", (err, data) => {
@@ -163,5 +160,102 @@ fs.writeFile("fileName", "New Content", (err) => {
 
 #### Cons
 
-- Memory-heavy for large files (can crash the program if the file is too big).
-- Slower for larger files since everything must be loaded before processing.
+<ul>
+  <li>Memory-heavy for large files (can crash the program if the file is too big).</li>
+  <li>Slower for larger files since everything must be loaded before processing. </li>
+</ul>
+</LongAside>
+</AsideNote>
+
+We would dwell a little more on watching a file. In programming, this means monitoring a file for changes. The changes can be in 3 forms: modifications, deletions, or creations.
+
+<LongAside subject="Why would you ever need to watch a file?">
+
+You may be wondering why would you or anyone watch a file.
+But taking action whenever a file changes is useful in a number of ways:
+
+1. Auto-Reloading During Development
+   Restarting a server or refreshing a browser when code changes (e.g., nodemon in Node.js, webpack --watch).
+
+2. Log File Monitoring
+   Like Tracking new entries in log file. If there is a new log, sends an alert or email.
+
+3. Build Automation & CI/CD
+   Triggering rebuilds when source files are modified (e.g., tsc --watch for TypeScript).
+
+</LongAside>
+
+To watch a file in Node , you either use Node's built in `fs.watch` or external libraries like `chokidar`.
+
+Open a terminal to begin. Create a new directory called `filesystem` and navigate into it.
+
+```bash
+$ mkdir filesystem
+$ cd filesystem
+```
+
+Paste the code below. Kindly ensure the "target.txt" file exist in the root directory from which you would be running the program.
+
+```bash
+'use strict';
+const fs = require('fs');
+fs.watch('target.txt', () => console.log('File changed!'));
+console.log('Now watching target.txt for changes...');
+```
+
+🐛🪲 For windows users: You may experience some issues when you make changes to the target.txt file:
+
+1. Multiple "file changed" logs for one change.
+2. It stops responding after the first change.
+
+This bug is expected because of how `fs.watch` behave in this environment. On writing to the file it replaces same file.
+
+Notice how the code above uses **strict mode** and require function. This is common js module unlike ES module that we've been using. The required() function pulls a module and returns it.
+
+Learn more strict mode, const, require
+
+We then progressed to call the fs module's watch() method, which takes a path to a file and a callback function to invoke whenever the file changes.
+
+### Read from command-line arguments
+
+Let's make our program more advanced by taking in a file to watch as a command-line argument. This will introduce the process global object and how node deals with exceptions.
+
+```bash
+const fs = require('fs')
+
+const filename = process.argv[2];
+if(!filename){
+    throw Error('A file to watch must be specified!')
+}
+fs.watch(filename, ()=> {
+    console.log(`File ${filename} changed!`)
+})
+console.log('Now watching ${filename} for changes...');
+```
+
+### Extend our program by spawning a child process
+
+Spawning a child is similar to opening up another command-line different from the original one used to run your node. This action is done for you by node so you can run any heavy stuff without blocking your main thread.
+
+```js
+"use strict";
+const fs = require("fs");
+const { spawn } = require("child_process");
+
+const filename = process.argv[2];
+
+if (!filename) {
+  throw Error("A file to watch must be specified");
+}
+
+fs.watch(filename, () => {
+  const ls = spawn("ls");
+  ls.stdout.pipe(process.stdout);
+});
+```
+
+## References
+
+### Footnotes
+
+1. [LBYL vs EAFP](https://stackoverflow.com/questions/404795/lbyl-vs-eafp=in=java) _Pasted on Tue, Aug 18, 2025._
