@@ -65,7 +65,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For questions, suggestions, or support, please open an issue or contact the maintainer.
+For questions, suggestions, or support, please open an issue.
 
 ---
 
