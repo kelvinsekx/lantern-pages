@@ -11,6 +11,16 @@ To help us cement concepts like async, event loop, process.argv from preceeding 
 
 One of the important targets of read and write operations is the file system. The use of files and file system can be seen everywhere, for instance when you upload files ( images, documents, audios, videos), the server is responsible for processing and storing them and managing their permissions. With how popular tasks like these are, it is only important to thoroughly understand them.
 
+<LessonObjectives
+  contents={[
+    "perform file operations: read, write, update, create, watch, delete, rename, move and copy files/directories",
+    "use streams for reading and writing large files",
+    "apply EAFP and LBYL error handling in file operations",
+    "watch file for changes and understand practical use cases",
+    "spawn child processess for advanced file handling",
+  ]}
+/>
+
 ## Asynchronous and synchronous functions
 
 There are broadly two ways for handling file operations: Async and Sync. Both versions exist out of the box from Node. In version 10+ of Node, they added a promise-based API too. While the Sync versions returns a value, the Async's are handled with callbacks ( or promises).

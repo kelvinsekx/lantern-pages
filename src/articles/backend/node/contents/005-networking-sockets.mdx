@@ -1,19 +1,123 @@
 ---
 title: "Playing with Sockets"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "21/08/2025"
+last_updated_date: "21/08/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-## Listening for sockets connections
+Networks and its systems are what guarantees that information can be shared online irrespective of distance. Much of the information on the internet is accessed using the **client-server model**, where a client requests some info ( short for information) from a server that hosts this info.
 
-### Questions
+Networks facilitate the movement of info from the server to the client. It is the medium through which this amazing process that powers the world happens. The most popular example is that of a web application, where the server generates web pages based on its database in response to a client request. The client-server model is applicable not only on the web, but other areas are IoT ( Internet of things) poised to connect just about every electronic devices we purchase to the internet ( e.g wristwatch, refrigerator).
 
-1. What are networked services?
-2. Network services exist to do two things: connect endpoints and transmit information between them. No matter what kind og information is trasmitted a connection must first be made.
+From this lesson forward, we would dwell more on networks. There are 5 layers of computer networks (Physical, Data Link, Network, Transport, Application). Developers usually spend more time on the last two layers: Transport Layer and Application Layer.
 
+<LessonObjectives
+  contents={[
+    "Highlight the layers of computer networks and their roles",
+    "Differentiate between UDP and TCP, including use cases and tradeoffs",
+    "List protocols built on top of TCP (e.g., HTTP, SMTP, FTP, etc.)",
+    "Build simple servers on TCP, UDP using Node.js",
+    "Explain the concept of sockets and streams",
+    "Use unix sockets and understand their advantages and limitations",
+    "Limit access to sockets and understand security implications",
+  ]}
+/>
+
+## The Transport Layer
+
+This layer is designed to allow peers of source and destination carry conversations ( or messages). Two end-to-end transport protocols are defined in this layer. The first one, TCP (Transmission Control Protocol) and the second, UDP (User Datagram Protocol).
+
+TCP is more reliable and won't allow a message to be delivered if there are errors on any of the machines (source/transporter and destination/receiver). It is the common protocol used to send texts across the internet.
+
+UDP is less reliable. It is used for applications where prompt delivery without necessary accuracy is required e.g live streaming.
+
+## Application Layer
+
+On top of the transport layer, we have the application layer. They are more abstract utilities built from either TCP or UDP. For example http used in communication between web applications and servers is built on top of TCP just like Next.js is built on top of React. Other examples built on either of the TCP and UDP protocols are SMTP, RTP and DNS.
+
+## Networks in Node
+
+**Networks in Node are treated as sockets**, while sockets are nothing more than streams. Node have modules out of the box that caters for several network protocols (HTTP, TCP, UDP).
+
+- `http.createServer()` function allows you to create HTTP servers and clients.
+- `net.createServer()` function from the `net` module used to create a new TCP server
+- `dgram.createSocket()` to create Datagram sockets for receiving and sending messages.
+
+## Unix sockets
+
+The simplest way to experiment with socket is to use a file-based unix socket. The unix sockets are significantly faster than the TCP/IP. They bypass the entire network stack, including the IP addressing, port numbers, and the TCP handshake. This socket can not be used to facilitate communication between two users over a network rather both users must exists on the same machine.
+
+```bash
+import { createServer } from 'net'
+
+const server = createServer(conn => {
+  conn.on('readable', data => {
+    console.log(conn.read().toString());
+  })
+
+  conn.on('end', ()=> {
+    console.log('connection ended');
+  })
+})
+
+server.listen('/tmp/nodess.sock', ()=> {
+  console.log('Server listening on /tmp/nodess.sock');
+})
+```
+
+Unlike a standard network socket (TCP or UDP), which uses an IP address and port number to comuunicate over a network, a Unix socket uses a file system path as its address. For example, in our code we listened on `/tmp/nodess.sock` instead of the typical TCP port number like 3000.
+
+The `net.createServer()` function returns an instance of the `net.Server`. This server object is an EventEmitter, meaning it can emit various events that you can listen to, such as:
+
+- `'connection'`: Emitted when a client successfully connects to the server. The callback function fo this event recieves a `Socket` object that can be used to communicate to the client: read data from it, write data to it.
+- `'error'`: Emitter if an error occurs on the server
+  `'listening'`: Emitter when the server starts listening for connections.
+
+<Nudge text="Difference between a client and server" />
+
+After creating the server, we called the `listen()` method specifying a port number and optionaly a host which tells the sever to start accepting incoming connections on that port.
+
+To communicate with a TCP server, we have to create a TCP client
+
+```bash
+import { connect } from 'net';
+
+const client = connect('/tmp/nodess.sock', ()=> {
+  console.log('connected to the server');
+  client.write('Hello server')
+})
+```
+
+<LongAside subject="Limiting access to the socket">
+
+Why should we limit access to the socket?
+If we do not, what could be possible go wrong?
+Can we do the same to HTTP server?
+
+```bash
+import { createServer } from 'net';
+import { chmod } from 'fs';
+
+const server = createServer(conn => {
+  conn.on('readable', data => {
+    console.log(conn.read().toString())
+  });
+
+  conn.on('end', ()=> {
+    console.log('connection ended')
+  })
+})
+
+server.listen('/tmp/nodess.sock', ()=> {
+  chmod('/tmp/nodess.sock', 0o700, ()=> {
+    console.log('Server listening on /tmp/nodess.sock')
+  })
+})
+```
+
+</LongAside>
 ## Binding a Server to a TCP Port
 
 TCP socket connections consist of two endpoints. One endpoint binds to a numbered port while the other endpoint connects to a port.
@@ -25,17 +129,20 @@ In Node.js, the bind and connect operations are provided by the net module.Bindi
 ```bash
 'use strict';
 
+const PORT = 3001;
+const HOST = 'localhost';
+
 const net =
     require('net'),
     server= net.createServer(connection => {
         // use the connection object to transfer data
     });
 
-server.listen(60300)
+server.listen(PORT, HOST, ()=> {
+  console.log(`TCP server started`)
+})
 ```
 
-## Writing data to a socket
+## Conclusion
 
-Write info to the client using connection.write
-
-## Implementing a Messaging Protocol
+This lesson may feel unusual but remember our goal is for you to learn thoroughly. The earlier you are introduced to networking the better you would be comfortable with harder topics. We would add on this knowledge as you go.

@@ -9,19 +9,27 @@ authors: "kelvinsekx"
 
 This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that complex things sit on. Skipping this phase may pose problems later in the course.
 
-As you progress, don't over concentrate on concepts that feel overly difficult or confusing. We'll have modules or sections where you will usually discuss these concepts.
+Don't overly concentrate on concepts that feel difficult or confusing. We'll have numerous opportunities to discuss these concepts again along in the course.
+
+<LessonObjectives
+  contents={[
+    "use console.log and understand its role in debugging",
+    "read command-line arguments using process.argv",
+    "access environment variables with process.env",
+    "understand the difference between CommonJS and ES6 modules",
+    "understand EAFP and LCYL error handling styles",
+  ]}
+/>
 
 ## Console.log out
 
-`console.log` in node is a web syntatic wrapper. It is a convenience for doing `process.stdout.write`.
+`console.log` in node is a web syntatic wrapper. It is a convenience alternative to `process.stdout.write`.
 
-Node console is a global instance configured to write to process.stdout and process.stderr. Because of this, it can be used without calling `require('node:console')`.
-
-Console.log can be used for debugging and display something to the user or drop in place use for process.stdout.
+Node console is a global instance configured to write to process.stdout and process.stderr. Because of this, it can be used without calling `require('node:console')`. Console.log can be used for debugging or display something to the user.
 
 <AsideNote>
-  If process.stdout, process.stderr confuse you, don't mind it. You will see
-  more of it and with lengthier explanation later.
+  {`If process.stdout, process.stderr confuse you, don't mind it. You will see
+  more of it and with lengthier explanation later.`}
 </AsideNote>
 
 Let's run some examples in the REPL.
@@ -41,9 +49,7 @@ In subsequent examples and the rest of the course, I will skip these terminal de
 console.log("kelvin") // kelvin
 ```
 
-## Command arguments and environment variables
-
-### Command arguments with `process.argv`
+## Command arguments with `process.argv`
 
 A Node program can read its command-line arguments from process.argv.
 Process.argv is an array that contains the command-line arguments passed when the Node.js process was launched. The first element of this array is always the path to the Node executable, followed by whatever follows your node command.
@@ -111,7 +117,7 @@ $ node argv1.js
 
 </LongAside>
 
-### Environment variables with `process.env`
+## Environment variables with `process.env`
 
 Node programs can also take input from Unix-style environment variables. These variables are available through **process.env**.
 
