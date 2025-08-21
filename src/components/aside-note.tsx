@@ -7,9 +7,9 @@ export const AsideNote = ({
 }) => {
   console.log(children);
   return (
-    <section role="note" className="bg-red-50/30 p-3 space-y-0">
+    <section role="note" className="bg-red-50/30 p-2.5 space-y-0">
       {note && (
-        <header className="text-base md:text-lg font-semibold text-[#a3427b]">
+        <header className="text-base md:text-lg font-semibold text-[#a3427b] py-1">
           {note}
         </header>
       )}
