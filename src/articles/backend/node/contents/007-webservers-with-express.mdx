@@ -9,11 +9,24 @@ authors: "kelvinsekx"
 
 The most popular Node.js web framework is Express.js. It is intended for the development of web applications and APIs. Virtually all the popular meta-frameworks and solutions are built on Express like Nest, Next, Nuxt etc.
 
-Express saves developers time and empower them to work on what truly matters. It can be time-consuming to create a backend from scratch using node's `createServer` utilities only. Writing all the boilerplate code from port configuration, route handling etc distracts from the important task of focus on the business logic for an application.
+Express saves developers time and empower them to work on what truly matters. It can be time-consuming to create a backend from scratch using node's `HTTP.createServer()` utilities only. Writing all the boilerplate code from port configuration, route handling etc distracts from the important task of focus on the business logic for an application.
 
 ## Create your first program
 
-The following program will listen on port 2999 when ran. The application will responde to any client request on port:2999 irrespective of the HTTP request type. If you make a HTTP POST or HTTP GET request, the response will print "Hi, our request has been received".
+To create your first express program:
+
+- Find an empty directory ( or folder). Directories would usually have a name so call this `"express-bac001"`
+- initiate the directory as an npm module and install the express package.
+  You can do `npm init -y` before running `npm i express`. But with npm v5+, `npm i express` initiates the directory before installing the express package locally to your desired folder. So can skip initiating with `npm init -y`.
+
+<Nudge text="Global NPM package install or Local installation" />
+
+### Paste the code below
+
+The following program will listen on port 2999 when ran. The application
+will responde to any client request on port:2999 irrespective of the HTTP
+request type. If you make a HTTP POST or HTTP GET request, the response will
+print "Hi, our request has been received".
 
 ```bash
 import express from "express";
@@ -37,9 +50,11 @@ $: curl -X GET localhost:2999 // HTTP GET
 $: curl -X POST localhost:2999 // HTTP POST
 ```
 
+<Nudge text="Why use CURL or POSTMAN?" />
+
 ## Routes
 
-Routes are one of the most important building block in Express. It consist of the application request **HTTP type**, **URL** and **accompanied route handler**. When a route is matched, **one or more** handler functions for that route are called.
+Routes are one of the most important building block in Express. It consist of the application request **HTTP type**, **URL** and **accompanied route handler ( typically consisdered the controller)**. When a route is matched, **one or more** handler functions for that route are called.
 
 In short, routing involves how the server respond to different requests (URI paths) made by clients.
 
@@ -48,11 +63,9 @@ In short, routing involves how the server respond to different requests (URI pat
 app.get('/login', handleLogin)
 ```
 
-**The HTTP type** can be HTTP GET, HTTP POST, HTTP PUT, HTTP DELETE. Learn more about HTTP methods.
+<Nudge text="Learn more about HTTP methods" />
 
-**The URL path** is the endpoint that should be matched.
-
-**The accompanied handler** is specified by the method as callback that is called when it detects a match from the client's request.
+**The HTTP type** can be HTTP GET, HTTP POST, HTTP PUT, HTTP DELETE. **The URL path** is the endpoint that should be matched. **The accompanied handler** is specified by the method as callback that is called when it detects a match from the client's request.
 
 We can now extend our previous example to do more with express routes.
 
@@ -74,22 +87,6 @@ curl -X POST localhost:2999 // HTTP POST will throw error
 ```
 
 This is because we have changed the route to only accept HTTP GET and not just any method. A route path can take multiple HTTP methods. Learn more about routing here.
-
-## NotFound
-
-We can change our NotFound handler to send a text and not an html response like it is doing.
-
-```bash
-import express from "express"
-
-const app = express()
-
-app.get('/', (req, res)=> res.send("Hi, your request has been received"))
-app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
-app.use((req, res)=> res.send("Oops! Not Found"))
-
-app.listen(2999, ()=> console.log("App started on 2999"))
-```
 
 ## Middlewares
 
@@ -218,6 +215,22 @@ function logger(req, res, next){
   console.log(req.originalUrl, '--', new Date())
   next()
 }
+```
+
+## NotFound
+
+We can change our NotFound handler to send a text and not an html response like it is doing.
+
+```bash
+import express from "express"
+
+const app = express()
+
+app.get('/', (req, res)=> res.send("Hi, your request has been received"))
+app.get('/welcome', (req, res)=> res.send("<h1>Hello to Welcome</h1>"))
+app.use((req, res)=> res.send("Oops! Not Found"))
+
+app.listen(2999, ()=> console.log("App started on 2999"))
 ```
 
 ## Conclusion
