@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Footer } from "@/components/footer";
-import { NavigationTop } from "@/components/nav";
 import { Plus } from "lucide-react";
 import { cn } from "@/utilities/cn";
 import Link from "next/link";
@@ -11,7 +10,6 @@ const { useState, useRef, useEffect } = React;
 export default function Home() {
   return (
     <div>
-      <NavigationTop />
       <Home.Main />
       <Footer />
     </div>

@@ -22,18 +22,18 @@ export const Footer = () => {
                   <LinkGroupSubTitle>Backend development</LinkGroupSubTitle>
                   <ul>
                     <li>
-                      <GroupLinkItem href="/learn/backend">Node</GroupLinkItem>
+                      <LinkGroupItem href="/learn/backend">Node</LinkGroupItem>
                     </li>
                   </ul>
                 </LinkGroup>
 
                 <div>
-                  <GroupLinkItem>Product management</GroupLinkItem>
+                  <LinkGroupItem>Product management</LinkGroupItem>
                 </div>
 
                 <LinkGroup>
                   <LinkGroupSubTitle>Languages</LinkGroupSubTitle>
-                  <GroupLinkItem>Itsekiri</GroupLinkItem>
+                  <LinkGroupItem>Itsekiri</LinkGroupItem>
                 </LinkGroup>
               </div>
             </>
@@ -44,10 +44,12 @@ export const Footer = () => {
               <LinkGroupTitle>Education</LinkGroupTitle>
               <ul>
                 <li>
-                  <GroupLinkItem>Mathematics</GroupLinkItem>
+                  <LinkGroupItem>Mathematics</LinkGroupItem>
                 </li>
                 <li>
-                  <GroupLinkItem>Unilag, economics edu</GroupLinkItem>
+                  <LinkGroupItem href="/edu">
+                    Unilag, economics edu
+                  </LinkGroupItem>
                 </li>
               </ul>
             </>
@@ -58,10 +60,10 @@ export const Footer = () => {
               <LinkGroupTitle>Others</LinkGroupTitle>
               <ul>
                 <li>
-                  <GroupLinkItem>Lantern roadmap</GroupLinkItem>
+                  <LinkGroupItem>Lantern roadmap</LinkGroupItem>
                 </li>
                 <li>
-                  <GroupLinkItem>Premium subscriptions</GroupLinkItem>
+                  <LinkGroupItem>Premium subscriptions</LinkGroupItem>
                 </li>
               </ul>
             </>
@@ -99,7 +101,7 @@ const LinkGroupSubTitle = ({
   </header>
 );
 
-const GroupLinkItem = ({
+const LinkGroupItem = ({
   children,
   href = "/",
 }: React.ComponentPropsWithoutRef<"a">) => (

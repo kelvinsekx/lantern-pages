@@ -7,33 +7,51 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Nest brings architecture to your app. While express doesn't enforce structure or architecture for designing your backend code, Nest does. It is a meta-framework built on top of Express. It is specially designed to aid large scale applications and large teams.
+Nest brings architecture to your app. While express doesn't enforce structure or architecture for designing your backend code, Nest does. It is a meta-framework built on top of Express. It is specially designed to aid large scale applications and large teams. Most Cos building webserver with Node use it.
 
-In this lesson, you'll be introduced to Nest and create a simple application similar to that we implemented in Node and Express lessons.
+In this lesson, you'll be introduced to Nest and replicate the application with Node and Express from previous lessons.
 
 ## Create your first program
 
-1. Install nest CLI `npm install -g @nestjs/cli`
+1. Install nest CLI `$ npm install -g @nestjs/cli`
+   - `$ nest --help` to get an overview of the available options on the command line.
+   - `$ nest -v` shows the current version
 2. After installation nest command will be available to use from the terminal.
-   1. create new application with `$ nest new <name>`
-      a. initialization process
-   2. start the application
+   - create new application with `$ nest new project-name`
+   - start the application with `$ npm run start:dev`
+
+| command                   | short form | description                   |
+| ------------------------- | ---------- | ----------------------------- |
+| nest new [options] [name] |            | create a new nest application |
+
+Luckily, Nest is compatible with both Typescript and pure JavaScript
 
 <LongAside subject="What is happening in console output">
   In the console output... If the application is extended, this is the place to
   start troubleshooting your application.
 </LongAside>
 
-3. binded PORT and customizing the PORT
-4. nest --help, to get an overview of the available options on the command line.
-5. nest -v, shows the current version
-
-| command                   | short form | description                   |
-| ------------------------- | ---------- | ----------------------------- |
-| nest new [options] [name] |            | create a new nest application |
-
 ## Routes
 
-## controller
+The controller is solely responsible to handle routes in Nest. The `@controller()` decorator is used in this file. passing a path prefix can auto segment the entire controller file for you.
+
+Core files in Nest app
+
+| file                   | use                                                                           |
+| ---------------------- | ----------------------------------------------------------------------------- |
+| app.controller.ts      | A controller with a single route                                              |
+| app.controller.spec.ts | where unit tests for the app.controller.ts program resides                    |
+| app.module.ts          | the root module of the application                                            |
+| main.ts                | uses NestFactory with the root module to create an instanceof the Nest js App |
+
+### Controller
+
+Controllers are responsible for handling requests and sending their respective responses to the client.
+
+To create CRUD controller `nest g resource [name]`
+
+HTTP request method decorators
+
+The route path for a handler is determined by combining the (optional) prefix declared for the controller with any path specified in the method's decorator.
 
 ### Services
