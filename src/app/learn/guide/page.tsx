@@ -51,7 +51,7 @@ export default function GuidePage() {
         <ul className="list-disc ml-6 mt-2 space-y-1">
           <li>
             <strong>Backend Teaching Cohort:</strong> Small group, 3 semesters
-            (5 weeks per semester), $100 per semester. Includes access to a
+            (4 weeks per semester), $150 per semester. Includes access to a
             private forum and direct mentorship.
           </li>
           <li>
