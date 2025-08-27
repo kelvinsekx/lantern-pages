@@ -2,7 +2,6 @@ import cuid2 from "@paralleldrive/cuid2";
 import { LibraryBig, LinkIcon } from "lucide-react";
 
 import syllabus from "./syllabus.json";
-import { NavigationTop } from "@/components/nav";
 import { getBlogPosts } from "@/utilities/mdx-utils";
 import Link from "next/link";
 
@@ -35,7 +34,6 @@ export default async function ListSyllabusPage() {
   });
   return (
     <div>
-      <NavigationTop />
       <div className="sekx__banner bg-green flex flex-col md:flex-row justify-between gap-y-10 py-10 px-4 md:p-10 lg:p-20">
         <div className="space-y-5 text-[#fff] tracking-tight md:max-w-2/3">
           <div>
