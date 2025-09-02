@@ -1,0 +1,211 @@
+---
+title: "Webserver with Nest"
+description: ""
+published_date: "17/07/2025"
+last_updated_date: "30/08/2025"
+syllabus_code: "BAC001"
+authors: "kelvinsekx"
+---
+
+Nest.js, also referred as Nest, is an HTTP web meta-framework built on top of Express the same way Express is built on top of Node. Unlike Express, Nest enforces an architecture for your backend code so that it can scale.
+
+In this lesson, you'll be introduced to Nest.js. We'll replicate [the application with Express from previous lesson along](/learn/backend/node/007-webservers-with-express).
+
+## Create your first program
+
+To create your first program
+
+1. Install nest CLI `$ npm install -g @nestjs/cli`.
+
+   - on successful installation run `$ nest -v` to show the current version. If you see a number then we can assume everything is working fine and `nest` is now available globally.
+
+2. Create new application with `$ nest new project-name`.
+
+   - you'll be asked to choose a package manager. I use NPM, in the same way either Yarn or Pnpm can be used.
+   - on successful completion, change directory to `project-name`, start the application with `$ npm run start:dev`.
+
+3. Go to your browser. Visit `localhost:3000` where you should see an "Hello World!" on screen.
+
+<LongAside subject="Customize port:3000 if it is in use">
+  On some rare cases, you may want to customize the default port for reasons
+  like port:3000 been used by another program. Go to the `main.ts` file in the
+  src drectory. Change the port from there.
+</LongAside>
+
+## Routing and request handling
+
+Routes and request handling are solely handled in the controller layer in Nest. Nest.js routes request to the request handler function that must be defined in a class marked as a controller.
+
+**To mark a class as a controller**, the `@controller()` decorator must be applied to a defined class, and this class must be exported to be accessible for registration in the Nest module. Lets take the "app.controller.ts" file in the src folder of your new "project-name" app.
+
+Remove the getHello method so that it looks exactly like the code below
+
+```bash
+// src/app.controller.ts
+import { Controller } from '@nestjs/common';
+
+@Controller() // controller applied to a defined class AppController
+export class AppController {
+
+}
+```
+
+The `@controller()` decorator takes an optional path prefix. This establishes a **base path** for all routes defined within that controller. If a controller takes a prefix of _'/api'_ `@controller('/api')`, it would prepend its **handler routes** with the _'/api'_ so that route handler defined with '/users' would be addressable as _'/api/users'_.
+
+### Route handlers
+
+**To create a route handler**, we use the HTTP decorators applied to a method in the controller class. Nest has a number of HTTP decorators like `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`, `@Options()`, and
+`@Head()`, used to create **handler routes** with matching HTTP methods.
+
+```bash
+import { Controller, Get } from '@nestjs/common';
+
+@Controller()
+export class AppController {
+   @Get() // defines a handler routes
+   findAll(): string{
+      return 'this action returns all items'
+   }
+}
+```
+
+### Sending Responses
+
+A route handler is not useful unless it sends a response to a matching request. To send a response, simple return your preferred value in the method applied with the HTTP decorator. Nest will auto serialize these values into a valid JSON and wrap it in a response body for you.
+
+```bash
+
+   @Get() // defines a route handler
+   findAll(){
+      // return 'this returns all items'
+      // return ['biscuit', 'milk']
+      /* return {
+      *     items: ['biscuit', 'milk']
+      *  }
+      */
+   }
+```
+
+<LongAside subject="Express option for sending responses">
+  An alternate approach to generating responses in Nest.js is to use Express
+  response object directly. Nest.js would inject a response object into a
+  handler method using the @Res() decorator.
+
+```bash
+import { Controller, Get, Res } from '@nestjs/common';
+import { Response } from 'express'
+
+@Controller()
+export class AppController {
+   @Get() // defines a route handler
+   findAll(@Res() res: Response){
+      return res.status(200).json(['kelvin', 'Adeyanju'])
+   }
+}
+```
+
+</LongAside>
+
+<AsideNote>
+  However, instead of writing controllers by hand, Nest.js devs rely on the
+  wand, nest/cli, to create these things. Create a new controller with `$ nest
+  generate controller notes`.
+
+| file                    | use                                       |
+| ----------------------- | ----------------------------------------- |
+| note.controller.ts      | A controller with a single route          |
+| note.controller.spec.ts | unit tests for the accompanied controller |
+
+</AsideNote>
+
+## Route parameters and request body
+
+The controller base route and http decorator routes combines to form the URL path. This path sometime takes a route parameter. All the route parameters in a path can then be accessed with the `@Param()` decorator function applied to a variable.
+
+In the example below, `@Param('item')` decorator is applied to the `item` variable: `@Param('item') item`. We added some typescript to type the item as a string with `{item: string}` so we now have `@Param('item') item: {item: string}`.
+
+```bash
+import { Controller, Get } from '@nestjs/common';
+import { Response } from 'express'
+
+@Controller()
+export class AppController {
+   @Get(":item") // defines a route handler
+   findItem(@Param('item') item: { item: string }){
+      return ['biscuit', item]
+   }
+}
+```
+
+You can send a Post request and have access to the request.body using the `@Body()` decorator.
+
+```bash
+
+   private items = ['biscuit', 'milk'];
+
+   @Get() // defines a route handler
+   findAll(){
+      return this.items
+   }
+
+   @Get(":item") // defines a route handler
+   findItem(@Param('item') item: { item: string }){
+      return this.items.filter(n => n == item)
+   }
+
+   @Post()
+   addNewItem(@Body() body: { item: string }){
+      this.items.push(item)
+      return this.items
+   }
+
+```
+
+## Separate business logic in services
+
+To promote separation of concerns, we ensure the controller does one thing and does it well: match HTTP requests with handlers. From our previous examples, we situated the logic in the controller. Let's change this so that the handler function simple points to a service function.
+
+Request -> Controller -> Service
+
+**To mark a class as a service**, the `@Injectable()` decorator must be applied to a defined class, and this class must be exported to be accessible in Nest module to be register as a **provider**.
+
+<AsideNote>
+  In Nest.js, the terms "provider" and "service" are often used interchangeably
+  but they refer to sightly different concepts. For example the AppService is
+  registered in the Nest module as a provider and not a service. By using the
+  term "service", we're emphasizing the role of the class in providing a
+  specific functionalitiy or service to the application rather than just its
+  technical implementation as a provider.
+  <LongAside subject="Provider">
+    A provider is a class that is registered in the Nest.js dependency injection
+    container and can be injected into other components.
+  </LongAside>
+  <br />
+  <LongAside subject="Service">
+    A service is a specific type of provider that encapsulates business logic
+    that is used by controllers. Services are providers but not all providers
+    are services. Providers can be Services, Repositories, Factories, Guards,
+    Interceptors
+  </LongAside>
+</AsideNote>
+
+Take the "app.service.ts" file in the src folder of your new "project-name" app. Remove the getHello method so that it looks exactly like the code below:
+
+```bash
+// A valid controller
+import { Injectable } from '@nestjs/common';
+
+@Injectable() // controller applied to a defined class AppController
+export class AppService {
+
+}
+```
+
+<LongAside subject="What is happening in console output">
+  In the console output... If the application is extended, this is the place to
+  start troubleshooting your application.
+</LongAside>
+
+## Conclusion
+
+You've reached the end of the first phase, a fit many struggle to beat. Don't stop now.
