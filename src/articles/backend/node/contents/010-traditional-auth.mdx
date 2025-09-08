@@ -1,5 +1,5 @@
 ---
-title: "Traditional Auth"
+title: "Traditional Stateless Auth"
 description: ""
 published_date: ""
 last_updated_date: ""
@@ -7,4 +7,143 @@ syllabus_code: "BAC003"
 authors: "kelvinsekx"
 ---
 
-## Traditional Auth
+Authentication management is built around sessions and tokens assigned to credible users who have verified to be indeed behind a client. The management of these activities can be done as Stateful or Stateless.
+
+Stateful Auth uses session IDs and a centralized store ( like database table) on the server to track and maintain users crediblity. With Stateless, the management resides on the client. In this lesson, you'll learn the step by step thoughts with authentication favouring Stateless along the way. This approach is popular in modern web applications and APIs because it's scalable and doesn't require a centralized session store.
+
+When making an action on the backend, deciding on the appropriate HTTP method is one of the very first question to answer. We'll start our discuss from this first step next.
+
+## HTTP Method for Auth
+
+Sensitive requests such as collecting user credentials for auth are safer on the POST HTTP method instead of GET HTTP. The GET request is easily exposed over the URL.
+
+However, being a POST request is not enough, the request must be tunneled through HTTPS using SSL/TL. If a domain is not secure with HTTPS, the resources transmitted between this domain and the server are in plain text that third parties like the government can easily read. **Using a POST HTTPS Request ( instead of the one with HTTP) guarantees that the conversation between the client and the server is encrypted** which adds layer of difficulty for anyone who is trying to peep.
+
+<AsideNote>
+  {`The examples in this lessons are written in Express and not bear Node`}
+</AsideNote>
+
+```bash
+app.post('/signup', (req, res)=> {
+
+})
+```
+
+Now that we know the POST HTTP method is the preferred choice for auth actions, we would proceed to implementing our preferred uthentication method with password and username.
+
+## Authentication with plain password
+
+The user sends their password and username ( combinely called credentials) on the first sign up request. These credentials are stored in a centralized place, usually a database. To keep our examples simple, array will be used throughout this lesson instead.
+
+```bash
+const DATABASE = Array(
+    { username: 'johndoe', password: 'password123' }
+)
+
+app.post('/signup', (req, res)=> {
+    const credential = req.body;
+    DATABASE.push(credential)
+})
+```
+
+From the example code above, you can see our password been saved as plain text.
+
+Saving passwords as plain text posses new problems:
+
+1.  **Unathorized access**:
+    If an attacker gains access to the database, they can obtain all passwords and use them to access other user accounts.
+
+2.  **Data breaches**:
+    In the event than an attacker finds this user's username and password. They can use it to get access to "johndoe's" resources when they are indeed not them. It results to indentity theft, financial loss or other malicious activities.
+
+To reduce the risks with exposing user passwords, it's essential to save them as hashed texts as against plain texts. When a new user is created or they change their password, the plain text password is run through a hashing function that changes them to a long random-looking string.
+
+## Authentication with hashed password
+
+```bash
+import crpto from 'crypto;'
+
+const DATABASE = Array(
+    {
+        username: 'kelvinsekx',
+        password: 'ef92b778bafd56oaa6yh31n777ghyuu...'
+    }
+)
+
+// hash function
+const hashFn = (text)=> crpto.createHash('sha256').update(text).digest('hex')
+
+app.post('/signup', (req, res)=> {
+    const credential = req.body;
+    const hashedPassword = hashFn(credential.password)
+    DATABASE.push({
+        username: credential.password,
+        password: hashedPassword
+    })
+    return res.send({
+        message: 'success',
+        data: true
+    })
+})
+```
+
+**Hash functions are one-way functions**. You can not undo them except you brute-force i.e put multiple plain text to see which one would give you a similar hash. So nope there are no functions to undo a hash.
+
+While things might look fine now, we have another problem: the hashing mechanism used in example for `Authentication with plain password` is fast to generate. They are good for integrity checks but not safe enough for password storage. To further limit the possibility of a Brute-force attack, we need hash generation that takes more time.
+
+<Nudge text="What does it mean when we say a hash is fast to generate in a layman example" />
+
+## Authentication with a slower hashing algorithm
+
+To make it less easier to brute force passwords, there are more time consuming algorithm than `sha256`.
+
+Add a salt ( a random string added to each password) when generating the hash string so that figuring the hash method is not enough to figure a password hash. Attackers have networks too, network of previously hashed strings and their hashes and the hash algorithm. We call this network of tables or databases, **Rainbow table**.
+
+Why salts exist
+
+- Makes each users' hash unique even if they use the same password
+- stops attackers from using precomputed rainbow tables
+- forces attackers to brute force password, not once for all.
+
+```bash
+import crpto from 'crypto;'
+
+const DATABASE = Array(
+    {
+        username: 'kelvinsekx',
+        password: 'ef92b778bafd56oaa6yh31n777ghyuu...',
+        salt: 'some-salt-v'
+    }
+)
+
+app.post('/signup', (req, res)=> {
+    const credential = req.body;
+    let hashedPassword = '', salt=''
+
+    salt = genSalt();
+    crpto.scrypt(credential.password, salt, 64, (err, derivedKey)=> {
+        hashedPassword = derivedKey;
+    })
+    DATABASE.push({
+        username: credential.password,
+        password: hashedPassword',
+        salt: salt
+    })
+
+    return res.send({
+        message: 'success',
+        data: true
+    })
+})
+```
+
+<AsideNote>
+  {` Because hashes are one way generated, don't be bothered if the salt is exposed
+  in the DB table.`}
+</AsideNote>
+
+Now that we have discussed how to go about signup, let's discuss login. After we know who a user is, we want to remember them until they explicitly logout or the duration we remember them for expires.
+
+## Conclusion
+
+Security is a serious business. Understanding every step of the way to building different layers of security and the reason can be empowering. If you do not take it seriously someone else would claim who they are not completely undermining the resource, time and money that has been put into your backendsystem and effort to earn a user. But hopefully from this lesson, you have learned enough to tackle this.
