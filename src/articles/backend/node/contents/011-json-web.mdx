@@ -1,0 +1,177 @@
+---
+title: "Stateless Token Based Authentication"
+description: ""
+published_date: ""
+last_updated_date: ""
+syllabus_code: "BAC003"
+authors: "kelvinsekx"
+---
+
+After storing a user's passport, they would usually want to access resources peculiar to them. We manage can manage this with a session or token upon login.
+
+What we do with login is to confirm teh user credential by asking them for their password and username. we then search our user's database table for this user, if user exist, we retreive their salt and hashed password. This also must happen over the POST HTTP Method.
+
+We retrive the plain text password, hash it and check it against the hash from the table. But we do not stop here as we have to issue a token. A token is a fancy name for a unique key the server gives a user after successfuly login. This saves them the stress of sending their password and username on every request to a gated resources. It is usually temporary. Tokens are of two communicated to the client as Cookies or bearer token to be stored in the localstorage.
+
+If your client is entirely a web app, then using a Cookie is fine, but if the API is intended to be used by mobile apps too, JWT is a better alternative because the mobile app can not handle cookies as well as the web does.
+
+In this example, let's do some auth with cookies.
+
+The cookies/JWT are access tokens that can be used to make a secure API calls when a client application needs to access a protected resources on behalf of a user.
+
+The access token signals to the server that the client is authorized by the user to perform certain tasks, or access certain resources. Access token is a bearer token meaning anyone with the token can use them.
+
+```bash
+import crpto from 'crypto;'
+
+// An hypothetical place where we save users credentials
+const DATABASE = Array(
+    {
+        username: 'kelvinsekx',
+        password: 'xx12dER121...',
+        salt : 'yySuAoiLdfgT...'
+    }
+)
+
+app.post('/login', (req, res)=> {
+    const credential = req.body;
+    const user = DATABASE.get(credential.username);
+
+    if(!user) {
+        res.status(400).send({message: 'user do not exist'})
+        return;
+    }
+
+    const isMatch = false;
+
+    // compare passwords
+    crpto.scrypt(credential.password, user.salt, 64, (err, derivedKey)=> {
+        isMatch = user.password == derivedKey;
+    })
+
+    if(!isMatch) {
+        res.status(400).send({message: "username and password incorrect"});
+        return;
+    }
+
+    res.cookie('cookie-name', 'token', {
+        httpOnly: true,secure: true,
+        sameSite: true,
+        maxAge: 1000 * 60 * 60
+    })
+
+    res.status(200).send({
+        message: 'Login successfully',
+        data: true
+    })
+})
+```
+
+After one hour, the browser will automatically delete the cookie. When the user makes another request, the cookie will no longer be present in the request headers.
+
+For JWT,
+
+```bash
+import crpto from 'crypto;'
+
+...
+
+    if(!isMatch) {
+        res.status(400).send({message: "username and password incorrect"});
+        return;
+    }
+
+   const payload = {username};
+   const token = jwt.sign(payload, secret, {expires: "1h"})
+
+    res.status(200).send({
+        message: 'Login successfully',
+        data: token
+    })
+})
+```
+
+Now that we know how to login a user, did you notice both the JWT and Cookie has expiry property ( called maxAge in cookies). Given that any maicious user could have access to a bearer token, we tend to make the expiry property short. This leads to our next uqestion, what happends when the JWT or Cookie expires?
+
+## What happens when JWT or Cookie expires
+
+The traditional thought would be to logout the user and make them manually login again. Also how do we know when a user is not logged in?
+
+```bash
+function authenticateToken(req, res, next){
+    const token = req.cookies?.cookie-name
+
+    if(!token) return res.status(401).json({message: 'Not logged in'});
+
+    jwt.verify(token, SECRET_KEY, (err, user)=> {
+        if(err) return res.status(403).json({message: 'invalid or expired token'});
+
+        req.user = user;
+        next()
+    })
+
+}
+```
+
+let's create some hypothetical routes that requires auth and do not. After a user is signed up and can login, they would usually try access a route that isn't accessible except we can confirm their status.
+
+```bash
+ app.get('/protected', authenticatedToken, (req, res)=>{
+    res.status(200).json({message: 'welcome to your protected route'});
+ })
+
+ app.get('/non-protected', (req, res)=>{
+    res.status(200).json({message: 'welcome to an unprotected route'});
+ })
+```
+
+Now we have a problem, we do not want our token to be available for long. Do we make the user login again after the session expires? And that is where a Refresh Token comes in. If you sign in and wait for 10 mins, and try visit thte protect route, you would get a 402 Error Code.
+
+<Nudge text="ID Tokens vs Refresh Tokens vs Access Tokens" />
+
+```bash
+app.post('/login', (req, res)=> {
+const credential = req.body;
+const user = DATABASE.get(credential.username);
+
+    if(!user) {
+        res.status(400).send({message: 'user do not exist'})
+        return;
+    }
+
+    const isMatch = false;
+
+    // compare passwords
+    crpto.scrypt(credential.password, user.salt, 64, (err, derivedKey)=> {
+        isMatch = user.password == derivedKey;
+    })
+
+    if(!isMatch) {
+        res.status(400).send({message: "username and password incorrect"});
+        return;
+    }
+
+    res.cookie('cookie-name', 'token', {
+        httpOnly: true,secure: true,
+        sameSite: true,
+        maxAge: 1000 * 60 * 60
+    })
+
+    res.cookie('refresh-token', 'Refreshtoken', {
+        httpOnly: true,secure: true,
+        sameSite: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7 // maxAge is 7 days
+    })
+
+    res.status(200).send({
+        message: 'Login successfully',
+        data: true
+    })
+
+})
+
+```
+
+With this after the token expires, we can use a valid refresh token to give another token to the user.
+
+And now we hit a rock because if a malicios person now have access to the refresh token, they would be able to get new token just like if they had the token anyways. So one way to tackle this is with Refresh Token Rotation. After the token expires and the authorized user seeks another token, we send them both a token and a refresh token. This invalidate old refresh token wile issueing a new one.
