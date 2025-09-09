@@ -5,15 +5,16 @@
     "code": "BAC001"
   },
   {
-    "title": "Database persistency (relational & non-relational)",
-    "description": "Learn to persist data over http",
-    "code": "BAC002"
-  },
-  {
     "title": "Authentication (custom, social logins)",
     "description": "Implement secure user authentication methods",
     "code": "BAC003"
   },
+  {
+    "title": "Database persistency (relational & non-relational)",
+    "description": "Learn to persist data over http",
+    "code": "BAC002"
+  },
+
   {
     "title": "Hosting (cdn, https, domains, networking)",
     "description": "Learn how to deploy and host your backend services",
