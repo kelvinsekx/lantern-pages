@@ -1,23 +1,21 @@
 ---
-title: "Traditional Stateless Auth"
+title: "Traditional Auth"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "10/09/2025"
+last_updated_date: "10/09/2025"
 syllabus_code: "BAC003"
 authors: "kelvinsekx"
 ---
 
-Authentication management is built around sessions and tokens assigned to credible users who have verified to be indeed behind a client. The management of these activities can be done as Stateful or Stateless.
+Authentication management is built around sessions and tokens assigned to registered users who have verified to be behind a client. In this lesson, our focus would be on the processes and standards of registering a user.
 
-Stateful Auth uses session IDs and a centralized store ( like database table) on the server to track and maintain users crediblity. With Stateless, the management resides on the client. In this lesson, you'll learn the step by step thoughts with authentication favouring Stateless along the way. This approach is popular in modern web applications and APIs because it's scalable and doesn't require a centralized session store.
-
-When making an action on the backend, deciding on the appropriate HTTP method is one of the very first question to answer. We'll start our discuss from this first step next.
+When making an action on the backend, deciding on the appropriate HTTP method is one of the very first question to answer. We'll start ours too from this first step.
 
 ## HTTP Method for Auth
 
-Sensitive requests such as collecting user credentials for auth are safer on the POST HTTP method instead of GET HTTP. The GET request is easily exposed over the URL.
+Sensitive requests such as collecting user credentials to be stored ( or registered) are safer on the POST HTTP method instead of GET HTTP. The GET Request is easily exposed over the URL.
 
-However, being a POST request is not enough, the request must be tunneled through HTTPS using SSL/TL. If a domain is not secure with HTTPS, the resources transmitted between this domain and the server are in plain text that third parties like the government can easily read. **Using a POST HTTPS Request ( instead of the one with HTTP) guarantees that the conversation between the client and the server is encrypted** which adds layer of difficulty for anyone who is trying to peep.
+However, being a POST Request is not enough. The request must be tunneled through HTTPS ( not HTTP) using SSL/TL. If a domain is not secure with HTTPS, the resources transmitted between this domain and the server are in plain texts that third parties like the government can easily read. **Using a POST HTTPS Request ( instead of the one with HTTP without the "S") guarantees that the conversation between the client and the server is encrypted**, this adds extra layer of difficulty for anyone trying to peep.
 
 <AsideNote>
   {`The examples in this lessons are written in Express and not bear Node`}
@@ -25,11 +23,16 @@ However, being a POST request is not enough, the request must be tunneled throug
 
 ```bash
 app.post('/signup', (req, res)=> {
-
+       res.send("signed up\n")
 })
 ```
 
-Now that we know the POST HTTP method is the preferred choice for auth actions, we would proceed to implementing our preferred uthentication method with password and username.
+Now that we know the POST HTTP method is the preferred choice for auth actions, we'll proceed to implementing our preferred authentication method with password and username.
+
+<LongAside subject="Run example in curl">
+  Run `curl -X POST localhost:3003/signup` in a terminal environment where Curl
+  is installed. Curl is auto installed in a linux environment.
+</LongAside>
 
 ## Authentication with plain password
 
@@ -37,103 +40,99 @@ The user sends their password and username ( combinely called credentials) on th
 
 ```bash
 const DATABASE = Array(
-    { username: 'johndoe', password: 'password123' }
+    {
+        username: 'johndoe',
+        password: 'password123'
+    }
 )
 
 app.post('/signup', (req, res)=> {
     const credential = req.body;
-    DATABASE.push(credential)
+    DATABASE.push(credential);
+    res.status(201).json(DATABASE.find(r => r.username == credential.username))
 })
 ```
 
-From the example code above, you can see our password been saved as plain text.
+<LongAside subject="Run example in curl">
+`curl -X POST localhost:3003/signup -H "Content-Type: application/json" -d '{"username": "Janedoe", "password": "janepassword"}'`
+</LongAside>
+
+From the example above, you should see our password been saved as plain text.
 
 Saving passwords as plain text posses new problems:
 
 1.  **Unathorized access**:
-    If an attacker gains access to the database, they can obtain all passwords and use them to access other user accounts.
+    If attackers gain access to the database, they can obtain all passwords and use them to access other user accounts.
 
 2.  **Data breaches**:
-    In the event than an attacker finds this user's username and password. They can use it to get access to "johndoe's" resources when they are indeed not them. It results to indentity theft, financial loss or other malicious activities.
+    In the event than attackers find this user's username and password. They can use it to get access to "johndoe's" resources. It results to indentity theft, financial loss or other malicious activities.
 
 To reduce the risks with exposing user passwords, it's essential to save them as hashed texts as against plain texts. When a new user is created or they change their password, the plain text password is run through a hashing function that changes them to a long random-looking string.
 
 ## Authentication with hashed password
 
 ```bash
-import crpto from 'crypto;'
+import crpto from 'node:crypto;'
 
 const DATABASE = Array(
     {
-        username: 'kelvinsekx',
+        username: 'johndoe',
         password: 'ef92b778bafd56oaa6yh31n777ghyuu...'
     }
 )
 
-// hash function
-const hashFn = (text)=> crpto.createHash('sha256').update(text).digest('hex')
+const hashFn = txt => crypto.createHash('sha256').update(txt).digest('hex')
 
 app.post('/signup', (req, res)=> {
     const credential = req.body;
-    const hashedPassword = hashFn(credential.password)
-    DATABASE.push({
-        username: credential.password,
-        password: hashedPassword
-    })
-    return res.send({
-        message: 'success',
-        data: true
-    })
+    credential.password = hashFn(credential.password);
+    DATABASE.push(credential);
+    res.status(201).json(DATABASE.find(r => r.username == credential.username))
 })
 ```
 
-**Hash functions are one-way functions**. You can not undo them except you brute-force i.e put multiple plain text to see which one would give you a similar hash. So nope there are no functions to undo a hash.
+<LongAside subject="Run example in curl">
+`curl -X POST localhost:3003/signup -H "Content-Type: application/json" -d '{"username": "Jdossh", "password": "jospord"}'`
+</LongAside>
 
-While things might look fine now, we have another problem: the hashing mechanism used in example for `Authentication with plain password` is fast to generate. They are good for integrity checks but not safe enough for password storage. To further limit the possibility of a Brute-force attack, we need hash generation that takes more time.
+**Hash functions are one-way functions**. Their returned values can not be inverted ( or reversed) except through a brute-force approach, like a dictionary attack or rainbow table attack. **A dictionary attack** is a type of cyberattack that tries to guess a password by attempting every plain texts or predefined list of common words until it can find one with a similar hash. In short, nope there are no functions to undo a hash value.
 
-<Nudge text="What does it mean when we say a hash is fast to generate in a layman example" />
+There is another problem: the hashing algorithm used in example for `Authentication with plain password` is fast to generate. This hashing algorithm ( sha256) is good for integrity checks but not safe enough for password storage. To limit the possibility of brute-force attacks, a slower hash algorithm should be used.
+
+<Nudge text="What does it mean when a hash is fast to generate in a layman example" />
 
 ## Authentication with a slower hashing algorithm
 
-To make it less easier to brute force passwords, there are more time consuming algorithm than `sha256`.
+To make it more difficult for attackers to brute-force passwords, one approach is to use hashing algorithms that are intentionally slower compare to `sha256`. However, this don't solve all the problems. Regardless of how slow a hashing algorithm is, it will always produce the same hash value for the same input. Are you seeing the problem? This means that if an attacker obtains a list of hashed passwords, and precomputed table of common passwords and their respective hashes ( rainbow tables), they can easily find a match. This is a significant vulnerability and it precisely leads us to the **need for a salt**.
 
-Add a salt ( a random string added to each password) when generating the hash string so that figuring the hash method is not enough to figure a password hash. Attackers have networks too, network of previously hashed strings and their hashes and the hash algorithm. We call this network of tables or databases, **Rainbow table**.
-
-Why salts exist
-
-- Makes each users' hash unique even if they use the same password
-- stops attackers from using precomputed rainbow tables
-- forces attackers to brute force password, not once for all.
+Salt ( a random string added to each password) when generating the hash ensures getting hashed values and rainbow tables are not enough to brute-force passwords for attackers.
 
 ```bash
-import crpto from 'crypto;'
+import crypto from 'node:crypto';
+import util from 'node:util';
+
+const scryptAsync = util.promisify(crypto.scrypt);
 
 const DATABASE = Array(
     {
-        username: 'kelvinsekx',
+        username: 'johndoe',
         password: 'ef92b778bafd56oaa6yh31n777ghyuu...',
-        salt: 'some-salt-v'
+        salt: 'some-salt-value'
     }
 )
 
+const hashFn = async (txt, salt) => {
+ const v = await scryptAsync(txt, salt, 64);
+ return v.toString('hex');
+})
+
 app.post('/signup', (req, res)=> {
     const credential = req.body;
-    let hashedPassword = '', salt=''
+    const salt = crypto.randomBytes(16).toString('hex');
+    credential.password = await hashFn(credential.password, salt);
 
-    salt = genSalt();
-    crpto.scrypt(credential.password, salt, 64, (err, derivedKey)=> {
-        hashedPassword = derivedKey;
-    })
-    DATABASE.push({
-        username: credential.password,
-        password: hashedPassword',
-        salt: salt
-    })
-
-    return res.send({
-        message: 'success',
-        data: true
-    })
+    DATABASE.push({...credential, salt});
+    res.status(201).json(DATABASE.find(r => r.username == credential.username));
 })
 ```
 
@@ -142,8 +141,10 @@ app.post('/signup', (req, res)=> {
   in the DB table.`}
 </AsideNote>
 
-Now that we have discussed how to go about signup, let's discuss login. After we know who a user is, we want to remember them until they explicitly logout or the duration we remember them for expires.
+In this lesson, we have been able to discuss indepth how to go about user signup, in he next lesson it'll be Login Authentication.
+
+Login auth can be Stateful or Stateless. While Stateful Auth uses session IDs and a centralized store ( like database table) on the server to track and maintain user crediblity, Stateless Auth resides on the client with no worry for a database. I can wait to meet you on the otherside.
 
 ## Conclusion
 
-Security is a serious business. Understanding every step of the way to building different layers of security and the reason can be empowering. If you do not take it seriously someone else would claim who they are not completely undermining the resource, time and money that has been put into your backendsystem and effort to earn a user. But hopefully from this lesson, you have learned enough to tackle this.
+Security is a serious business. Understanding every step of the way to building different layers of security and the reason behind these choices is empowering. If you do not take it seriously remember attackers are on the otherend that will. If it turns in their avour, it undermines the resources, time and money that put into your backend system.
