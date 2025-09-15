@@ -136,9 +136,34 @@ app.post('/signup', (req, res)=> {
 })
 ```
 
+Because hashes are one way generated, don't be bothered if the salt is exposed
+in the DB table.
+
 <AsideNote>
-  {` Because hashes are one way generated, don't be bothered if the salt is exposed
-  in the DB table.`}
+ Don't forget our examples are simplified for learning purposes. Below is a robust sample of our completed signup handler:
+
+```bash
+app.post('/signup', (req, res)=> {
+    try {
+        const credential = req.body;
+        const salt = crypto.randomBytes(16).toString('hex');
+        credential.password = await hashFn(credential.password, salt);
+
+        DATABASE.push({...credential, salt});
+        res.status(201).json({message: 'User created successfully'});
+    } catch (err){
+        res.status(500).json({error: 'An error occurred when signing up'});
+    }
+})
+```
+
+**changes**:
+
+<div>
+    - wrapped the handler in a try...catch block.
+    - sent a response with a message property that "User created successfully". This replaced previous use of exposing the user's credentials.
+    - handled error.
+</div>
 </AsideNote>
 
 In this lesson, we have been able to discuss indepth how to go about user signup, in he next lesson it'll be Login Authentication.
