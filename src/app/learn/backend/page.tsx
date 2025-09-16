@@ -62,16 +62,16 @@ export default async function ListSyllabusPage() {
               className="bg-muted-200 pt-10 flex flex-col"
             >
               <div className="flex px-3.5 md:px-12">
-                <div className="w-12 h-12 md:w-20 md:h-20 text-muted-0 rounded-full bg-black border-2 border-black">
-                  <div className="flex w-full h-full justify-center items-center text-2xl md:text-4xl">
+                <div className="w-10 h-10 md:w-20 md:h-20 text-muted-0 rounded-full bg-black border-2 border-black">
+                  <div className="flex w-full h-full justify-center items-center text-xl md:text-4xl">
                     {index + 1}
                   </div>
                 </div>
-                <section className="pl-5 md:pl-10 space-y-1 flex-1">
-                  <header className="text-black-400 text-3xl font-semibold tracking-tight">
+                <section className="pl-2 md:pl-10 space-y-1 flex-1">
+                  <header className="text-black-400 text-2xl md:text-3xl font-semibold tracking-tight">
                     {stage.title}
                   </header>
-                  <p className="text-black-150 text-lg font-medium">
+                  <p className="text-black-150 text-base md:text-lg font-medium">
                     {stage.description}
                   </p>
                   <p className="text-black-250 mt-8 flex items-baseline gap-2">
@@ -84,10 +84,10 @@ export default async function ListSyllabusPage() {
                       <Link
                         href={p.slug}
                         key={p.slug}
-                        className="block hover:text-black-150 active:text-black md:text-lg w-fit group"
+                        className="block mt-2 hover:text-black-150 active:text-black md:text-lg w-fit group"
                       >
                         {p.metadata.title}{" "}
-                        <LinkIcon className="inline stroke-muted group-hover:stroke-black" />
+                        <LinkIcon className="inline stroke-muted group-hover:stroke-black w-4 h-4" />
                       </Link>
                     ))}
                 </section>

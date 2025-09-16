@@ -13,9 +13,7 @@ export const AsideNote = ({
           {note}
         </header>
       )}
-      <div className="text-sm md:text-base text-gray-600 text-[#3c1a2e]">
-        {children}
-      </div>
+      <div className="text-gray-600 text-[#3c1a2e]">{children}</div>
     </section>
   );
 };
