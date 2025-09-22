@@ -9,6 +9,7 @@ type Metadata = {
   last_updated_date: string;
   syllabus_code: string;
   authors: string;
+  status: string;
 };
 
 export interface TPost {
@@ -21,6 +22,7 @@ export interface TPost {
 function parseFrontmatter(fileContent: string) {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
   const match = frontmatterRegex.exec(fileContent);
+
   const frontMatterBlock = match![1];
   const content = fileContent.replace(frontmatterRegex, "").trim();
   const frontMatterLines = frontMatterBlock.trim().split("\n");
@@ -28,13 +30,15 @@ function parseFrontmatter(fileContent: string) {
 
   frontMatterLines.forEach((line) => {
     const [key, ...valueArr] = line.split(": ");
+
     let value = valueArr.join(": ").trim();
     value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
+
     //metadata[key.trim() as keyof Metadata] = value;
     metadata[key as keyof Metadata] = value;
   });
 
-  return { metadata: metadata as Metadata, content };
+  return { metadata: metadata as Metadata, content, status: metadata.status };
 }
 
 function getMDXFiles(dir: fs.PathLike) {
@@ -46,27 +50,37 @@ export function readMDXFile(filePath: string) {
     const rawContent = fs.readFileSync(filePath, "utf-8");
     return parseFrontmatter(rawContent);
   } else {
-    return { content: "", metadata: {} as Metadata };
+    return { content: "", metadata: {} as Metadata, status: "" };
   }
 }
 
 function getMDXData(dir: string, whichPost: string) {
   const mdxFiles = getMDXFiles(dir);
-  return mdxFiles.map((file) => {
-    const { metadata, content } = readMDXFile(path.join(dir, file));
+
+  const data = [];
+  for (let i = 0; i < mdxFiles.length; i++) {
+    const file = mdxFiles[i];
+    const { metadata, content, status } = readMDXFile(path.join(dir, file));
+    if (
+      process.env.NODE_ENV !== "development" &&
+      (status == "in-progress" || status == "un-published")
+    )
+      continue;
     const slug =
       "/learn/backend/" +
       whichPost +
       "/" +
       path.basename(file, path.extname(file));
 
-    return {
+    data.push({
       metadata,
       slug,
       content,
       id: path.basename(file, path.extname(file)),
-    };
-  });
+    });
+  }
+
+  return data;
 }
 
 export function getBlogPosts(slug: string) {
