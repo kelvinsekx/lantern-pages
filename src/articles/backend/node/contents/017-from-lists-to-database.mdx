@@ -1,11 +1,205 @@
 ---
 title: "From Lists to Databases: Database Fundamentals"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "27/09/2025"
+last_updated_date: "27/09/2025"
 syllabus_code: "BAC002"
-authors: "kelvinsekx",
-status: "in-progress"
+authors: "kelvinsekx"
 ---
 
-## Introduction to Databases
+Up until this point, we've stored information in lists, also known as arrays. Aside from the obvious inability to persist this information after a program reloads, the data was often poorly structured and redundant. We had all sorts of list anomalies. We are moving on to databases, a fascinating and long-established method of storing data.
+
+## What is a database?
+
+A database is an **electronically** stored collection of **structured** records with the purpose to not only store, but to organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, including punch cards, paper tape, magnetic tapes and disks. Different departments in a company would design their own databases with their own copies of data.
+
+Modern database is controlled by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, are referred to as **the database system**. DBMS solved most of the problems associated with lists and older database systems. However, they are not without their demerits, which is why lists were used in previous examples. These concerns include:
+
+- Database systems are complex, difficult, and time-consuming to design
+- Substantial hardware and software start-up costs
+
+## Brief history
+
+Database history began long before modern computing with manual file systems. However, the first electronic systems were Hierarchical and Network database models, which were complex and difficult to query. The modern era of databases began around the 1970s with Dr. E.F. Codd of IBM. Codd published a seminal paper introducing the mathematical foundation for the relational model on which Relational Databases (RDBs) are based. This model provided a significant advantage over previous systems, leading to the development of the design methodology known as normalization. Codd also stipulated that a relational database should include a common language for interaction, which led to the wide adoption of Structured Query Language (SQL).
+
+## Stages in creating a database
+
+The process of creating a database can be broadly divided into two main stages:
+
+1. Data analysis involves using a standardized method to translate business needs and concepts into database designs. It is important to note that a database design is independent of the final database system (MySQL, Oracle, MongoDB etc) chosen. Therefore, the same design can be physically implemented in different types of databases. Two widely used methods are Entity Relationship Modelling (ER) and Normalisation. You will see more in the Design a database section below.
+
+2. Physical Implementation and System Choice The second stage involves the physical implementation of the design created in the data analysis phase. This is where the chosen Database Management System (DBMS) is used to translate the conceptual design (Entities, Relationships, Attributes) into a functioning database (Tables, Keys, Columns). The choice of DBMS is critical and depends on factors like scalability, cost, and complexity. The database system used in this course is MySQL, a Relational Database Management System (RDBMS). Other RDBMS examples include PostgreSQL (open source), DB2 (IBM), and SQLite (a lightweight, file-based database).
+
+During the process of translating business needs and concepts through data analysis to database implementation, a couple of concepts are thrown around. This table illustrates the conceptual mappings between these terms:
+
+| S/N | Entity relation Modelling | Normalisation | RDBMS           |
+| --- | ------------------------- | ------------- | --------------- |
+| 1   | Entity                    | Relation      | Table           |
+| 2   | Entity occurrence         | Tuple         | Row or Record   |
+| 3   | Attribute                 | Domain        | Column or Field |
+
+## Concepts in database
+
+**An entity**, which maps to a **relation** in the relational model and a **table** in an RDBMS, is any object in the business that we want to model and store information about. They are usually recognizable concepts such as persons, places or events which have relevance to the business or product. Some specific examples are Cart, Employee, Driver, Rider, Admin.
+
+Note - by conventions we use singular noun when naming a table.
+
+**An entity occurrence**, also known as a row or record (in an RDBMS), is a single, specific instance of an entity. If the entity is Student, an entity occurrence would be the complete set of attribute values for one student. For example, for the Student entity, the record with the details: (SN19275, Kelvin Doe, 19/03/2014) constitutes one entity occurrence.
+
+**An attribute**, also known as column or field, is an item of information which is stored about an entity. For example, the entity 'lecturer' could have attributes such as staff id, surname, forename, date of birth, telephone number, etc. An attribute can only appear in one entity, unless it is a ( foreign) key attribute in another entity.
+
+<TryThis text="A new database system is to be designed at your college. Make a list of entities that are of importance to that system. Also list possible attributes for three of the entities you have chosen. Remember that the convention for naming an entity is to use a singular name, eg: student." />
+
+Entities rarely exist in isolation; for example, a Student entity is typically associated with a Department entity. This interaction is referred to as a **relationship** and will be discussed next.
+
+## Relationship
+
+Database relationships are the associations between entities in a relational database.
+
+A relationship is implemented in a relational database by using a **foreign key** in one entity linking to the primary key in another entity.
+
+For example, a manager manages one or two departments. A manager id would be added as foreign key to the department table to link both entities.
+
+## Degrees of relationships ( Cardinality)
+
+The degree of relationship (also known as cardinality) is the number of occurrences in one entity which are associated (or linked) to the number of occurrences in another.
+
+There are three degrees of relationship, known as:
+
+- One-to-One (1:1)
+- One-to-Many (1:M)
+- Many-to-Many (M:N)
+
+### One-to-One (1:1)
+
+One-to-One is where one occurrence of an entity relates to only one occurrence in another entity, e.g a person has one passport and a passport belong to one person.
+
+In database systems one-to-one relationships rarely exist in practice, but they can. However, you may consider combining them into one entity.
+
+### One-to-Many (1:M)
+
+A One-to-Many relationship is where one occurrence in an entity relates to many occurrences in the second entity but each occurrence in the second entity is related to at most one in the first. e.g one manager manages many employees, but each employee has only one manager.
+
+A One-to-Many relationship is established with a foreign key.
+
+### Many-to-Many (M:N)
+
+A many-to-many relationship - One lecturer teaches many students and a student can be taught by many lecturers - is the relationship where many occurrences in an entity relate to many occurrences in another entity.
+
+They are typically resolved by inserting a new entity, known as an intersection or junction table, which creates two separate One-to-Many relationships.
+
+## Keys
+
+A key is a data item that with the primary purpose to uniquely identify individual occurrences or an entity type. You can sort and quickly retrieve information from a database by choosing one or more fields (ie attributes) to act as keys.
+
+For instance, in a student's table you could use a combination of the last name and first name fields (or perhaps last name, first name and birth dates to ensure you identify each student uniquely) as a key field.
+
+There are several types of key field:
+
+- Primary Key
+- Secondary Key
+- Foreign key
+- Simple key
+- Compound key
+- Composite key
+
+Our interest in this course would be on Primary and Foreign keys only. **A primary key** is unique attribute in a table used to identify a row. It distinguishes a record from another in an enity. For each record (row) in the table, the primary key acts as a unique identifier, much like a driver's license number or a national insurance number, ensuring that no two records are identical.
+
+A **foreign key** on the other hand is an attribute in a table that points to a primary key in another table. It enables a link ( or relationship) with multiple entities. However, if the business rules permit, a foreign key may be optional so therefore can be NULL.
+
+For example, an employee works in a department. The department id column in the employee entity is a foreign key, which links to the department entity.
+
+## Design a database
+
+Ever wonder how your favorite ecommerce apps keep tracks of millions of products, customer details and orders without getting lost? The secret lies in Database design. Now that you are familiar with the parlance to communicate in relational database, we'll move to the blueprint that organizes raw data from business requirements into logical, efficient, and scalable structure.
+
+#### Step 1
+
+**Interpret business needs**
+
+This involves understanding what the business needs to do. It translates real-world requirements into data goals.
+
+This comprises of sentences that describes the information requirements that the database design is supposed to meet.
+
+For example: _a bookshop needs to manage inventory of books and track customer orders._
+
+#### Step 2
+
+**Indentify key nouns**
+
+These are the core entities, the things that the database needs to store information about. These will typically become your table.
+
+From our bookshop example: _a bookshop needs to manage ~~inventory~~ of ~~books~~ and track ~~customer~~ ~~orders~~._ These nouns would translate into the following entities or tables: Book, Customer, Order, Inventory.
+
+#### Step 3
+
+**Create tables**
+Define a separate table for each noun.pronoun. This ensures data is only stored once, which is a fundamental goal of good design.
+
+#### Step 4
+
+**Identify attributes**
+
+For each table, list the distinct characteristics (columns) you need to record. One attribute in each table must be the Primary Key (PK) - unique identifier.
+
+In continuation with our example:
+
+- Book table would have BookID (PK), Title, Author, ISBN, Price
+- Customer table would have CustomerID (PK), FirstName, LastName, Email
+- Order table would have OrderID (PK), OrderDate, CustomerID (FK), Array(BookIDs(FK))
+
+#### Step 5
+
+**Normalization**
+
+A process to organize columns and tables to minimize redundancy and dependency. The goal is often Third Normal Form (3NF), ensuring non-key columns depend only on the primary key.
+
+In the design at Step 4, you should see a problem. If a customer orders multiple books in a single order, storing a list of Book IDs directly in the Order table (e.g., in an array) violates the rules of normalization (specifically, First Normal Form). Relational databases require that each cell contain only a single, atomic value.
+
+To acheive this, we are going to create a separate table for OrderDetails.
+
+- OrderDetails table would now have an attribute of OrderDetailsID (PK), OrderID (FK), BookID and Quantity
+- Order table would now be OrderID (PK), OrderDate, CustomerID (FK). The OrderDetailsID is not included here.
+
+#### Step 6
+
+**Associate relationships**
+
+Although the relationships were implied in previous steps, this stage explicitly defines how tables are connected using Foreign Keys and Joining tables, which establishes the cardinality (One-to-Many, etc.).
+
+Customer -> Orders: One-to-Many
+A customer can have many orders but an Order can only have a customer. Two customers can not place the same order.
+
+Orders -> Books: Many-to-Many
+Many-to-Many orders are resolved using a joining or junction table. An order can contain multiple books, and a book can appear in many different orders. This M:N relationship is resolved (as demonstrated in Step 5) by the new junction table: OrderDetails.
+
+To reach these conclusions, you need to ask questions like:
+
+- can a customer have 2 or more orders?
+- can an order be own by 2 or more customers?
+- can an order contain 2 or more books?
+- can a book be in 2 or more different orders?
+
+#### Step 7
+
+**Make an ERD ( Entity Relationship Diagram) and share with colleague**
+
+There are two broad ways of making this diagram: Chen notation and Crow's foot notation
+
+#### Step 8
+
+**Implement Database Definition language with SQL**
+
+To implement this, we will address how to use SQL and what it is in the next lesson
+
+## Conclusions
+
+I hope this lesson has ushered you into basic concepts of database, and database design. In the next lesson, we will start to implement these theories using SQL and MySQL Database.
+
+## References
+
+### Footnotes
+
+1. [What is a database](https://www.oracle.com/database/what-is-database/) _Pasted on Tue, September 23, 2025._
+2. [More on the modification anomalies](https://dba.stackexchange.com/questions/194631/how-does-normalization-fix-the-three-types-of-update-anomalies) _Pasted on Tue, September 23, 2025._
+3. [Common mistakes in database design](https://www.youtube.com/watch?v=s6m8Aby2at8) _Pasted on Sat, September 27, 2025._
