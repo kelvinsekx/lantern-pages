@@ -10,6 +10,7 @@ import { LongAside } from "@/components/long-aside";
 import { RefN } from "@/components/ref-num";
 import { LessonObjectives } from "@/components/lesson-objectives";
 import { Nudge } from "@/components/nudge";
+import { TryThis } from "@/components/try-this";
 
 type Params = Promise<{ slug: string; article_slug: string }>;
 
@@ -63,6 +64,7 @@ export default async function BlogPage({ params }: { params: Params }) {
                 RefN,
                 LessonObjectives,
                 Nudge,
+                TryThis,
               }}
             />
           </article>
