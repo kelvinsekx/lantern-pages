@@ -2,21 +2,21 @@
 title: "From Lists to Databases: Database Fundamentals"
 description: ""
 published_date: "27/09/2025"
-last_updated_date: "27/09/2025"
+last_updated_date: "07/10/2025"
 syllabus_code: "BAC002"
 authors: "kelvinsekx"
 ---
 
-Up until this point, we've stored information in lists, also known as arrays. Aside from the obvious inability to persist this information after a program reloads, the data was often poorly structured and redundant. We had all sorts of list anomalies. We are moving on to databases, a fascinating and long-established method of storing data.
+Up until this point, we've stored information in lists, as in with arrays. Aside from the obvious inability to persist information after a program reloads, the data was often poorly structured and redundant. We had all sorts of list anomalies! We are migrating to databases, a fascinating and long-established method of storing data.
 
 ## What is a database?
 
-A database is an **electronically** stored collection of **structured** records with the purpose to not only store, but to organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, including punch cards, paper tape, magnetic tapes and disks. Different departments in a company would design their own databases with their own copies of data.
+A database (db for short) is an **electronically** stored collection of **structured** records with the purpose to not only store, but to organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, such as punch cards, paper tape, magnetic tapes and disks. These records were **redundant** too as it was normal then for different departments in a company to design and their own copies of data on each department's databases.
 
-Modern database is controlled by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, are referred to as **the database system**. DBMS solved most of the problems associated with lists and older database systems. However, they are not without their demerits, which is why lists were used in previous examples. These concerns include:
+The modern database is controlled by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, are referred to as **the database system**. DBMS solved most of the problems associated with lists and older database systems like redundancy. However, they are not without their demerits too, which is why lists have been used in previous examples until now. These concerns include:
 
-- Database systems are complex, difficult, and time-consuming to design
-- Substantial hardware and software start-up costs
+- Database systems are complex, difficult, and time-consuming to design ( and sometimes understand)
+- Substantial hardware and software costs to run them. A good example being my Window + icore3 laptop would struggle to run databases or docker ( another modern software that makes it easy to run dbs). I grew in African. And for many like myself we started our programming from cheap hardwares
 
 ## Brief history
 
@@ -26,11 +26,11 @@ Database history began long before modern computing with manual file systems. Ho
 
 The process of creating a database can be broadly divided into two main stages:
 
-1. Data analysis involves using a standardized method to translate business needs and concepts into database designs. It is important to note that a database design is independent of the final database system (MySQL, Oracle, MongoDB etc) chosen. Therefore, the same design can be physically implemented in different types of databases. Two widely used methods are Entity Relationship Modelling (ER) and Normalisation. You will see more in the Design a database section below.
+1. **Data analysis** involves using a standardized method to translate business needs and concepts into database designs. It is important to note that a database design is independent of the final database system (MySQL, Oracle, MongoDB etc) chosen. Therefore, the same design can be physically implemented in different types of databases. Two widely used methods are Entity Relationship Modelling (ER) and Normalisation. You will see more in the Design a database section in this lesson.
 
-2. Physical Implementation and System Choice The second stage involves the physical implementation of the design created in the data analysis phase. This is where the chosen Database Management System (DBMS) is used to translate the conceptual design (Entities, Relationships, Attributes) into a functioning database (Tables, Keys, Columns). The choice of DBMS is critical and depends on factors like scalability, cost, and complexity. The database system used in this course is MySQL, a Relational Database Management System (RDBMS). Other RDBMS examples include PostgreSQL (open source), DB2 (IBM), and SQLite (a lightweight, file-based database).
+2. **Physical Implementation and System Choice**: The second stage involves the physical implementation of the design created in the data analysis phase. This is where the chosen Database Management System (DBMS) is used to translate the conceptual design (Entities, Relationships, Attributes) into a functioning database (Tables, Keys, Columns). The choice of DBMS is critical and depends on factors like scalability, cost, and complexity. The database system used in this course is MySQL, a Relational Database Management System (RDBMS). Other RDBMS examples are PostgreSQL, DB2, and SQLite.
 
-During the process of translating business needs and concepts through data analysis to database implementation, a couple of concepts are thrown around. This table illustrates the conceptual mappings between these terms:
+During the process of translating business needs and concepts through data analysis to database implementation, a couple of concepts are thrown around. This table illustrates the mappings between these terms:
 
 | S/N | Entity relation Modelling | Normalisation | RDBMS           |
 | --- | ------------------------- | ------------- | --------------- |
@@ -42,11 +42,11 @@ During the process of translating business needs and concepts through data analy
 
 **An entity**, which maps to a **relation** in the relational model and a **table** in an RDBMS, is any object in the business that we want to model and store information about. They are usually recognizable concepts such as persons, places or events which have relevance to the business or product. Some specific examples are Cart, Employee, Driver, Rider, Admin.
 
-Note - by conventions we use singular noun when naming a table.
+Note - by conventions we use singular and capitalized noun when naming a table. Student not ~~student~~, not ~~students~~, not ~~Students~~.
 
 **An entity occurrence**, also known as a row or record (in an RDBMS), is a single, specific instance of an entity. If the entity is Student, an entity occurrence would be the complete set of attribute values for one student. For example, for the Student entity, the record with the details: (SN19275, Kelvin Doe, 19/03/2014) constitutes one entity occurrence.
 
-**An attribute**, also known as column or field, is an item of information which is stored about an entity. For example, the entity 'lecturer' could have attributes such as staff id, surname, forename, date of birth, telephone number, etc. An attribute can only appear in one entity, unless it is a ( foreign) key attribute in another entity.
+**An attribute**, also known as column or field, is an item of information which is stored about an entity. Using our 'Student' example, their attributes would be student matric number, surname, firstname, date of birth. An attribute should only appear in one entity, unless it is a ( foreign) key attribute used in multiple entities.
 
 <TryThis text="A new database system is to be designed at your college. Make a list of entities that are of importance to that system. Also list possible attributes for three of the entities you have chosen. Remember that the convention for naming an entity is to use a singular name, eg: student." />
 
@@ -72,21 +72,32 @@ There are three degrees of relationship, known as:
 
 ### One-to-One (1:1)
 
-One-to-One is where one occurrence of an entity relates to only one occurrence in another entity, e.g a person has one passport and a passport belong to one person.
+One-to-One is where one occurrence of an entity relates to only one occurrence in another entity, examples are:
+
+- Person and Passport Tables: a person has one passport and a passport belong to one person.
+- User and UserProfile Tables: a user can only have one UserProfile and vice versa.
+
+> The Passport table would take a foreign key that points to Person table similar to UserProfile would take a foreign key that point to User table.
 
 In database systems one-to-one relationships rarely exist in practice, but they can. However, you may consider combining them into one entity.
 
 ### One-to-Many (1:M)
 
-A One-to-Many relationship is where one occurrence in an entity relates to many occurrences in the second entity but each occurrence in the second entity is related to at most one in the first. e.g one manager manages many employees, but each employee has only one manager.
+A One-to-Many relationship is the type of association between 2 tables (first and second) where one occurrence in first entity may relate to many occurrences in second entity but each occurrence in the second entity is related to at most one in the first. Examples:
 
-A One-to-Many relationship is established with a foreign key.
+- one manager manages many employees, but each employee has only one manager.
+
+A One-to-Many relationship is established with a foreign key just like 1:1.
 
 ### Many-to-Many (M:N)
 
-A many-to-many relationship - One lecturer teaches many students and a student can be taught by many lecturers - is the relationship where many occurrences in an entity relate to many occurrences in another entity.
+A many-to-many relationship is the relationship where many occurrences in an entity relate to many occurrences in another entity.
 
-They are typically resolved by inserting a new entity, known as an intersection or junction table, which creates two separate One-to-Many relationships.
+For example:
+
+- One lecturer teaches many students and a student can be taught by many lecturers -
+
+This type is not established with foreign keys. They are resolved by inserting a new entity, known as an intersection or junction table, which creates two separate One-to-Many relationships.
 
 ## Keys
 
