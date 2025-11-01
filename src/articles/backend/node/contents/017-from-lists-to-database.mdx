@@ -7,16 +7,20 @@ syllabus_code: "BAC002"
 authors: "kelvinsekx"
 ---
 
-Up until this point, we've stored information in lists, as in with arrays. Aside from the obvious inability to persist information after a program reloads, the data was often poorly structured and redundant. We had all sorts of list anomalies! We are migrating to databases, a fascinating and long-established method of storing data.
+Up until this point, we've stored information in lists, as in with arrays. Aside from the obvious inability to persist information after a program reloads, the data were often poorly structured and redundant. We had all sorts of list anomalies! We are migrating to databases, a fascinating and long-established method of storing data.
+
+Database is the established way business store data electronically. It has silently shaped every era of computing. Everytime you search online, request your user profile, check your bank balance or follow your favorite content creators, database is where those information are asked from, otherwise being called **queried**. Which leads us to what is a database?
 
 ## What is a database?
 
-A database (db for short) is an **electronically** stored collection of **structured** records with the purpose to not only store, but to organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, such as punch cards, paper tape, magnetic tapes and disks. These records were **redundant** too as it was normal then for different departments in a company to design and their own copies of data on each department's databases.
+A database (db for short) is an **electronically** stored collection of **structured** records with the purpose to store, organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, such as punch cards, paper tape, magnetic tapes and disks. These records were **redundant** too as it was normal then for different departments in a company to design and their own copies of data on each department's databases.
 
 The modern database is controlled by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, are referred to as **the database system**. DBMS solved most of the problems associated with lists and older database systems like redundancy. However, they are not without their demerits too, which is why lists have been used in previous examples until now. These concerns include:
 
 - Database systems are complex, difficult, and time-consuming to design ( and sometimes understand)
 - Substantial hardware and software costs to run them. A good example being my Window + icore3 laptop would struggle to run databases or docker ( another modern software that makes it easy to run dbs). I grew in African. And for many like myself we started our programming from cheap hardwares
+
+There are 2 major types databases can be categorized into: **Relational ( or SQL) Database** and **Non-relational ( NoSQL) Databases**. Relational databases are designed to contain tables while NoSQL databases are designed for unstructured or semi-structured data. For the most part of this lesson our focus will be on relational database with a separate lesson for NoSQLs later in the course.
 
 ## Brief history
 
@@ -42,7 +46,13 @@ During the process of translating business needs and concepts through data analy
 
 **An entity**, which maps to a **relation** in the relational model and a **table** in an RDBMS, is any object in the business that we want to model and store information about. They are usually recognizable concepts such as persons, places or events which have relevance to the business or product. Some specific examples are Cart, Employee, Driver, Rider, Admin.
 
-Note - by conventions we use singular and capitalized noun when naming a table. Student not ~~student~~, not ~~students~~, not ~~Students~~.
+<AsideNote>
+  By conventions we use singular and capitalized noun when naming a table.
+  Student not ~~student~~, not ~~students~~, not ~~Students~~. However, this is
+  not an SQL rule. It is fine to do student or students or Students. What
+  matters is to stay consistent with whatever approach throughout your database
+  design
+</AsideNote>
 
 **An entity occurrence**, also known as a row or record (in an RDBMS), is a single, specific instance of an entity. If the entity is Student, an entity occurrence would be the complete set of attribute values for one student. For example, for the Student entity, the record with the details: (SN19275, Kelvin Doe, 19/03/2014) constitutes one entity occurrence.
 
@@ -214,3 +224,4 @@ I hope this lesson has ushered you into basic concepts of database, and database
 1. [What is a database](https://www.oracle.com/database/what-is-database/) _Pasted on Tue, September 23, 2025._
 2. [More on the modification anomalies](https://dba.stackexchange.com/questions/194631/how-does-normalization-fix-the-three-types-of-update-anomalies) _Pasted on Tue, September 23, 2025._
 3. [Common mistakes in database design](https://www.youtube.com/watch?v=s6m8Aby2at8) _Pasted on Sat, September 27, 2025._
+4. [The untold story of databases](https://youtu.be/lvCZk3k4-34?si=nRKcs31jiMFjzwgd) _Pasted on Sat, October 17, 2025._
