@@ -1,9 +1,158 @@
 ---
 title: "A Beginner's Guide to SQL Mastery"
 description: ""
-published_date: ""
-last_updated_date: ""
+published_date: "01/11/2025"
+last_updated_date: "01/11/2025"
 syllabus_code: "BAC002"
 authors: "kelvinsekx"
-status: "in-progress
 ---
+
+## What is SQL?
+
+Structured Query Language (shortened as SQL or pronounced Sequel) was developed in the 1970s as a standardized language for communicating with the relational databases. A relational database stores data in tables, rows and columns. You can use SQL statements to store, update, remove, search and retrieve information from the database. In fact, it is also used for maintenance and optimization of database performance. Through out this lesson, our goal will be to have hands on experiences of how to do all of these things SQL do.
+
+<LongAside subject="It was never called SQL (what you pronounce S-QWELL)">
+  {` While the standard abbreviation is pronounced "S-Q-L", many people rather pronounce it as 'sequel' because the language was originally named SEQUEL (Structured English Query Language) before shortened due to trademark issues.`}
+</LongAside>
+
+## Relational database creation
+
+Data is stored in tables, tables that must exist in a special vacuum, a database container. In short, before you can create a table, you need a database to hold the table which brings us to the `CREATE` command.
+
+The `CREATE DATABASE` command is used to create a database. It is usually followed by the custom name you want to give the database.
+
+`CREATE DATABASE School;`
+
+If you're using MySQL, **CREATE SCHEMA** is synonymous to the `CREATE DATABASE` command.
+
+With that statement, you have created the `Student` database. To use this newly created database, we'll designate it as the active database. Use the **USE** command with the database name to achieve this.
+
+`USE School;`
+
+Let's delete this database. By the way, we can always create another db now. To delete or remove an existing database is simple to do with `DROP DATABASE` command.
+
+`DROP DATABASE School;`
+
+<AsideNote>
+  {`Religiously avoid deleting database in the real world. Usually they come with more problems than you can think of.`}
+</AsideNote>
+
+So far we have learned 3 things. To **create**, **delete** and **use** a database. It is time to do more fun things 🥳 like creating tables and columns.
+
+## Table creation
+
+The `CREATE TABLE` command is used to create a table in SQL. It is usually followed by the name you want to give the table. Just doing `CREATE TABLE Student` is not enough though, as a table must have least one visible column. In our example, we gave it a column `student_name`.
+
+<AsideNote>
+  {`Don't forget to create a database and set it as the active db before crearting a table.`}
+</AsideNote>
+
+```bash
+CREATE TABLE Student (
+    student_name VARCHAR(60)
+);
+```
+
+## Data defintions
+
+We just created a table and a column, and gave a warning that it is impossible to create a table without at least one column. The column `student_name VARCHAR(60)` follows a strict invisible pattern of "column-name data-type constraint(s)". We have not a need for contraint yet, but we are going to add one to make things clear.
+
+```bash
+CREATE TABLE Student (
+    student_name VARCHAR(60) NOT NULL
+);
+```
+
+When defining a column for a table, you'll need to specify two mandatory variales: a column name and data type. Third one is the contraint which is optional, but recommended. Here are some common data types
+
+- **CHAR** or **CHARACTER** is used to describe character strings with a fixed length. As in `M` and `F` for gender can be described with `gender CHAR(1)`
+- **INT** or **INTEGER** thinks in number, but enforces it's in whole number which can be positive or negative, e.g 1,2, 20, -30. Example: `age INT` to store a person's age.
+- **BLOB** is used to describe large gobs of text data
+- **DATE** is used for dates, but doesn't care about the time. Such as `birthdate DATE` to store a person's birthdate.
+- **VARCHAR** holds text data of up to 255 (0-255) characters in length. It is flexible unlike CHAR that can not adapt to the length set to it.
+- **DATETIME** or **TIMESTAMP** depending on the SQL RDBMS keeps track of both date and time. Example: `create_at DATETIME`, `meeting_time DATETIME` to store the timestamp when a record was created.
+- **DEC** short for **DECIMAL** gives all the decimal places that it's described until it is full. It defines a fixed precision anf scale. Example: DECIMAL(10, 2) to store prices with a miaximum of 10 digits and 2 decimal places.
+
+<AsideNote>
+  **Watch out!** These data type names might not work with all SQL RDBMS. Our
+  examples are flavored for MySQL
+</AsideNote>
+
+<Nudge text="Why not use BLOB for all of the text values" />
+
+<Nudge text="When to choose between numeric types like INT and DEC" />
+
+<AsideNote>
+  {`Did you notice how every SQL command has ended with a semi colon? It is important to mark all SQL command with semi-colon to server as end of line for the command.`}
+</AsideNote>
+
+You can see that to create a table you categorize your data into columns, Then you come up with the right data type and length for each column.
+
+**Let's create more complicated table**. The column **student_name** is ambiguous as it can be difficult to identify student's first name and last name. We'll change the student_name column to first_name and add a new column for last_name which leads us to the `ALTER` command.
+
+## Make changes to a table
+
+To modify a table, you have two options.
+
+The first option is to drop (destroy) the existing table and then recreate a new one with the desired structure. However, if your table contains existing data, a far better approach is to alter the table directly. This method allows you to change the structure without destroying the table or the data contained within it.
+
+To execute this change, use the ALTER command. The ALTER command is followed by the type of object you intend to modify (such as TABLE or DATABASE) and the name of that object.
+
+### Opions1: Drop and recreate table
+
+```bash
+DROP TABLE table-name
+```
+
+`DROP TABLE` will delete the table whether it has some data or not. If a table is deleted, all the records that resides in it will be permanently gone too. Caution! Exercise extremee cuation when deleting anything in database.
+
+**Recreate with new schema** now that we've dropped the old table, use `CREATE TABLE` with the new changes of first name and last name.
+
+```bash
+CREATE TABLE Student (
+    first_name VARCHAR(60) NOT NULL,
+    second_name VARCHAR(60) NOT NULL
+);
+```
+
+<AsideNote>
+  {`Like with database ( and any thing electronical record) religiously avoid deleting tables in production. Usually they come with more problems than you can think of.`}
+</AsideNote>
+
+### Option 2: Alter the table (The Preferred Method)
+
+The recommended approach for schema modification is using the `ALTER TABLE` command which allwos you to make changes losing data. You use combine `ALTER TABLE` and `CHANGE COLUMN name` clause.
+
+```bash
+ALTER TABLE Student
+CHANGE COLUMN name first_name VARCHAR(200);
+```
+
+<AsideNote>
+  **Tip!** use `DESC table-name` to see a description of each column in a table.
+  It shows the structure of the table and not the information inside it.
+</AsideNote>
+
+## Adding data with the `INSERT INTO` statement
+
+Once your table structure is finalized, you can populate it using the INSERT INTO statement.
+
+The syntax requires specifying the table name, the columns you are populating, and the corresponding values: `INSERT INTO table-name (column-name-1, column-name-2, ...) VALUES ('value-1', 'value-2')`.
+
+<AsideNote>
+  **Crucial Rule!** Ensure the values you provide are in the exact same
+  sequential order as the column names listed in the statement, and that their
+  data types match the column definitions.
+</AsideNote>
+
+## Peek at the table records with `SELECT` statement
+
+Use the `select` command to peek into the record in your table.
+
+`SELECT * FROM Student`
+
+## References
+
+### Footnotes
+
+1. [Tips for SQL Query Optimization](https://www.youtube.com/watch?v=GA8SaXDLdsY) _Pasted on Sat, Nov 01, 2025._
