@@ -12,6 +12,8 @@
     "@mdx-js/loader": "3.1.0",
     "@next/mdx": "15.3.3",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.85.0",
     "@types/mdx": "2.0.13",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
