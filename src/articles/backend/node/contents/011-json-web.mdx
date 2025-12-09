@@ -1,60 +1,66 @@
 ---
-title: "Stateless Token Based Authentication"
-description: ""
-published_date: ""
-last_updated_date: ""
+title: "Stateless Authentication: The Essential Guide to JWTs, Access & Refresh Tokens"
+description: "Master stateless authentication for modern apps. Learn how JSON Web Tokens (JWTs) provide verifiable identity, the difference between cookies and bearer tokens, and the security best practice of Refresh Token Rotation."
+published_date: "10/09/2025"
+last_updated_date: "09/12/2025"
 syllabus_code: "BAC003"
 authors: "kelvinsekx"
 ---
 
-After we've learned to store a user's password securely on signup, the next phase is to let authenticated user access resources peculiar to them. This is managed by assigning a session or token upon login.
+Once a user's password has been securely stored during signup, the next crucial step is ensuring only authenticated users can access their specific resources. Modern backend architecture manages this access by issuing a token or cookie upon successful login.
 
-## Login
+## Login & Token Issuance
 
-After a user is signed up, it is best practice to re-verifying their credentials (username and password) called Login. This involves authenticating the user against their saved information, and upon successful verification authorizes them (give access) to their data and features.
+After signup, the user must re-verify their credentials (a process called Login). Login first authenticates the user against their stored credential, and upon successful verification authorizes them (give access) to their data and features.
 
-On the code end, login retrieves the plain text password, hashes it and check the hashed value against the hash stored in the database. A token is issued if a match is found. This token is a secure, temporary and unique **string of data** issued by a server to a client after successfuly login. This saves users the stress of sending their password and username on every request to gated resources. The token is a prove of the client indentity and authorization.
+Login retrieves a user password, and check the hashed value against the one stored in the database. A token will be issued if a match is found. This token - a secure, temporary and unique **string of data** - is issued by a server to a client after every successfuly login. The token is then sent with subsequent requests to gated resources, eliminating the need to repeatedly send the username and password. The token acts as a proof of the client's indentity and their current authorization.
 
-Tokens are communicated in two broad ways: as Cookies or as Bearer tokens to be stored in the local storage.
+Tokens are communicated in two primary ways: as Cookies reserved on the server or as Bearer tokens to be managed by the client.
 
-If the client is a web app, using a Cookie is fine. But if it is intended for a mobile app, Bearer tokens are a better alternative because the mobile app don't handle Cookies as well as the web does.
+For traditional web app, using a Cookie is fine. However, for non-browser clients like a mobile app or native desktop applications, Bearer tokens are a better alternative.
 
 ## Authentication with Cookies
 
-One of the ways to communicate tokens with clients is with Cookies.
+One of the ways to communicate tokens with clients is with Cookies. Let's look at a step by step implementation.
 
-Create a login path and a handler like below:
+Focus on the `app.post()` method. We'll be using abstract Node/Express code to demonstrate these concepts
 
-```bash
-import crpto from 'crypto;'
+```js
+import crpto from "crypto;";
 
-...
+// ...application setup...
 
-app.post('/login', (req, res)=> {
-    const credential = req.body;
-    const user = DATABASE.find(c => c.username === credential.username);
+app.post("/login", (req, res) => {
+  // 1. Get user credentials from the Request Body
+  const credential = req.body;
+  // 2. Find if the user exists in the database using their username
+  const user = DATABASE.find((c) => c.username === credential.username);
 
-    if(!user) return res.status(400).json({error: 'User don\'t exist'})
-    res.status(200).json({message: 'User found'});
-})
+  if (!user) return res.status(400).json({ error: "User don't exist" });
+  // ...The password verification logic will go here...
+  res.status(200).json({ message: "User found" });
+});
+
+// ...rest of application code...
 ```
 
-Then add some routes
+To appreciate our progress, let's add some protected routes to the mix.
 
-```bash
-...
+```js
+// ...some exiting lines of code...
 
-app.get('/protected', authenticatedToken, (req, res)=>{
-    res.status(200).json({message: 'welcome to your protected route'});
- })
+app.get("/protected", authenticatedToken, (req, res) => {
+  res.status(200).json({ message: "welcome to your protected route" });
+});
 
-app.get('/non-protected', (req, res)=>{
-    res.status(200).json({message: 'welcome to an unprotected route'});
-})
-
+app.get("/non-protected", (req, res) => {
+  res.status(200).json({ message: "welcome to an unprotected route" });
+});
 ```
 
-```bash
+Let's add some extra logic to `app.post()`
+
+```js
 app.post('/login', (req, res)=> {
     const credential = req.body;
     const user = DATABASE.find(c => c.username === credential.username);
@@ -67,13 +73,14 @@ app.post('/login', (req, res)=> {
     hasMatch = hashed === user.password;
 
     if(!hasMatch) return res.status(400).json({error: 'Username and password incorrect'})
+    // Token generation and cookie setting will go here
     res.status(200).json({message: 'User found'});
 })
 ```
 
-Let's add sending a Cookie to our client
+After comfirming the username and password matches, we must now attach a token to tell the client a match exist by sending a cookie.
 
-```bash
+```js
 app.post('/login', (req, res)=> {
     const credential = req.body;
     const user = DATABASE.find(c => c.username === credential.username);
@@ -85,15 +92,18 @@ app.post('/login', (req, res)=> {
     hasMatch = hashed === user.password;
     if(!hasMatch) return res.status(400).json({error: 'Username and password incorrect'})
 
+    // NOTE: 'token' is currently a non-unique placeholder string!
     res.cookie('cookie-name', 'token', {
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-        maxAge: 1000 * 60 * 60
+        httpOnly: true, // Prevents client-side JS access, mitigating XSS
+        secure: true, // Ensures cookie is only sent over HTTPS
+        sameSite: true, // Protects against Cross-Site Request Forgery (CSRF)
+        maxAge: 1000 * 60 * 60 // 1 hour expiration (in milliseconds)
     })
     res.status(200).json({message: 'User found'});
 })
 ```
+
+With this implementation, the server will auto attach this cookie on subsequent visit to the server.
 
 <LongAside subject="Run in curl">
 - Run the server, 
@@ -104,128 +114,119 @@ In the header output, you should see the **Set-Cookie** property with our cookie
 
 </LongAside>
 
-After one hour, the browser will automatically delete the cookie. When the user makes another request, the cookie will no longer be present in the request headers.
+After one hour, the browser will automatically delete the cookie forcing the user to login again.
 
-If you have been following, you must have seen a looming problem: Our token isn't unique. Attackers could use the "token" string as cookie and have access to user's resources. To make our token unique, we would employ "JSON WEB TOKEN" package. This would help us create a simple unique key that we can easily unkey to get details about the user.
+If you have been following, you must have noticed a serious security flaw: Our token is hard-coded and not unique. Attackers could easily forge the "token" string and have access to user's resources. To make our token unique, we would employ the JSON Web Token (JWTs) package. A JWT is a compact, URL-safe means of representing claims to be transferred between two parties.
 
-```bash
-app.post('/login', async (req, res)=> {
+We replace the placeholder string with a signed JWT.
+
+```js
+// ... application code ...
+app.post("/login", async (req, res) => {
   const credential = req.body;
-  const user = DATABASE.find(c => c.username === credential.username);
 
-  if(!user) return res.status(400).json({error: 'User don\'t exist'})
+  // ... user and password verification logic ...
 
-  let hasMatch = false;
-  const hashed = await hashFn(credential.password, user.salt)
+  if (!hasMatch)
+    return res.status(400).json({ error: "Username and password incorrect" });
 
-  hasMatch = hashed === user.password;
-
-  if(!hasMatch) return res.status(400).json({error: 'Username and password incorrect'})
-
+  // SECURITY: Never include the password in the JWT payload
   delete credential.password;
 
-  const token = jwt.sign(
-    credential,
-    `${process.env.MY_SECRET}`,
-    {expiresIn: '1hr'}
-  );
-
-  res.cookie('cookie-name', token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      maxAge: 1000 * 60 * 60
+  const token = jwt.sign(credential, `${process.env.MY_SECRET}`, {
+    expiresIn: "1hr",
   });
 
-  return res.status(200).json({message: 'User found'});
+  res.cookie("cookie-name", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: true,
+    maxAge: 1000 * 60 * 60,
+  });
 
-})
+  return res.status(200).json({ message: "User found" });
+});
 ```
 
 ## Authentication with Bearer Tokens
 
-The JWT (JSON Web Token) are access tokens that can be used to make a secure API call when a client application needs to access a protected resources. We've discussed how to communicate Access tokens with Cookie and now we will discuss how to do it with Bearer toke.
+We have covered cookie-based delivery; now we will examine the Bearer Token method.
 
-Bearer tokens are Access tkens with Bearer prefix.
+A Bearer Token is simply an Access Token prefixed with the word "Bearer" and included in the **Authorization** HTTP header. The prefix signals that the token holder ("the bearer") is authorized to access the resource.
 
 <Nudge text="Difference between Bearer token and Access token" />
 
-```bash
-app.post('/login', async (req, res)=> {
-  const credential = req.body;
-  const user = DATABASE.find(c => c.username === credential.username);
+When using Bearer Tokens, the token is returned to the client in the response body instead of being sent separately as a cookie in previous examples:
 
-  if(!user) return res.status(400).json({error: 'User don\'t exist'})
+```js
+// ... application code ...
+app.post("/login", async (req, res) => {
+  // ... verification logic ...
 
-  let hasMatch = false;
-  const hashed = await hashFn(credential.password, user.salt)
-
-  hasMatch = hashed === user.password;
-
-  if(!hasMatch) return res.status(400).json({error: 'Username and password incorrect'})
-
-  delete credential.password;
-
-  const token = jwt.sign(
-    credential,
-    `${process.env.MY_SECRET}`,
-    {expiresIn: '1hr'}
-  );
+  const token = jwt.sign(credential, `${process.env.MY_SECRET}`, {
+    expiresIn: "1hr",
+  });
 
   return res.status(200).json({
-    message: 'User found',
-    data: token
-    });
-
-})
+    message: "User found",
+    data: token,
+  });
+});
 ```
 
-The signed in user can take the token, prefix it with Bearer, `Bearer ${token}`, attack it to the HTTP header.
+The client application receives the token and must store it (e.g., in $\text{localStorage}$). For every protected API call, the client explicitly sets the $\text{Authorization}$ header with the Bearer Token.
 
 <LongAside subject="Run example in curl">
 - sign up
-- log in
-- try access a protected route with `curl -v -X GET localhost:3003/protected -H "Authorization: Bearer JWT-TOKEN"`
+- log in (you'll receive the token in the response body)
+- try access a protected route with:
+
+`curl -v -X GET localhost:3003/protected -H "Authorization: Bearer JWT-TOKEN"`
 
 You should be able to see the protected response.
 
 </LongAside>
 
-Now that we know how to log a user in, did you notice both the JWT and Cookie have expiry property ( called maxAge in Cookies). Given that any malicious user could have access to a bearer token, we tend to make the expiry property short unlike our previous example with an hour long expiration, authorization token are meant to be less than 30 mins.
+Now that we implemented log in, did you notice The **JWT (expiresIn**) and **Cookie (maxAge)** both define an expiration property. Access Token expiry is typically kept short (e.g., 15-30 minutes). This minimizes the time an attacker has if the token is compromised.
 
-This leads to our next question, what happens when the JWT or Cookie expires? The natural approach would be for the user to login again. This experience is not user friendly. In this next section, we would talk about popular approach to improve this user experience.
+When an Access Token expires, the traditional method forces the user to log in again. This is a poor user experience. Next, let's talk Refresh Access Tokens.
 
 ## What happens when Access token expires
 
-To mitigate the user experience of having to log in again after an access token experience, several approaches can be employed, one of which is the use of Refresh Token.
+To mitigate the user experience of having to log in again after an access token experience, Refresh Tokens are used to obtain a new Access Token without requiring the user to re-enter their credentials. Unlike short-lived Access Tokens, Refresh Tokens are long-lived (e.g., days or weeks) and are securely stored (often in an HttpOnly cookie or database). When the Access Token expires, the client sends the valid Refresh Token to a dedicated refresh endpoint to be exchanged for a new Access Token.
 
-A refresh token can be used to obtain a new access token without requiring the user to log in again. When the access token expires, the client can use the refresh token to request a new access token
-
-```bash
+```js
 function AuthenticateMiddleware(req, res, next) {
+  let token = "";
+  // 1. Check for cookie (server-managed)
 
-    let token = '';
-    if(req.cookies['cookie-name']){
-      token = req.cookies['cookie-name']
-    }else if(req.headers.authorization){
-      token = req.headers.authorization.split(' ')[1]
-    }
+  // this else..if is used when a cookie or jwt is used
+  // normally you would stick with one
+  if (req.cookies["cookie-name"]) {
+    token = req.cookies["cookie-name"];
+    // 2. Check for Authorization header
+  } else if (req.headers.authorization) {
+    token = req.headers.authorization.split(" ")[1];
+    //3. Gets the token after 'Bearer'.
+  }
 
-  if(token){
-    const user = jwt.verify(token, `${process.env.MY_SECRET}`, (err, user)=> {
-      if(err){
-        res.clearCookie('cookie-name')
-        return res.status(403).json({error: 'token is invalid or expired'});
+  if (token) {
+    //4. The jwt.verify() function checks the signature and the expiration date
+    const user = jwt.verify(token, `${process.env.MY_SECRET}`, (err, user) => {
+      if (err) {
+        // Token is invalid (tampered with) or expired
+        res.clearCookie("cookie-name");
+        return res.status(403).json({ error: "token is invalid or expired" });
       }
     });
     req.user = user;
     next();
-  } else{
-    return res.status(401).json({error: 'no authorization found'})
+  } else {
+    return res.status(401).json({ error: "no authorization found" });
   }
 }
 ```
 
 <Nudge text="ID Tokens vs Refresh Tokens vs Access Tokens" />
 
-With the use of refresh token, comes another challenge. Given refresh tokens validity are longer, say days if an attacker have access to it, new access token can get generated just like if they had the access token instead. One way out of challenge is the use of **Refresh Token Rotation**. After the access token expires, we invalidate old refresh token wile issuing a new access token.
+With the use of refresh token, comes another challenge. Because Refresh Tokens are long-lived, their compromise presents a significant security risk. An attacker with a compromised Refresh Token could perpetually generate new Access Tokens. To challenge, **Refresh Token Rotation** is used in defence. When the client requests a new Access Token, the server must invalidate the old Refresh Token while simultaneously issuing both a new Access Token and a new Refresh Token. This ensures that if the Refresh Token is ever compromised, it can only be used once before being invalidated.

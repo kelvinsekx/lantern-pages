@@ -2,27 +2,27 @@
 title: "Webserver with Nest"
 description: ""
 published_date: "17/07/2025"
-last_updated_date: "30/08/2025"
+last_updated_date: "02/11/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Nest.js, also referred as Nest, is an HTTP web meta-framework built on top of Express the same way Express is built on top of Node. Unlike Express, Nest enforces an architecture for your backend code so that it can scale.
+Nest, also referred as Nest.js and NestJS, is an HTTP web meta-framework built on top of Express the same way Express is built on top of Node. Unlike Express, Nest enforces an architecture for your backend code so that it can scale.
 
-In this lesson, you'll be introduced to Nest.js. We'll replicate [the application with Express from previous lesson along](/learn/backend/node/007-webservers-with-express).
+In this lesson, you'll be introduced to Nest.js. We'll replicate [the application with Express from previous lesson along](/learn/backend/node/007-webservers-with-express) which also combines as a prerequisite for this lesson.
 
-## Create your first program
+## Your first Nest program
 
-To create your first program
+Follow these 2 simple steps:
 
 1. Install nest CLI `$ npm install -g @nestjs/cli`.
 
-   - on successful installation run `$ nest -v` to show the current version. If you see a number then we can assume everything is working fine and `nest` is now available globally.
+   - on successful installation run `$ nest -v` to show the current version. If you see a number, we can assume everything is fine and `nest` is available globally.
 
 2. Create new application with `$ nest new project-name`.
 
    - you'll be asked to choose a package manager. I use NPM, in the same way either Yarn or Pnpm can be used.
-   - on successful completion, change directory to `project-name`, start the application with `$ npm run start:dev`.
+   - once the scaffold and installation is complete, you'll find instructions to start the application.
 
 3. Go to your browser. Visit `localhost:3000` where you should see an "Hello World!" on screen.
 
@@ -32,9 +32,9 @@ To create your first program
   src drectory. Change the port from there.
 </LongAside>
 
-## Routing and request handling
+## Routing with `@controller()` decorator
 
-Routes and request handling are solely handled in the controller layer in Nest. Nest.js routes request to the request handler function that must be defined in a class marked as a controller.
+Routes and request handling are solely handled in the controller layer in Nest. NestJS routes request to the request handler function that must be defined in a class marked as a controller.
 
 **To mark a class as a controller**, the `@controller()` decorator must be applied to a defined class, and this class must be exported to be accessible for registration in the Nest module. Lets take the "app.controller.ts" file in the src folder of your new "project-name" app.
 
@@ -52,10 +52,14 @@ export class AppController {
 
 The `@controller()` decorator takes an optional path prefix. This establishes a **base path** for all routes defined within that controller. If a controller takes a prefix of _'/api'_ `@controller('/api')`, it would prepend its **handler routes** with the _'/api'_ so that route handler defined with '/users' would be addressable as _'/api/users'_.
 
-### Route handlers
+### Route handlers with HTTP verb decorators
 
-**To create a route handler**, we use the HTTP decorators applied to a method in the controller class. Nest has a number of HTTP decorators like `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`, `@Options()`, and
-`@Head()`, used to create **handler routes** with matching HTTP methods.
+The HTTP verb (or HTTP method) decorators are primarily used for two things:
+
+1. to define the HTTP method, and
+2. to define a route path by extending its base controller route.
+
+To create a route handler, combine the HTTP verb decorators with a method in a controller class. Nest has a number of them like `@Get()`, `@Post()`, `@Put()`, `@Delete()`, `@Patch()`, `@Options()`, and `@Head()`, that can be used with an HTTP method to create handler routes.
 
 ```bash
 import { Controller, Get } from '@nestjs/common';
@@ -69,13 +73,10 @@ export class AppController {
 }
 ```
 
-### Sending Responses
-
-A route handler is not useful unless it sends a response to a matching request. To send a response, simple return your preferred value in the method applied with the HTTP decorator. Nest will auto serialize these values into a valid JSON and wrap it in a response body for you.
+To send an HTTP response, simple return a value from the route handler method applied. Nest will auto serialize these values into a valid JSON and wrap it in a response body.
 
 ```bash
-
-   @Get() // defines a route handler
+   @Get()
    findAll(){
       // return 'this returns all items'
       // return ['biscuit', 'milk']
@@ -107,14 +108,14 @@ export class AppController {
 </LongAside>
 
 <AsideNote>
-  However, instead of writing controllers by hand, Nest.js devs rely on the
-  wand, nest/cli, to create these things. Create a new controller with `$ nest
-  generate controller notes`.
+  Instead of writing controllers by hand, Nest.js devs rely on a familiar
+  wand, nest/cli, to create these things. Use `$ nest
+  generate controller <name>` to create a controller boilerplate.
 
-| file                    | use                                       |
+| File                    | Use                                       |
 | ----------------------- | ----------------------------------------- |
 | note.controller.ts      | A controller with a single route          |
-| note.controller.spec.ts | unit tests for the accompanied controller |
+| note.controller.spec.ts | Unit tests for the accompanied controller |
 
 </AsideNote>
 
@@ -209,3 +210,9 @@ export class AppService {
 ## Conclusion
 
 You've reached the end of the first phase, a fit many struggle to beat. Don't stop now.
+
+## References
+
+### Footnotes
+
+1. [NestJS installation](https://docs.nestjs.com/#installation) _Pasted on Sun, Nov 02, 2025._

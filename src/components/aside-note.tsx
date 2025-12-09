@@ -5,7 +5,6 @@ export const AsideNote = ({
   note?: string;
   children?: React.ReactNode;
 }) => {
-  console.log(children);
   return (
     <section role="note" className="bg-red-50/30 p-2.5 space-y-0">
       {note && (
