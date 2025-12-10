@@ -1,5 +1,5 @@
 ---
-title: "Stateless Authentication: The Essential Guide to JWTs, Access & Refresh Tokens"
+title: "The Essentials on JWTs, Access & Refresh Tokens"
 description: "Master stateless authentication for modern apps. Learn how JSON Web Tokens (JWTs) provide verifiable identity, the difference between cookies and bearer tokens, and the security best practice of Refresh Token Rotation."
 published_date: "10/09/2025"
 last_updated_date: "09/12/2025"
@@ -174,7 +174,7 @@ app.post("/login", async (req, res) => {
 });
 ```
 
-The client application receives the token and must store it (e.g., in $\text{localStorage}$). For every protected API call, the client explicitly sets the $\text{Authorization}$ header with the Bearer Token.
+The client application receives the token and must store it (e.g., in localStorage). For every protected API call, the client explicitly sets the Authorization header with the Bearer Token.
 
 <LongAside subject="Run example in curl">
 - sign up
