@@ -41,7 +41,7 @@ export const ArticleSideBar = async ({
                   }
                 )}
               >
-                {truncate(post.metadata.title)}
+                {truncate(post.metadata.title, 60)}
               </Link>
             ))}
           </div>
