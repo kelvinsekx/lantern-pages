@@ -1,30 +1,37 @@
 ---
-title: "From Lists to Databases: Database Fundamentals"
-description: ""
+title: "From Lists to Databases: Introduction to Database Fundamentals"
+description: "Learn how databases evolved from simple lists, why relational databases dominate modern software, and how to design scalable data systems step by step."
 published_date: "27/09/2025"
-last_updated_date: "07/10/2025"
+last_updated_date: "14/12/2025"
 syllabus_code: "BAC002"
 authors: "kelvinsekx"
 ---
 
-Up until this point, we've stored information in lists, as in with arrays. Aside from the obvious inability to persist information after a program reloads, the data were often poorly structured and redundant. We had all sorts of list anomalies! We are migrating to databases, a fascinating and long-established method of storing data.
+So far, we've relied on in-memory data structures such as arrays and lists to store information. While simple and fast, these structures suffer from serious limitations: data disappears when the program stops, structures become inconsistent as applications grow, and redundancy becomes unavoidable.
 
-Database is the established way business store data electronically. It has silently shaped every era of computing. Everytime you search online, request your user profile, check your bank balance or follow your favorite content creators, database is where those information are asked from, otherwise being called **queried**. Which leads us to what is a database?
+To overcome these problems, modern software systems rely on databases which is a battle-tested, decades-old approach to organizing, persisting, and querying data at scale.
+
+Database is the established way businesses store and retrieve data electronically. It has silently shaped every era of computing. Every time you search the web, request your user profile, check your bank balance or follow your favorite content creators, your request is answered by querying a database. This naturally raises an important question: what exactly is a database?
 
 ## What is a database?
 
-A database (db for short) is an **electronically** stored collection of **structured** records with the purpose to store, organize and interact with the data. This is the modern definition of a database. Before the modern era, collections of records were stored on various media, such as punch cards, paper tape, magnetic tapes and disks. These records were **redundant** too as it was normal then for different departments in a company to design and their own copies of data on each department's databases.
+A database (DB for short) is an **electronically** stored collection of **structured** records designed to store, organize and retrieve data. This is the modern definition of a database. Before the modern era, collections of records were stored on punch cards, paper tape, magnetic tapes and disks. These records were **redundant** as it was normal then for different departments in a company to design and their own copies of data on each department's databases.
 
-The modern database is controlled by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, are referred to as **the database system**. DBMS solved most of the problems associated with lists and older database systems like redundancy. However, they are not without their demerits too, which is why lists have been used in previous examples until now. These concerns include:
+The modern database is managed by a database management system (DBMS). Together, the data and the DBMS, along with the applications that are associated with them, form **the database system**. DBMS addresses most of the limitations with lists and early file-based database systems. However, databases have their trade-off too:
 
-- Database systems are complex, difficult, and time-consuming to design ( and sometimes understand)
-- Substantial hardware and software costs to run them. A good example being my Window + icore3 laptop would struggle to run databases or docker ( another modern software that makes it easy to run dbs). I grew in African. And for many like myself we started our programming from cheap hardwares
+- Database systems are complex, difficult, and time-consuming to design.
+- They require additional hardware, memory, and operational overhead. A good example being low spec machines like my Window + icore3 laptop would struggle to run databases or docker ( another modern software that makes it easy to run dbs). I grew in Africa, just like in many part of the world, we started our programming from cheap hardwares.
 
-There are 2 major types databases can be categorized into: **Relational ( or SQL) Database** and **Non-relational ( NoSQL) Databases**. Relational databases are designed to contain tables while NoSQL databases are designed for unstructured or semi-structured data. For the most part of this lesson our focus will be on relational database with a separate lesson for NoSQLs later in the course.
+Databases broadly fall into two categorizes:
+
+1. **Relational ( or SQL) Database** used for operational duties like day to day record keeping
+2. **Non-relational ( NoSQL) Databases** used for analytic reasons like large records usually dormant for analyzes.
+
+Relational databases are designed to contain tables while NoSQL databases are designed for unstructured or semi-structured data. For the most part of this lesson our focus will be on relational database with a separate lesson for NoSQLs later in the course.
 
 ## Brief history
 
-Database history began long before modern computing with manual file systems. However, the first electronic systems were Hierarchical and Network database models, which were complex and difficult to query. The modern era of databases began around the 1970s with Dr. E.F. Codd of IBM. Codd published a seminal paper introducing the mathematical foundation for the relational model on which Relational Databases (RDBs) are based. This model provided a significant advantage over previous systems, leading to the development of the design methodology known as normalization. Codd also stipulated that a relational database should include a common language for interaction, which led to the wide adoption of Structured Query Language (SQL).
+Database history began long before modern computing with manual file systems. The first electronic systems were Hierarchical and Network database models, which were complex and difficult to query. The modern era of databases began around the 1970s with Dr. E.F. Codd of IBM. Codd published a seminal paper introducing the mathematical foundation for the relational model on which Relational Databases (RDBs) are based. This model provided a significant advantage over previous systems, leading to the development of the design methodology known as normalization. Codd also stipulated that a relational database should include a common language for interaction, which led to the wide adoption of Structured Query Language (SQL).
 
 ## Stages in creating a database
 
