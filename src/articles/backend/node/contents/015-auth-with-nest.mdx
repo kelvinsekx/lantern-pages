@@ -1,10 +1,422 @@
 ---
-title: "Auth with Nest"
-description: ""
-published_date: ""
-last_updated_date: ""
+title: "Building Production-Ready Auth with NestJS"
+description: "Learn how to implement industry-standard security in NestJS, including rate limiting, DTO sanitization, and bcrypt hashing."
+published_date: "22/12/2025"
+last_updated_date: "23/12/2025"
 syllabus_code: "BAC003"
 authors: "kelvinsekx"
 ---
 
-## Advanced Auth
+In this lesson, we'll build a production level authentication system with NestJS. Authentication is the foundation of any application security; basic CRUD operations are rarely enough. We will deep-dive into implementing DTO-based validation, rate limiting, input sanitization to ensure your Auth APIs are indeed secure.
+
+<LessonObjectives
+  contents={[
+    "signup ( or register)",
+    "login ( or signin)",
+    "enable email verification",
+    "implement forgotten password",
+    "implement reset password",
+  ]}
+/>
+
+The Auth endpoints for this lesson will be placed in a `auth` controller. Create one with `nest generate controller auth`;
+
+## Secure user registration
+
+A production signup flow requires more than just saving data. Here is our checklist:
+
+- [ ] Extract credentials from the Request Body
+- [ ] Implement Rate Limiting (Brute-force protection)
+- [ ] Validate and sanitize input data
+  - [ ] check for required fields (not-null/empty)
+  - [ ] validate email format
+  - [ ] validate password complexity (length, special characters)
+  - [ ] trim whitespace
+- [ ] Check for existing user
+- [ ] Hash passwords using bcrypt
+- [ ] Save new user Credentials
+
+### Extracting and validating the Request Body
+
+In NestJS, there are several ways to access the request body, the most common and recommended is the `@Body()` decorator. This decorator extracts the request payload and passes it to the preceding variable `body` in our example.
+
+Start with a simple Route handler method, signup.
+
+```js
+// File: "src/auth/auth.controller.ts"
+import { Controller, Post } from "@nestjs/common";
+
+@Controller("auth")
+export class AuthController {
+  @Post("signup")
+  signup() {
+    return "signup";
+  }
+}
+```
+
+Test that things work as expected by running the endpoint.
+
+```bash
+curl -X POST  localhost:3000/auth/signup \
+>> -H "Content-Type: application/json"
+```
+
+<AsideNote>
+  Keep in mind to set `Content-Type` request header as `application/json`.
+</AsideNote>
+
+```js
+// File: "src/auth/auth.controller.ts"
+...
+export class AuthController {
+  @Post('signup')
+  signup(@Body() body: string) {
+    return body;
+  }
+}
+
+```
+
+Because the body variable was typed as a string, we expect the request body to only allow a string. When an object is sent as the request body, we don't get any error. Why? This is because TypeScript used in NestJS only exist at compile time, and not runtime.
+
+```bash
+curl.exe -X POST localhost:3000/auth/signup \
+>> -d '{\"email\": \"hello world\"}' \
+>> -H "Content-Type: application/json"
+********
+{"email":"hello world"}
+```
+
+To enforce runtime validation for our client payloads, we'll use the DTO and ValidationPipe. There are 3 steps to implement DTO in Nest JS.
+
+step 1: Installing the class-validator and transformer packages, `npm i --save class-validator class-transformer`.
+
+step 2: Register the validationPipe in your bootstrap function in the root main.ts file.
+
+step 3: Define a class based DTO and use it as the type hint for the `@Body()` decorator.
+
+```js
+// File: "src/auth/auth.controller.ts"
+...
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
+}
+...
+@Post('signup')
+  signup(@Body() body: CreateUserDto) {
+    return body;
+  }
+```
+
+```bash
+curl -X POST localhost:3000/auth/signup \
+  -d "{\"name\": \"kelvin\"}" \
+  -H "content-type: application/json" | jq '.'
+```
+
+We have fully implemented getting credentials from request body
+
+### Rate limit the endpoint
+
+One of the common techniques to frustate effort of brute-force attacks is rate-limiting. To implement this in nest is kinda easy. To get started install `npm i --save @nestjs/throttler`
+
+```bash
+import { Module } from '@nestjs/common';
+..
+import { APP_GUARD } from '@nestjs/core';
+
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
+  ],
+  controllers: [AppController, AuthController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
+})
+
+export class AppModule {}
+```
+
+Test if the rate limit works by hitting one of the endpoints multiple times. You can do this from the terminal with curl, `for i in {1..50}; do curl -I localhost:3000/auth/signup; done`. Look out for `HTTP/1.1 429 Too Many Requests` in the results.
+
+### Validate user input
+
+In this section, we will cover:
+
+- [x] check for required fields (not-null/empty)
+- [x] validate email format
+- [x] validate password complexity (length, special characters)
+- [x] trim whitespace
+
+We had a glimpse of client payload validation in the first section of this lesson, but we will go extra in this section
+
+```bash
+curl localhost:3000/auth/signup \
+  -d '{"email": "kelvin@gmail.com", "password": "kelvin@1234 "}' \
+  -X POST \
+  -H "content-type: application/json" -s | jq '.'
+```
+
+First, run the curl command above. Note that I have intentionally added a trailing whitespace to the password property.
+
+Upon execution, you will realize that the password was saved exactly as sent,**without being trimmed**. In a backend environment, this is a subtle but critical issue.
+
+#### The "Invisible" Bug
+
+"Invisible" whitespace is a leading cause of user churn and support tickets. Users often sign up on mobile devices where keyboards inadvertently insert trailing spaces (`"password "`). When they later attempt to log in (without a space `"password"`), their valid password is rejected because the database hash included the invisible space. This results in a frustrating "Invalid Credentials" loop for the user.
+
+Regarding the email address, we rely on the `@IsEmail` decorator as it is enough to catch trailing spaces automatically.
+
+To address trailing white spaces and validate password complexity we will enforce input sanitization at the DTO (Data Transfer Object) level specifically using transformation logic rather than a generic interceptor. We will achieve this by:
+
+1. Adding the `transform: true` property to the global ValidationPipe in `main.ts`. This enables the class-transformer to modify incoming payloads before validation occurs.
+
+2. Using the `@Transform` decorator within the DTO to auto-trim string properties.
+
+3. Finally, I have ensured security compliance by applying the `@IsStrongPassword` decorator to validate complexity requirements (e.g., mixed case, special characters).
+
+```js
+// File: "src/auth/auth.dto.ts"
+..
+export class CreateUserDto {
+  ..
+  @Transform(Trim)
+  @IsString()
+  @IsNotEmpty()
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+    minUppercase: 1,
+  })
+  password: string;
+}
+
+//src/main.ts
+..
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    })
+  );
+ ..
+```
+
+See full code so far [here](https://github.com/kelvinsekx/nest-auth)
+
+To proceed, let's setup a free Database and Auth with Supabase.
+
+## Check for existing user and Hash password
+
+Before we save a new user, we ensure two critical security and integrity steps are completed:
+
+1. Check for existing user to prevent duplicate accounts by ensuring the provided email address is not registered more than once.
+
+2. Hashing the password securely using a one-way hashing algorithm.
+
+<AsideNote note="NestJS Services: Your Request Handler Assistants">
+In NestJS, **Controllers** are primarily responsible for handling incoming HTTP requests and returning the appropriate response. However, they shouldn't handle complex business logic. That's where **Services** come in.
+
+### What are Services?
+
+Services are the **providers** in NestJS that handle the bulk of your route handler's logic, such as data fetching, computations, or interacting with databases. They are simple **JavaScript classes** that are registered as providers within a NestJS module.
+
+### Defining and Using a Service
+
+You can define and integrate a Service into your controller in three simple steps:
+
+1.  Define the Service: Create a file (e.g., `user.service.ts`) and define the class using the `@Injectable()` decorator. This decorator marks the class as one that can be managed by the NestJS **IoC (Inversion of Control)** container for dependency injection.
+
+2.  Inject the Service: Use the service within a Controller's constructor. NestJS's dependency injection system automatically resolves and provides an instance of the service when the controller is initialized.
+
+3.  Register as a Provider: Ensure the service is listed in the `providers` array of the relevant NestJS Module (e.g., `user.module.ts`). This tells NestJS that the class should be instantiated and made available for injection.
+
+</AsideNote>
+
+We'll go on to implement an **auth.service.ts** where we will put the logic for checking existing users and hashing our passwords.
+
+Our example uses Supabase, learn more about setting up Supabase with NestJS on our separate article.
+
+```js
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import bcrypt from 'bcrypt';
+...
+import { CreateUserDto } from './auth.dto';
+
+@Injectable()
+export class AuthService {
+  constructor(private supabaseService: SupabaseService) {}
+
+  async create(body: CreateUserDto) {
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(body.password, saltRounds);
+
+    const { error } = await this.supabaseService
+      .getClient()
+      .from('users')
+      .insert({
+        email: body.email,
+        password: hashedPassword,
+      });
+
+    if (error) {
+      ...
+    }
+
+    return {
+      message: 'User created successfully',
+      email: body.email,
+    };
+  }
+}
+```
+
+Never store passwords in plain text. We use bcrypt with a recommended salt round of 10-12.
+
+When a user attempts to register with an email that already exists, return a 409 Conflict exception rather than a generic error. This helps the frontend provide specific feedback.
+
+```js
+...
+ @Post('signup')
+  async signup(@Body() body: CreateUserDto) {
+    // checks for existing user
+    const { data } = await this.supabaseService
+      .getClient()
+      .from('users')
+      .select('*')
+      .eq('email', body.email);
+    // if they exist already throw error
+    if (data?.length) {
+      throw new ConflictException('This email is already registered.');
+    }
+    // hash and create an account where logic resides in some authService.create service
+    return await this.authService.create(body);
+  }
+```
+
+See full code so far [here](https://github.com/kelvinsekx/nest-auth/tree/auth-002)
+
+And that is it for signup, for sending emails after signup is beyond the scope of this lesson.
+
+## The Login Flow
+
+- [ ] Get login credentials from Request Body
+  - [ ] email/username
+  - [ ] password
+- [ ] Rate limit the endpoint
+- [ ] Validate input data
+  - [ ] check for required fields (not-null/empty)
+  - [ ] validate email format (if applicable)
+  - [ ] trim whitespace
+- [ ] Fetch user by email/username
+- [ ] If user not found - return generic "invalid credentials"
+- [ ] Check if user account is active
+  - [ ] email verified?
+  - [ ] not banned / deactivated?
+- [ ] Compare password with hashed password
+- [ ] If password mismatch, return generic "invalid credentials"
+- [ ] Generate authentication token (JWT / session / OAuth)
+- [ ] Generate refresh token (if your system uses refresh tokens)
+- [ ] Save or update session / store refresh token
+- [ ] Return success response with tokens & user info (sanitized)
+
+(Optional but common)
+
+- [ ] Log login attempt (successful/failed)
+- [ ] Send "new login detected" email if device/new IP
+- [ ] Handle 2FA / OTP if enabled
+
+```js
+async login(body: Pick<CreateUserDto, 'email' | 'password'>) {
+    // 1. Get login credentials from Request Body
+    // 2. Validate input data:: done with Pick<T, K> above
+
+    // 3. Fetch user by email/username
+
+    //4. If user not found - return generic "invalid credentials"
+
+    // 5. Compare password with hashed password
+
+    if (!isMatch) {
+      // 6. If password mismatch, return generic "invalid credentials"
+    }
+
+    // 7. Generate authentication token (JWT / session / OAuth)
+    const payload = { sub: data.userId, user: data.email };
+    // 8. Return success response with tokens & user info (sanitized)
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+}
+
+```
+
+<AsideNote note="Pro-Tip:">
+  Always return a generic "Invalid credentials" message for both "User not
+  found" and "Password mismatch." This prevents account enumeration, where
+  attackers try to find valid emails by checking which error the API returns.
+</AsideNote>
+
+Interestingly, the login flow follows a similar pattern to the signup process we already addressed with slight differences. While signup POST returns 201 Created, a login doesn't "create" a user. We use @HttpCode(HttpStatus.OK) to return a standard 200 instead.
+
+```js
+//...rest of auth controller codes...
+  @HttpCode(HttpStatus.OK) // Difference A
+  @Post('login')
+  async signIn(@Body() signInDto: Pick<CreateUserDto, 'email' | 'password'>) {
+    return await this.authService.login(signInDto);
+  }
+//...rest of auth controller codes...
+```
+
+<AsideNote note="Power of HttpStatus">
+
+You may have noticed a new one `@HttpCode(HttpStatus.OK)`, this was added to change the default behaviour of nestjs. Nest follows REST conventions:
+
+- `GET()` for **200** OK
+- `POST` for **201** created
+- `PUT/PATCH/DELETE` for **200** OK
+
+Without the `@HttpCode(HttpStatus.OK)`, the status code would have been **201 Created** implying a new resource was created. This is misleading because on login we aren't creating any new resources. Nest defaults are convenient, not always correct.
+
+`@HttpCode(HttpStatus.OK)` gives developerss the control to give API response
+befitting meaning. A popular example is with `Delete()` that returns **200
+OK** instead of **204 No Content** achievable with
+`@HttpCode(HttpStatus.NO_CONTENT)`.
+
+</AsideNote>
+
+The lessons you've learned from this lesson is enough to guide you implement the
+rest of code for Auth. However, we provided all the codes you need for all sorts of
+auth needs in this repo.
+
+## References
+
+### Footnotes
+
+1. [Nest and rate limiting](https://docs.nestjs.com/security/rate-limiting) _Pasted on Wed, Nov 19, 2025._
+2. [Nest and vaidation](https://docs.nestjs.com/techniques/validation) _Pasted on Wed, Nov 19, 2025._
+3. [Don't process.env](https://syskool.com/configuration-management-with-nestjs-config/) _Pasted on Sat, Dec 06, 2025_
