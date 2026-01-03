@@ -29,21 +29,24 @@ export const ArticleSideBar = async ({
             Articles in {category}
           </p>
           <div>
-            {content.map((post) => (
-              <Link
-                href={post.slug}
-                key={post.slug}
-                className={cn(
-                  "block hover:text-black-150 hover:bg-green-50 active:text-black rounded-sm py-0.5",
-                  {
-                    "text-green-400 bg-green-50/50 font-medium":
-                      activeSlug === post.id,
-                  }
-                )}
-              >
-                {truncate(post.metadata.title, 60)}
-              </Link>
-            ))}
+            {content.map((post) => {
+              const t = post.metadata.short_title || post.metadata.title;
+              return (
+                <Link
+                  href={post.slug}
+                  key={post.slug}
+                  className={cn(
+                    "block hover:text-black-150 hover:bg-green-50 active:text-black rounded-sm py-0.5",
+                    {
+                      "text-green-400 bg-green-50/50 font-medium":
+                        activeSlug === post.id,
+                    }
+                  )}
+                >
+                  {truncate(t, 60)}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>

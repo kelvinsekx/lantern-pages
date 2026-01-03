@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Signin from "./sign-in";
 
 export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
   return (
@@ -16,9 +17,7 @@ export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
           </Link>
         </div>
         <div>
-          <button className="text-black-250 font-medium rounded-md px-4 py-1 cursor-pointer">
-            Sign in
-          </button>
+          <Signin />
         </div>
       </div>
     </nav>
