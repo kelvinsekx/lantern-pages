@@ -16,12 +16,14 @@ export default function GuidePage() {
           1. Contributing to Lantern
         </header>
         <p>
-          We welcome contributions of all kinds—content corrections, new
-          articles, code improvements, or feedback. To contribute:
+          We welcome contributions of all kinds. We take extra interests in
+          identifying inconsistent sentences, code errors in examples or
+          accompanied github repos, inaccurate logic, unclear thoughts, new
+          articles, or code improvements. To contribute:
         </p>
         <ul className="list-disc ml-6 mt-2 space-y-1">
           <li>
-            If you spot an error or have a suggestion, please{" "}
+            If you spot an concern above, please{" "}
             <a
               href="https://github.com/kelvinsekx/lantern-pages/issues"
               className="text-blue-600 underline"

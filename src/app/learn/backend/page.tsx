@@ -4,6 +4,7 @@ import { LibraryBig, LinkIcon } from "lucide-react";
 import syllabus from "./syllabus.json";
 import { getBlogPosts } from "@/utilities/mdx-utils";
 import Link from "next/link";
+import { ShowProgressOrLogout } from "@/components/progress-or-logout";
 
 export default async function ListSyllabusPage() {
   const posts = await getBlogPosts("node");
@@ -44,15 +45,7 @@ export default async function ListSyllabusPage() {
           </div>
           <div>An indepth and production ready guide</div>
         </div>
-        <div className="border bg-[#fff] border-muted rounded-2xl w-fit px-5 py-10 lg:mr-20 mx-auto">
-          <div className="text-black-400 font-semibold text-xl">
-            <span className="text-black">0%</span> Completed
-          </div>
-          <p className="text-black-250">
-            <span className="text-green-350 font-semibold">sign in</span> to
-            save your progress
-          </p>
-        </div>
+        <ShowProgressOrLogout />
       </div>
       <div className="sekx__list-stages">
         <ul>
@@ -86,7 +79,7 @@ export default async function ListSyllabusPage() {
                         key={p.slug}
                         className="block mt-2 hover:text-black-150 active:text-black md:text-lg w-fit group"
                       >
-                        {p.metadata.title}{" "}
+                        {p.metadata.short_title || p.metadata.title}{" "}
                         <LinkIcon className="inline stroke-muted group-hover:stroke-black w-4 h-4" />
                       </Link>
                     ))}
