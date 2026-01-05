@@ -2,6 +2,12 @@
 import { useState, useEffect } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase-client";
+import Image from "next/image";
+
+function getUserAvatar(user: User | null) {
+  if (!user) return null;
+  return user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
+}
 
 export default function Signin() {
   const [user, setUser] = useState<User | null>(null);
@@ -49,7 +55,17 @@ export default function Signin() {
   };
 
   if (user) {
-    return <div>Signed in as {user.email}</div>;
+    return (
+      <div className="text-green-450 font-medium w-10 h-10 relative">
+        <Image
+          src={getUserAvatar(user)}
+          alt="Avatar"
+          fill
+          priority
+          className="rounded-full object-cover object-center"
+        />
+      </div>
+    );
   }
 
   return (
