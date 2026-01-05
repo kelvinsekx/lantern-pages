@@ -23,7 +23,7 @@ export default function GuidePage() {
         </p>
         <ul className="list-disc ml-6 mt-2 space-y-1">
           <li>
-            If you spot an concern above, please{" "}
+            If you spot any concern, please{" "}
             <a
               href="https://github.com/kelvinsekx/lantern-pages/issues"
               className="text-blue-600 underline"
@@ -48,7 +48,7 @@ export default function GuidePage() {
         <p>
           Interested in a more personalized learning journey? You can apply to
           join my teaching cohort for a one-on-one experience, or book a private
-          consultation session.
+          mentorship, consultation session.
         </p>
         <ul className="list-disc ml-6 mt-2 space-y-1">
           <li>
@@ -98,6 +98,9 @@ export default function GuidePage() {
           <li>Stay tuned for upcoming community events and forums.</li>
         </ul>
       </section>
+      <p className="text-black-100 font-sm mt-4">
+        written and edited by Kelvinsekx, 2026
+      </p>
     </div>
   );
 }
