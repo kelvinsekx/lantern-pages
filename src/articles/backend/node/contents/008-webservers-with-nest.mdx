@@ -7,9 +7,9 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Nest, also referred as Nest.js and NestJS, is an HTTP web meta-framework built on top of Express the same way Express is built on top of Node. Unlike Express, Nest enforces an architecture for your backend code so that it can scale.
+Nest, also referred as Nest.js and NestJS, is an HTTP web meta-framework built on top of ExpressJS. The same way Express is built on top of Node. But unlike Express, Nest forces you to use some predefined architecture for your backend code.
 
-In this lesson, you'll be introduced to Nest.js. We'll replicate [the application with Express from previous lesson along](/learn/backend/node/007-webservers-with-express) which also combines as a prerequisite for this lesson.
+In this lesson, I'll introduce you to Nest.js. We'll replicate [the application with Express from previous lesson ](/learn/backend/node/007-webservers-with-express). The same lesson combines as a prerequisite for this one.
 
 ## Your first Nest program
 
@@ -17,22 +17,30 @@ Follow these 2 simple steps:
 
 1. Install nest CLI `$ npm install -g @nestjs/cli`.
 
-   - on successful installation run `$ nest -v` to show the current version. If you see a number, we can assume everything is fine and `nest` is available globally.
+   On successful installation run `$ nest -v` to show the current version. If you see a number, we can assume everything is fine and `nest` is available globally.
 
 2. Create new application with `$ nest new project-name`.
 
-   - you'll be asked to choose a package manager. I use NPM, in the same way either Yarn or Pnpm can be used.
-   - once the scaffold and installation is complete, you'll find instructions to start the application.
+   You'll be asked to choose a package manager. I use NPM, either Yarn or Pnpm is fine. Once the initialization is complete, you'll find instructions to start the application.
+
+   The `nest new` command creates a functional application with a base structure on which you can extend your implementation on.
 
 3. Go to your browser. Visit `localhost:3000` where you should see an "Hello World!" on screen.
 
-<LongAside subject="Customize port:3000 if it is in use">
+<LongAside subject="If port 3000 is in use, customize to a different port number">
   On some rare cases, you may want to customize the default port for reasons
   like port:3000 been used by another program. Go to the `main.ts` file in the
-  src drectory. Change the port from there.
+  src directory. Change the port from 3000 to a preferred port of yours say
+  8686.
 </LongAside>
 
-## Routing with `@controller()` decorator
+## Existing Structures in a Nest Application
+
+**The basic structure in a Nest application are modules, controllers, and services**. In a large project you want to keep things simple and these structures have enough to server your needs. In case when you want to hack past the basics, their are existing structures provided by Nest. They are are application, class, configuration, decorator, filter, gateway, guard, interceptor, interface, middleware. module, pipe, provider, resolver, library, sub-app and resource.
+
+Instead of writing these files/structures by hand all the time, we use the Nest's `generate` command.
+
+#### Routing with `@controller()` decorator
 
 Routes and request handling are solely handled in the controller layer in Nest. NestJS routes request to the request handler function that must be defined in a class marked as a controller.
 
