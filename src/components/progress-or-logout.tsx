@@ -25,6 +25,27 @@ const ShowProgressOrLogout = function () {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const handleSignIn = async () => {
+    // 2. This simply initiates the redirect.
+    // The code below this await mostly won't run because the browser leaves the page.
+    const { error } = await supabase().auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // Redirect back to your app after Google is done
+        redirectTo: `${window.location.origin}/auth/callback?next=${window.location.pathname}`,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
+
+    if (error) {
+      console.error("Error signing in:", error);
+    }
+  };
+
   return (
     <div className="border bg-[#fff] border-muted rounded-2xl w-80 px-5 py-10 lg:mr-20 mx-auto">
       <div className="text-black-400 font-semibold text-xl">
@@ -33,8 +54,13 @@ const ShowProgressOrLogout = function () {
       <p className="text-black-250">
         {!user ? (
           <>
-            <span className="text-green-350 font-semibold">sign in</span> to
-            save your progress
+            <span
+              onClick={handleSignIn}
+              className="text-green-350 font-semibold cursor-pointer"
+            >
+              sign in
+            </span>{" "}
+            to save your progress
           </>
         ) : (
           <LogoutButton />
