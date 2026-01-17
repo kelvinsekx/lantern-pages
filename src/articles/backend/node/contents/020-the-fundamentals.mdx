@@ -1,0 +1,42 @@
+---
+title: "The Fundamentals (Node.js, SMTP & Nodemailer)"
+description: "Understand how SMTP works"
+published_date: "17/01/2026"
+last_updated_date: "17/01/2026"
+syllabus_code: "BAC006"
+authors: "kelvinsekx"
+---
+
+Email has become a ubiquitous component of modern application features. As a primary communication channel, nearly every user interaction, from password resets to transaction receipts, triggers an automated message.
+
+In this module, we'll explore the lifecycle of internet mails (email), the protocols that carries your email from your client to the receivers inbox and choices you face to implement one that scale in Node and NestJS.
+
+## The 6 pillars of email delivery
+
+The email ecosystem relies on six critical components. Much like a physical postal service,there is a lot happening before your letter or item reaches the intended recipient.
+
+1. User Agent (UA): The interface (Gmail, Outlook) where the sender composes the message before (Sender's Email Server)
+2. Submission Agent (MSA): The software that receives the mail from the UA and checks for errors before handing it to the transfer agent.
+3. Mail Transfer Agent (MTA): The "sorting facility" that routes the email across the internet to the recipient's server.
+4. Receiving MTA: The destination server that accepts the incoming message.
+5. Mail Delivery Agent (MDA): The "local carrier" that places the message into the recipient's specific mailbox.
+6. IMAP/POP3 Protocols: The tools the recipient uses to retrieve the mail from the mailbox.
+
+These components can be further categorized into two
+
+- Email Infrastructure: user agents, servers, mailboxes
+- SMTP: simple mail transfer protocol
+
+The user agents are mail readers used for composing, editing, reading email messages like Outlook and Gmail.
+
+The mail servers are where your email account lives, they contain mailboxes that holds incoming messages for user and message queue of outgoing (to be sent) mail messages. For email to be sent from one person to another, we need at least two servers: the sender's mail server and the receiver's mail server.
+
+We've chosen not to go into the details of these systems (Submission Agents, MTAs) but this article will be incomplete without discuss the popular protocol used for sending emails, SMTP.
+
+## Understanding SMTP
+
+SMTP (Simple Mail Transfer Protocol) is a one way protocol used for sending email only (not responsible for receiving email) that sits on top of TCP. Think of it as a one way post office for your emails. They can send them but not receive them. It's important to add that unlike other TCP meta-protocols like HTTP that pulls data from a server, SMTP pushes data to a server or between servers.
+
+To complete the loop, SMTP hands off the message to the MDA, where protocols like IMAP or POP3 allow the end-user to access it.
+
+While SMTP remains the backbone of email, many modern developers are shifting toward HTTP-based APIs (like SendGrid or Postmark). These offer better security (hiding your server's IP), easier credential management, and built-in analytics that raw SMTP lacks.
