@@ -14,7 +14,11 @@
     "description": "Learn to persist data over http",
     "code": "BAC002"
   },
-
+  {
+    "title": "Email",
+    "description": "Integrate email sending and receiving functionality",
+    "code": "BAC006"
+  },
   {
     "title": "Hosting (cdn, https, domains, networking)",
     "description": "Learn how to deploy and host your backend services",
@@ -25,11 +29,7 @@
     "description": "Store and serve user-uploaded files efficiently",
     "code": "BAC005"
   },
-  {
-    "title": "Email",
-    "description": "Integrate email sending and receiving functionality",
-    "code": "BAC006"
-  },
+
   {
     "title": "Payments",
     "description": "Process payments and handle financial transactions",
