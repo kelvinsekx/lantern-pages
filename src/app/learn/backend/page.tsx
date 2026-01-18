@@ -101,7 +101,7 @@ export default async function ListSyllabusPage() {
                   <div className="flex items-start gap-4 md:gap-6">
                     {/* Step Number */}
                     <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center">
-                      <span className="text-lg md:text-2xl font-bold text-primary">
+                      <span className="text-lg md:text-2xl font-bold">
                         {index + 1}
                       </span>
                     </div>
