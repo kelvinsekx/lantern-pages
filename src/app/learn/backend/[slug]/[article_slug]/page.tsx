@@ -17,14 +17,12 @@ type Params = Promise<{ slug: string; article_slug: string }>;
 export default async function BlogPage({ params }: { params: Params }) {
   const { slug, article_slug } = await params;
   const { metadata, content } = await getPostInformation(
-    (
-      await params
-    ).article_slug
+    (await params).article_slug,
   );
 
   const posts = await getBlogPosts(slug);
   const relatedPosts = posts.filter(
-    (p) => p.metadata.syllabus_code == metadata.syllabus_code
+    (p) => p.metadata.syllabus_code == metadata.syllabus_code,
   );
 
   const options: MDXRemoteOptions = {
@@ -50,8 +48,23 @@ export default async function BlogPage({ params }: { params: Params }) {
           category={metadata.syllabus_code}
         />
 
-        <div className="space-y-10 md:mr-10 pt-0 pb-10 w-full md:w-[calc(100%-25%-10%)] absolute right-0 top-[10px] md:top-[30px]">
-          <article className="prose prose-slate prose-h2:text-center prose-h2:mt-8 prose-h2:mb-2 prose-h2:font-medium prose-h2:text-xl prose-h2:py-4 prose-h2:tracking-tight prose-h3:text-base prose-h3:font-bold prose-strong:text-black prose-strong:font-semibold shadow-inner border border-muted-200 rounded-3xl p-5 md:p-10 space-y-5 block max-w-[82ch] prose-hr:border-black-50 prose-code:text-black prose-code:text-base prose-pre:bg-[#838570]/30 prose-pre:[&_code]:text-black-500 prose-pre:[&_code]:text-sm prose-li:my-0.5">
+        <div className="space-y-10 md:mr-10 pt-0 pb-10 px-5 md:px-0 w-full md:w-[calc(100%-25%-10%)] absolute right-0 top-[10px] md:top-[30px]">
+          <article
+            className="prose prose-lg max-w-none mb-12
+            prose-headings:font-bold prose-headings:tracking-tight
+            prose-h1:text-4xl prose-h1:mt-8 prose-h1:mb-6
+            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
+            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-p:text-foreground/80 prose-p:leading-7 prose-p:my-4
+            prose-strong:text-foreground prose-strong:font-semibold
+              prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
+            prose-pre:bg-slate-950 prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:overflow-x-auto
+            prose-pre:[&_code]:text-accent prose-pre:[&_code]:text-sm
+            prose-blockquote:border-l-4 prose-blockquote:border-black-50/15 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground/70 prose-blockquote:bg-accent/5 prose-blockquote:py-2 prose-blockquote:pr-4
+            prose-li:marker:text-black prose-li:my-2
+            prose-hr:border-border prose-hr:my-8
+             prose-a:no-underline prose-a:font-medium hover:prose-a:underline"
+          >
             <h1 className="text-3xl md:text-4xl font-normal tracking-tight text-center">
               {metadata.title}
             </h1>
@@ -88,10 +101,3 @@ export default async function BlogPage({ params }: { params: Params }) {
     </div>
   );
 }
-
-// export async function generateStaticParams() {
-//   const posts = await getBlogPosts("node");
-//   return posts.map((p) => ({ slug: p.slug }));
-// }
-
-// export const dynamicParams = false;
