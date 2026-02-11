@@ -2,7 +2,7 @@
 title: "Introduction to Executing Node Code"
 description: ""
 published_date: "16/06/2025"
-last_updated_date: "29/07/2025"
+last_updated_date: "11/02/2025"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
@@ -19,11 +19,11 @@ authors: "kelvinsekx"
 
 If you have Node installed on your computer, you should have the commands `node` and `npm` available in your environment. Make sure the Node version is a recent one (20.x or higher).
 
-To verify your Node version, open a terminal and run the command `node -v`. If the prompt returns something around "command 'node' not found, ..." instead of a number, you don't have the node command.[Follow this link on instructions to download node](https://nodejs.org/en/download).
+To verify your Node version, open a terminal and run the command `node -v`. If the prompt returns something around "command 'node' not found, ..." and not a number, you don't have the node command.[Follow this link on instructions to download node](https://nodejs.org/en/download).
 
 ## How to execute your applications
 
-There are broadly two ways of executing node commands or codes.
+There are broadly two ways of executing node programs.
 
 1. **an interactive shell/mode**, also called REPL (Read-Eval-Print-Loop)
 2. **a script** by passing the first name of the file to node command
@@ -61,7 +61,7 @@ $ node
 Welcome to Node.js v<your_number>
 ...
 > Math.random()
-> 0.0893322323219892
+> 0.<random number>
 >
 ```
 
@@ -73,7 +73,7 @@ We are going to run the same code using script next.
 
 ## Your first node in a script
 
-`mkdir` (make a new directory) and `cd` (change directory) into it:
+Let's create a directory with `mkdir` (make a new directory) and `cd` (change directory) into it:
 
 ```bash
 $ mkdir node-example-1
@@ -94,7 +94,7 @@ To execute that script, in the terminal, type the following command passing the 
 $ node test.js // <node-command> <file-name>
 ```
 
-You will notice the command will basically do nothing because we did not output anything in the script. To output something, you can use the global `console` object, which is similar to the one available in browsers.
+You will notice the command will do nothing because we did not output anything in the script. To output something, you can use the global `console` object, which is similar to the one available in browsers.
 
 ```bash
 //file: node-example-1/test.js
@@ -114,13 +114,13 @@ The `console.log` method is a mask that writes the value of its arguments to the
 
 The console object is one of many top-level global scope objects that we can access in Node without needing to declare any dependencies. Similar to how the global windows object in browsers can be accessed with the globalThis property, in Node, the globalThis property is the global object and the console object is part of it. All properties of globalThis can be accessed directly: for example, `console.log` instead of `globalThis.console.log` which also works.
 
-If the preceeding paragraphs confuses you, again we will talk about this in other chapters.
+If the preceeding paragraphs confuses you, again we will talk about this in other chapters so you are fine reading along.
 
 </LongAside>
 
 ## In Conclusion
 
-At the end of this lesson, you should be familiar with the two ways on how to run your node commands. Congratulations as nothing is too small to celebrate.
+At the end of this lesson, you should be familiar with the two ways to run your node programs. Congratulations! Nothing is too small to celebrate.
 
 ## References
 

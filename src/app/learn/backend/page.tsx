@@ -97,7 +97,7 @@ export default async function ListSyllabusPage() {
 
             return (
               <div key={cuid2.createId()} className="group">
-                <div className="bg-white border border-border rounded-lg p-6 md:p-8 hover:border-accent/50 transition-colors duration-200">
+                <div className="bg-white border border-border rounded-lg p-4 md:p-8 hover:border-accent/50 transition-colors duration-200">
                   <div className="flex items-start gap-4 md:gap-6">
                     {/* Step Number */}
                     <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center">
