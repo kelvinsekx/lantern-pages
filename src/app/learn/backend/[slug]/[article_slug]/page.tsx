@@ -50,7 +50,7 @@ export default async function BlogPage({ params }: { params: Params }) {
 
         <div className="space-y-10 md:mr-10 pt-0 pb-10 px-5 md:px-0 w-full md:w-[calc(100%-25%-10%)] absolute right-0 top-[10px] md:top-[30px]">
           <article
-            className="prose prose-lg max-w-none mb-12
+            className="prose max-w-none mb-12
             prose-headings:font-bold prose-headings:tracking-tight
             prose-h1:text-4xl prose-h1:mt-8 prose-h1:mb-6
             prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
@@ -65,7 +65,7 @@ export default async function BlogPage({ params }: { params: Params }) {
             prose-hr:border-border prose-hr:my-8
              prose-a:no-underline prose-a:font-medium hover:prose-a:underline"
           >
-            <h1 className="text-3xl md:text-4xl font-normal tracking-tight text-center">
+            <h1 className="text-2xl md:text-4xl font-normal tracking-tight text-center">
               {metadata.title}
             </h1>
             <MDXRemote
