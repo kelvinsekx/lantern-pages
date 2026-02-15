@@ -10,9 +10,7 @@ export const LongAside = ({
       <summary className="text-base md:text-lg font-medium mb-2 text-[#a3427b]">
         {subject}
       </summary>
-      <div className="text-gray-600 text-[#3c1a2e] text-sm md:text-base">
-        {children}
-      </div>
+      <div className="text-gray-600 text-[#3c1a2e]">{children}</div>
     </details>
   );
 };

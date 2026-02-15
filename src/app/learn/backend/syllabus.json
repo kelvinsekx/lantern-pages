@@ -20,6 +20,11 @@
     "code": "BAC006"
   },
   {
+    "title": "Caching",
+    "description": "Improve performance with data caching strategies",
+    "code": "BAC013"
+  },
+  {
     "title": "Hosting (cdn, https, domains, networking)",
     "description": "Learn how to deploy and host your backend services",
     "code": "BAC004"
@@ -59,10 +64,5 @@
     "title": "Push Notifications",
     "description": "Send real-time notifications to user devices",
     "code": "BAC012"
-  },
-  {
-    "title": "Caching",
-    "description": "Improve performance with data caching strategies",
-    "code": "BAC013"
   }
 ]

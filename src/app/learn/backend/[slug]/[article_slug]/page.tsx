@@ -52,15 +52,15 @@ export default async function BlogPage({ params }: { params: Params }) {
           <article
             className="prose max-w-none mb-12
             prose-headings:font-bold prose-headings:tracking-tight
-            prose-h1:text-4xl prose-h1:mt-8 prose-h1:mb-6
-            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
+            
+            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
             prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
             prose-p:text-foreground/80 prose-p:leading-7 prose-p:my-4
             prose-strong:text-foreground prose-strong:font-semibold
               prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
             prose-pre:bg-slate-950 prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:overflow-x-auto
             prose-pre:[&_code]:text-accent prose-pre:[&_code]:text-sm
-            prose-blockquote:border-l-4 prose-blockquote:border-black-50/15 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground/70 prose-blockquote:bg-accent/5 prose-blockquote:py-2 prose-blockquote:pr-4
+            prose-blockquote:border-l-4 prose-blockquote:border-black-50/15 prose-blockquote:pl-4 prose-blockquote:not-italic prose-blockquote:text-foreground/70 prose-blockquote:bg-accent/5 prose-blockquote:py-2 prose-blockquote:pr-4
             prose-li:marker:text-black prose-li:my-2
             prose-hr:border-border prose-hr:my-8
              prose-a:no-underline prose-a:font-medium hover:prose-a:underline"
@@ -81,14 +81,17 @@ export default async function BlogPage({ params }: { params: Params }) {
               }}
             />
           </article>
-          <div className="text-black-200 pl-2.5 md:p-0 [&_span]:text-black">
+          <div className="text-black-200 pl-2.5 md:p-0 [&_span]:text-black ">
             <p>
-              <span>Published on</span> {metadata.published_date},{" "}
-              <span>Last updated on</span> {metadata.last_updated_date}
-            </p>
-            <p>
-              This page was contributed to by{" "}
-              <a href="https://github.com/kelvinsekx">kelvinsekx</a>,{" "}
+              This page was published on {metadata.published_date}, last updated
+              on <span>{metadata.last_updated_date}.</span> Contributed to by{" "}
+              <a
+                href="https://github.com/kelvinsekx"
+                className="text-black font-medium"
+              >
+                kelvinsekx
+              </a>
+              ,{" "}
             </p>
           </div>
           <footer className="mt-8 text-center text-base text-gray-500">
