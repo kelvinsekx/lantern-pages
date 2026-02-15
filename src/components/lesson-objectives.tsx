@@ -44,7 +44,7 @@ export function LessonObjectives({
             <ul className="space-y-3 p-0">
               {contents.map((s: string, i: number) => (
                 <li key={i} className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 stroke-green-100" />
+                  <CheckCircle2 className="h-5 w-5 stroke-green" />
                   <span className="text-black-250">{s}</span>
                 </li>
               ))}
