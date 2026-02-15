@@ -1,0 +1,39 @@
+---
+title: "Introduction to Caching on the Backend"
+description: ""
+published_date: "15/02/2026"
+last_updated_date: "15/02/2026"
+syllabus_code: "BAC007"
+authors: "kelvinsekx"
+---
+
+**Caching is meant for temporary fast access to frequently needed data that rarely change**. If you are from a frontend background, caching assets like images, css in CDN is popular. CDN is one of the ways caching is implemented. But in this article, we will focus on **caching at the backend application level** instead.
+
+Backend application level caching lives on the computer RAM and not written to disk. Without caching, every request for some stored data would normally hit the DB (short for database) that then hits the server's CPU before reaching down to disk. Caching brings these data closer to the CPU.
+
+## Does caching on the backend matters?
+
+**Caching on the backend saves cost**, while caching on the frontend drives revenue. In fact, many times caching on the backend has an higher ROI compare to on the frontend.
+
+Caching protects your database from being hit all the time. It gives your database breathing room which in turn reduces your network cost.
+
+You want your database to do one thing and one thing well, persist data and ensure its integrity. The DB doesn't need to be fast at answering simple questions anymore; it just needs to be correct and reliable when the cache eventually asks for an update.
+
+Cache should be used because they:
+
+1. Save cost thanks to fewer DB reads
+2. Reduce latency i.e make your server faster.
+3. Scale the app as more users can be served by same server.
+
+## Real world scenarios use cases for caching
+
+1. In case of push notification to all users to your app. These users can reside on the cache. This is called **Fan-out or Read-heavy optimization**.
+2. Cache long list of feed so that you don't hit the DB immediately the user opens your app. Creating a Feed would usually require computation of joins, rank and filtering logics, Caching saves the expensive calculations.
+
+## What cache should NOT be used for
+
+Cache should not be used as a primary database or permanent storage of data. Also, data that isn't accessed frequently or that changes fast.
+
+## Conclusion
+
+Now you are tip-toeing into real hard components of backend development. In the next lesson, we will talk all about Redis, a distributed application level cache solution.
