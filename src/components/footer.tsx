@@ -27,12 +27,8 @@ export const Footer = () => {
                   </ul>
                 </LinkGroup>
 
-                <div>
-                  <LinkGroupItem>Product management</LinkGroupItem>
-                </div>
-
                 <LinkGroup>
-                  <LinkGroupSubTitle>Languages</LinkGroupSubTitle>
+                  <LinkGroupSubTitle>Mother tongues</LinkGroupSubTitle>
                   <LinkGroupItem>Itsekiri</LinkGroupItem>
                 </LinkGroup>
               </div>

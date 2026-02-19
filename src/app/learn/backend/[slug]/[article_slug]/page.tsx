@@ -53,8 +53,8 @@ export default async function BlogPage({ params }: { params: Params }) {
             className="prose max-w-none mb-12
             prose-headings:font-bold prose-headings:tracking-tight
             
-            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
-            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-h2:text-xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-foreground
+            prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
             prose-p:text-foreground/80 prose-p:leading-7 prose-p:my-4
             prose-strong:text-foreground prose-strong:font-semibold
               prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
@@ -65,7 +65,7 @@ export default async function BlogPage({ params }: { params: Params }) {
             prose-hr:border-border prose-hr:my-8
              prose-a:no-underline prose-a:font-medium hover:prose-a:underline"
           >
-            <h1 className="text-2xl md:text-4xl font-normal tracking-tight text-center">
+            <h1 className="text-2xl my-2 md:text-4xl font-normal tracking-tight text-center">
               {metadata.title}
             </h1>
             <MDXRemote
