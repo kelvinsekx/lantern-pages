@@ -2,7 +2,7 @@
 title: "Introduction to Executing Node Code"
 description: ""
 published_date: "16/06/2025"
-last_updated_date: "11/02/2025"
+last_updated_date: "11/02/2026"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
@@ -19,7 +19,7 @@ authors: "kelvinsekx"
 
 If you have Node installed on your computer, you should have the commands `node` and `npm` available in your environment. Make sure the Node version is a recent one (20.x or higher).
 
-To verify your Node version, open a terminal and run the command `node -v`. If the prompt returns something around "command 'node' not found, ..." and not a number, you don't have the node command.[Follow this link on instructions to download node](https://nodejs.org/en/download).
+To verify your Node version, open a terminal and run the command `node -v`. If the prompt returns something around "command 'node' not found, ..." and not a number, you don't have the node command. [Follow this link on instructions to download node](https://nodejs.org/en/download).
 
 ## How to execute your applications
 
@@ -76,11 +76,20 @@ We are going to run the same code using script next.
 Let's create a directory with `mkdir` (make a new directory) and `cd` (change directory) into it:
 
 ```bash
+
 $ mkdir node-example-1
 $ cd node-example-1
 ```
 
-Open up the directory in your favorite code editor and create a file name "test.js". Put the same `Math.random()` line into it:
+Open up the directory in your favorite code editor and create a file name `test.js`. If you use a linux environment, you can just do this:
+
+```bash
+
+$ touch test.js // creates a file
+$ vim test.js // opens the file with a linux built-in vim editor
+```
+
+Put the same `Math.random()` line as we did with REPL into it:
 
 ```bash
 //file: node-example-1/test.js
@@ -88,7 +97,7 @@ Open up the directory in your favorite code editor and create a file name "test.
 Math.random()
 ```
 
-To execute that script, in the terminal, type the following command passing the file name as first argument to the node command:
+To execute that script, in your terminal, type the following command passing the file name as first argument to the node command:
 
 ```bash
 $ node test.js // <node-command> <file-name>
@@ -99,12 +108,10 @@ You will notice the command will do nothing because we did not output anything i
 ```bash
 //file: node-example-1/test.js
 
-console.log(
-    Math.random()
-)
+console.log(Math.random())
 ```
 
-Executing node-example-1/test.js will output a random number. We're using both JavaScript (`Math` object) and an object from the Node API (`console`). Taa daa!
+Executing `node-example-1/test.js` will output a random number and immediately terminate the script. We're using both JavaScript (`Math` object) and an object from the Node API (`console`). Taa daa!
 
 <LongAside subject="A little diversion to talk `console`">
 
@@ -112,15 +119,15 @@ The `console` object in node is similar to the one available in browsers but the
 
 The `console.log` method is a mask that writes the value of its arguments to the default standard output stream (stdout) of the running process.
 
-The console object is one of many top-level global scope objects that we can access in Node without needing to declare any dependencies. Similar to how the global windows object in browsers can be accessed with the globalThis property, in Node, the globalThis property is the global object and the console object is part of it. All properties of globalThis can be accessed directly: for example, `console.log` instead of `globalThis.console.log` which also works.
+The console object is one of many top-level global scope objects that we can access in Node without declaring any dependencies. Similar to how the global windows object in browsers can be accessed with the globalThis property. In Node, the globalThis property is the global object and the console object is part of it. All properties of globalThis can be accessed directly without prefixing with the object name: for example, using `globalThis.console.log` instead of `console.log` works fine.
 
-If the preceeding paragraphs confuses you, again we will talk about this in other chapters so you are fine reading along.
+If the preceeding paragraphs confuses you, we'll talk about this in other chapters so you are fine reading along.
 
 </LongAside>
 
 ## In Conclusion
 
-At the end of this lesson, you should be familiar with the two ways to run your node programs. Congratulations! Nothing is too small to celebrate.
+At the end of this lesson, you have ran your first NodeJS program. Nothing is too small to celebrate. Congratulations!
 
 ## References
 

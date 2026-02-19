@@ -7,7 +7,7 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that the complex parts are built on.
+This module may feel way longer compared to previously completed ones. Please don't rush it. These are the basic concepts that the complex ones are built on.
 
 <LessonObjectives
   contents={[
@@ -21,36 +21,44 @@ This module may feel way longer compared to previously completed ones. Please do
 
 ## Console.log out
 
-`console.log` in node is a web syntatic wrapper. It is a convenience alternative to `process.stdout.write`.
+`console.log` in node is a web syntatic wrapper. It is a convenience alternative to `process.stdout.write()` function.
 
-Node console is a global instance configured to write to process.stdout and process.stderr. Because of this, it can be used without calling `require('node:console')`. Console.log can be used for debugging or display something to the user.
+The console is a **global instance** configured to write to node's standard out among other things. Because of being global, the `.log()` function can be used without importing it from `node:console`.
+
+`console.log` is used for debugging or display a record to the client.
 
 <AsideNote>
   {`If process.stdout, process.stderr confuse you, don't mind it. You will see
-  more of it and with lengthier explanation later.`}
+  more lengthier explanation on them later.`}
 </AsideNote>
 
 Let's run some examples in the REPL.
 
 ```bash
+
 $ node
 Welcome to Node.js v21.6.0.
 Type ".help" for more information.
 > console.log("kelvin")
 kelvin
 undefined
+> process.stdout.write('kelvin \n')
+kelvin
+true
 ```
 
-In subsequent examples and the rest of the course, I will skip these terminal details and jump straight at the sample code and outputs so that the example above is written with fewer lines.
+In subsequent examples and the rest of the course, I'll skip these terminal details and jump straight at the sample code with their expected outputs so that the example above is rewritten with fewer lines.
 
 ```bash
+
 console.log("kelvin") // kelvin
+process.stdout.write('kelvin \n') // kelvin
 ```
 
-## Command arguments with `process.argv`
+## Command arguments with process.argv
 
-A Node program can read its command-line arguments from process.argv.
-Process.argv is an array that contains the command-line arguments passed when the Node.js process was launched. The first element of this array is always the path to the Node executable, followed by whatever follows your node command.
+A Node program can read its command-line arguments from `process.argv`.
+Process.argv is an array that contains the commands passed when the Node.js process was launched. The first element of this array will be the path to the Node executable, and whatever follows your node command.
 
 Run this in a REPL
 
@@ -58,12 +66,12 @@ Run this in a REPL
 process.argv // [ '/path/to/yours/versions/node/v21.6.0/bin/node' ]
 ```
 
-To explore an example, let's run using a script here.
+To explore an example, let's run a script.
 
 For example, suppose you save this Node program to the file argv1.js:
 
 ```bash
-// File: argv1.js
+//file: node-example-1/argv1.js
 console.log(process.argv)
 ```
 
@@ -106,8 +114,6 @@ $ node argv1.js
     | --require | preload a module before running your script |
 
     If you want to access all arguments including those used by node, you can use `process.execArgv`.
-
-    Popular examples of Node-specific arguments
     </LongAside>
 
   </li>
@@ -115,37 +121,52 @@ $ node argv1.js
 
 </LongAside>
 
-## Environment variables with `process.env`
+## Environment variables with process.env
 
 Node programs can also take input from Unix-style environment variables. These variables are available through **process.env**.
 
-Process.env is an object. It contains your environment variables. The property names of this object are environment variable names, and the property values (always strings) are the values of those variables.
+<LongAside subject="Unix-style environment variables?">
+We could have written that sentence as: **_Node programs can also take input from environment variables_**. The adjective Unix-style is to emphasize the acceptable style when writing that specific style of variables, environment variables.
 
-**Why do you need to know about process.env?**
+Some of the standard that guides this style are:
 
-1. It is perfect for configurations or variables that might change between deployments.
-2. It is simpler alternative to hide sensitive information that would have otherwise be hardcoded.
+1. All character must be written in UPPERCASE. It's the name convention and the most visible characteristics of this style.
+2. All values of a variable must be stored as strings (even numbers). No real data types like int, bool ecosystem
+3. No space in variable assigment. i.e between the KEY and VALUE e.g `count = 42` is wrong; `count=2` is the right way.
+
+</LongAside>
+
+Process.env is an object, whose property are the environment variable names and their string values. It contains your computer's environment variables.
+
+Process.env is important for its perfect use case as configurations or variables that might change between deployments.Hide sensitive information that would have otherwise be hardcoded.
 
 Using the REPL, run `process.env`. Its output is a long object.
 
-To make our hands dirty, create some custom variables in a `.env` file in the root directory where you are making our sample applications.
+To get our hands dirty, create some custom variables in a `.env` file in the root directory where you are running your node applications.
 
 ```bash
-//file: .env
-PORTAL="SEKX_10001"
+$ vim .env
 ```
 
-Exit the REPL and restart it before running `process.env`. Try find your newly defined variables.
+Paste the code below in the file
 
-Oops, you wouldn't be able to find it in the output. This is because you would manually load this file if you want the variables in .env file to be included.
+```bash
 
-Start your REPL like this `node --env-file=.env`. It loads the .env file in your REPL environment.
+//file: .env
+PORTAL=SEKX_10001
+```
 
-Try find your newly defined PORTAL variable and you should see it in the list.
+Exit the REPL if it was running while you made the addition to the env file and run the REPL again.
+
+In the REPL run `process.env`. Try find your newly defined variables. Or better still do `process.env.PORTAL`.
+
+Oops, you wouldn't be able to find it in the output or `process.env.PORTAL` should return `undefined`. This is because you would manually load the env file if you want the variables to be included in your system's environment.
+
+Start your REPL with `node --env-file=.env`. It loads the .env file in your REPL environment. `process.env.PORTAL` would return "SEKX_10001". Celebrationssss 🍕
 
 ## Modules and npm (Node Package Manager)
 
-Node had its module system before javascript own. This system is called CommonJS.
+Node had its module system before javascript's'. This system is called CommonJS.
 
 The then Node's module system uses the `require()` function to import values into a module and the `exports` object or the `module.exports` property to export values from a module.
 
