@@ -2,12 +2,12 @@
 title: "Node Async and Event Loop"
 description: "A thorough lesson on the intricacies of node's async and event loop"
 published_date: "09/07/2025"
-last_updated_date: "09/07/2025"
+last_updated_date: "01/03/2026"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Node and the entire JavaScript ecosystem is built on async and the event loop fundamentals. The mastery of these topics can be liberating, but they can also feel more like abstractions especially if you are new to programming.
+Node and the entire JavaScript ecosystem relies on **async** and **the event loop**. The mastery of these topics gives you superpowers.
 
 <LessonObjectives
   contents={[
@@ -15,20 +15,34 @@ Node and the entire JavaScript ecosystem is built on async and the event loop fu
     "identify and use callbacks, promises, and async/await for async operations",
     "understand the concept of callback hell and how to avoid it",
     "use event emitters and listeners for handling events and async operations",
-    "different between synchronous and asynchronous code execution",
-    "understand how the event loop manages async operations",
+    "difference between synchronous and asynchronous code execution",
     "research and answer advanced questions about async executions and threading in Node",
   ]}
 />
 
-## What's Async
+## The event loop
+
+Like in javascript, the world we live in is an indefinite event loop. The year starts by Jan. 1 ends by Dec. 31, only to begin the next day with Jan. 1. With each day capturing amazing and disastrous events.
+
+Javascript exists in a loop, the event loop. It is an infinite loop that waits for tasks, executes them, then sleeps until it receives more tasks. It's like a worker who constantly checks for new jobs to do, completes them, and then sit waiting for the next one.
+
+Thanks to this loop, Node can handle a lot of tasks on **a single execution thread**. Tasks run efficiently on a separate end without creating multiple threads.
+
+## Understanding that a task can be sync or async
+
+By default, Javascript runs in sync (not async) from top to bottom. This means when it reaches a line whose task takes a lot of time, the rest of the lines below it would wait for the heavy duty line.
+
+In contrast, async abilities allows the Javascript engine to read the next lines without waiting for the heavy duty line to be done. While we have a single execution thread in JavaScript by default, with the async superpowers, Javascript acts like manager that direct tasks to OS/Kernel when we run async events.
+
+Node is async first.
+
+## What's async
 
 When we say an operation or task runs async in Node, we mean they run **asynchronously**. This kind of tasks usually take more time to complete ( i.e long running operations).
-Async is both a concept and keyword in Node ( and JavaScript). We will discuss its pov as a keyword later in this lesson.
 
-Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. And when they are done, it cedes control back to the main event loop to handle ( instead of blocking this loop).
+Async is both a concept and keyword in Node ( and JavaScript).
 
-Thanks to async, tasks are not forced to wait after another. If a task takes more time (i.e async), it should be moved to a separate lane while the rest of program goes on un-interrupted.
+Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. And when they are done, it cedes control back to the execution event loop to handle.
 
 Examples of async tasks ( or operations) are writing/reading a file, network fetches.
 
