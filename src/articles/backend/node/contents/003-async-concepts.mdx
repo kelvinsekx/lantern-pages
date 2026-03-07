@@ -2,12 +2,12 @@
 title: "Node Async and Event Loop"
 description: "A thorough lesson on the intricacies of node's async and event loop"
 published_date: "09/07/2025"
-last_updated_date: "01/03/2026"
+last_updated_date: "07/03/2026"
 syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-Node and the entire JavaScript ecosystem relies on **async** and **the event loop**. The mastery of these topics gives you superpowers.
+Node and the entire JavaScript ecosystem relies on **async** and its **the event loop** management. The mastery of these topics gives you superpowers to write efficient Node code.
 
 <LessonObjectives
   contents={[
@@ -22,56 +22,54 @@ Node and the entire JavaScript ecosystem relies on **async** and **the event loo
 
 ## The event loop
 
-Like in javascript, the world we live in is an indefinite event loop. The year starts by Jan. 1 ends by Dec. 31, only to begin the next day with Jan. 1. With each day capturing amazing and disastrous events.
+Like in javascript, the world we live in is an indefinite event loop. The year starts by `Jan. 1` ends by `Dec. 31`, only to begin the next day with `Jan. 1` again. An unending cycle of days and months. With each day capturing amazing and disastrous events.
 
-Javascript exists in a loop, the event loop. It is an infinite loop that waits for tasks, executes them, then sleeps until it receives more tasks. It's like a worker who constantly checks for new jobs to do, completes them, and then sit waiting for the next one.
+Javascript executes in a loop, the event loop. It is an infinite loop that waits for tasks, delivers them, then sleeps until it receives more tasks. It's like a worker who constantly checks for new jobs to do, completes them, and then sit waiting for the next one.
 
-Thanks to this loop, Node can handle a lot of tasks on **a single execution thread**. Tasks run efficiently on a separate end without creating multiple threads.
+Thanks to this loop, Node can handle a lot of tasks on **a single execution thread**. Tasks run efficiently without creating multiple threads.
 
-## Understanding that a task can be sync or async
+## Understanding that a task may be sync or async
 
-By default, Javascript runs in sync (not async) from top to bottom. This means when it reaches a line whose task takes a lot of time, the rest of the lines below it would wait for the heavy duty line.
+By default, Javascript runs in sync (not async) from top to bottom. This means when it reaches a line whose task takes a lot of time, the rest of the lines below it would wait for the heavy duty line to complete.
 
-In contrast, async abilities allows the Javascript engine to read the next lines without waiting for the heavy duty line to be done. While we have a single execution thread in JavaScript by default, with the async superpowers, Javascript acts like manager that direct tasks to OS/Kernel when we run async events.
+In contrast, when async, the Javascript engine would read the next lines without waiting until the heavy duty line complete. Although we have a single execution thread in JavaScript by default, with the async superpowers, Javascript can do many heavy duty task by directing them to the OS/Kernel then move to the next line after.
 
 Node is async first.
 
 ## What's async
 
-When we say an operation or task runs async in Node, we mean they run **asynchronously**. This kind of tasks usually take more time to complete ( i.e long running operations).
+Async is short for **asynchronously**. It is both a concept and keyword in Node ( and JavaScript).
 
-Async is both a concept and keyword in Node ( and JavaScript).
-
-Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. And when they are done, it cedes control back to the execution event loop to handle.
+Node associates **async** operations ( or tasks) with **events**. Whenever they are triggered, they are run independently from other non-async operations. And when done, it cedes control back to the execution event loop to handle.
 
 Examples of async tasks ( or operations) are writing/reading a file, network fetches.
 
 <LongAside subject="Explanation with some layman examples">
-  For example, **the process of sewing by one person is synchronous**. As a tailor, you can not stitch a cloth until they are cut in patterns. After cutting, you would have to weave ( depending on the material) before stitching and so on. In a nutshell, you can not go on with next process until the first is done.
+  For example, **a tailor sewing all by her is synchronous**. As a tailor, you can not stitch a cloth until you cut them. After cutting, weave ( depending on the material) before stitching and so on. Since it is just you, you can only do them one at a time.
 
-But let's use another example with **a Baker, who bakes asynchronously**. They start by spreading cream while the machine is mixing the cake. If it is done to taste, you can leave what you are doing to go back to the mixed cake.
+**A Baker, who bakes asynchronously**. She starts by prepping the oven by herself. For mixing the flour & eggs, she pours them into a Mixer machine. Since this is handled by the Mixer, she won't have to wait before doing another thing. While the machine is mixing, she go get the cake cups, come back to get the mixed flour when the machine is done.
 
-These scenarios represent Async and Sync concepts well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time or slow. These kind of operations are taken off the execution flow.
+These scenarios represent Async and Sync well. Async guarantees your node program can keep running while another piece of the program is doing something else that usually takes time.
 
 </LongAside>
 
-Async events are handled by handlers. These handlers can be expressed in 3 broad patterns: **Callbacks**, **Promises** (and Async/Await) and **Listeners**.
+Async operations take handlers. These handlers can be expressed in 3 broad patterns: **Callbacks**, **Promises** (and Async/Await) and **Listeners**.
 
 ## Callbacks
 
-Before JavaScript empowered us with an intuitive way of handling async tasks, Node gave us Callbacks. Callbacks are functions that are called after an async task is done.
+Before JavaScript gave us async by default, Node gave us Callbacks. Callbacks are functions that are called back in loop after an async task completes.
 
-Imagine giving an instruction that if the bake is done smoothing, a sound should peep.
+Imagine this, if the Mixer is done smoothing, a sound should peep.
 
 ```bash
-cake("be mixing", (err, done){
+Mixer("be mixing", (err, done){
     if(!err){
         done(peep)
     }
 })
 ```
 
-Another example would be reading from the drive or filesystem. Until recently with faster computers, it takes a substantial time to read from drives. You don't want to delay your entire program waiting for a feedback from your drive.
+Another example would be reading from the drive or filesystem. Until recently with faster computers, it takes a substantial time to read from the drive. You don't want to delay your entire program waiting for a feedback.
 
 **Synchronously reading a file**
 
@@ -83,7 +81,7 @@ console.log("Hello")
 // prints "Hello" -> GoToNextLine
 
 fileName = readFileSync('file.txt')
-// takes 10 secs -> call done() -> GoToNextLine
+// takes 10 secs -> after it is done reading file -> GoToNextLine
 
 console.log(fileName)
 // prints "FileName.txt" -> ends
@@ -96,7 +94,7 @@ important to put a little more attention here.
 When writing a callback function for an async operation in node, it is important to keep these two vital points in mind:
 
 1.  Node's callback style is referred to as "error-first callback style". Callbacks must always **have an error as its first argument**.
-2.  Callback functions would usually be the last argument for an async function. See the example below.
+2.  Callback functions would usually be the last argument for an async function.
 
 </AsideNote>
 
@@ -109,20 +107,23 @@ let fileName
 console.log("Hello")
 // prints "Hello" -> GoToNextLine
 
-readFile('file', (err, done)=> {})
-// leaves execution flow -> GoToNextLine immediately -> takes 10 secs in background -> call done() if successful (i.e no error)
+readFile('file', cb(err, done)=> {}) // assume it takes 10 secs to read the file
+// give the task to OS/Kernel -> GoToNextLine
 
 console.log(fileName)
-// prints undefined -> ends
+// prints undefined -> wait
+
+//after 10sec
+// cb() comes back
 ```
 
 <LongAside subject={'A little beyond: Async in series and parallel'}>
 
-Although most of our examples while doing asyn operations would be with a sigle identity, in rare cases, often than not, you would have to make async operations for multiple things at a time. For example an array of items.
+Sometimes you want to make async operations for multiple things at a time. Say an array of items and need the results in order. This introduces the dilemma to either run async in series and parallel.
 
-An example where this shine is trying to read all the files in a directory. You can either do these async operations in series or parallel. Let's make an example of reading a folder and list the length of the files in the directory/folder.
+An example where this shine is trying to read all the files in a directory. You can either do this in series or parallel.
 
-We might be tempted to do this.
+**Async in parallel**
 
 ```bash
 fs.readdir('foldername', (err, files){
@@ -130,7 +131,7 @@ fs.readdir('foldername', (err, files){
     files.forEach((f)=> {
         fs.readFile(f, (err, result){
             if(err){
-                throw new Error(err)
+              throw new Error(err)
             }
             console.log(result.length)
         })
@@ -138,32 +139,33 @@ fs.readdir('foldername', (err, files){
 })
 ```
 
-The problem with our former example is that the length of files would not come in the order of the files in our directory.
+The log (result.length) can not be trusted because they are not in order.
 
-To solve this, we can make the operations in series. One after another, and what else algorithm shines here if not recursion. See example below:
+The problem with running async operations in parallel is that results don't come in the order. To solve this, let's do in series instead.
+
+**Async in Series Recursively**
 
 ```bash
-import fs from "fs";
-import path from "path";
-
 fs.readdir("ddd", (err, files)=>{
   if(err) throw new Error(err);
 
   function readFiles(i){
     if(i >=files.length) return; // exit
     fs.readFile(path.join("ddd", files[i]), (err, content)=> {
-        if(err) throw new Error(err);
-        console.log(content.toString())
-        readFiles(i+1)
+      if(err) throw new Error(err);
+      console.log(result.length)
+      readFiles(i+1)
     })
- }
+  }
 
  readFiles(0)
 
 })
 ```
 
-There are a number of ways to solve this aside doing the operations one step at a time. The problem with this approach of mine is that the async operations are not made at parallel. Instead they are made one after the other which can be slow too except in cases like we do where the files in dir aren't much.
+Our pattern forces JS to read the files in order.
+
+There are a number of ways to solve this aside doing the operations recursively. The problem with this approach is they are made one after the other which can be slow. There is a much more better approach below.
 
 ```bash
 import fs from "fs";
@@ -186,19 +188,17 @@ fs.readdir("ddd", (err, files)=>{
 })
 ```
 
-This way all the files are called in parallel and their results saved based off their indexes so that we can access them orderly.
-
 </LongAside>
 
-**Callbacks are great but they have their limitations** like the pyramid of doom ( also known as Callback Hell). In addition, Callback handlers weren't symbolic to async operations <RefN>2</RefN>. In fact, it can be confusing sometimes because non-blocking functions use them too. They can also have major concerns with coupling.
+**Callbacks are great but they have their limitations** like the pyramid of doom ( also known as Callback Hell). In addition, Callback handlers weren't symbolic to async operations <RefN>2</RefN>. In fact, it is confusing because non-blocking functions use them too. They can also have major concerns with coupling.
 
-The community brought about **Promises** that can help handle these limitations better. Let's talk about it next.
+The community brought about **Promises** that can help handle these limitations better. Let's talk about it.
 
 ## Promises
 
-Instead of passing callback functions as argument to an async ops to handle the error and success in same place, a Promise is an object that allows us to handle (or better still watch for) success or error and separately chain multiple async calls to handle these events (instead of nesting with callbacks).
+Instead of passing callback functions as argument to an async operation, a Promise is an object that allows us to handle (or better still watch for) success or failure of our async operations while separately chain multiple async calls to handle these events (instead of nesting with callbacks).
 
-Let's promisify our previous callback code. Promisifying is the transformation of callback based methods to promise.
+Let's promisify our previous callback. Promisifying is the transformation of callback based methods to promise.
 
 ```bash
 import { readFile } from 'fs';
@@ -238,7 +238,7 @@ promisifiedReadFile('note.txt')
 
 ### The Async keyword
 
-Chaining promise handlers can be simpllified even more to feel like a sync ops. There is the Async/Await keywords, they do these things:
+Chaining promise handlers can be simpllified even more to feel like sync. There is the Async/Await keywords, they do these things:
 
 1. improve readability of async codes.
 2. simplifies variable scopes around async codes.
@@ -262,13 +262,13 @@ try {
 
 <LongAside subject="The Event Loop">
 
-When dealing with async operations, it can sometimes be important to understand how multiple asyc operations and their handlers are managed or in what order they get back to the main thread. To answer these questions, we need to understand **The call stack**, **event queues** and the **the event loop**.
+When dealing with async operations, it can sometimes be important to understand how multiple async operations and their handlers are managed or in what order they get back to the main thread. To answer these questions, we need to understand **The call stack**, **event queues** and the **the event loop**.
 
 </LongAside>
 
 ## Listeners and Event Emitters
 
-Another handler method that takes the game to a different elvel is the use of Event Listeners created with Emitter object.
+Another handler method that takes the game to a different level is the use of Event Listeners created with Emitter object.
 
 An Emitter object has two main features:
 
@@ -303,7 +303,7 @@ reader.readFile('note.txt')
 
 ## Questions to research on
 
-- How exactly does an handler function get executed in the main thread after its async operation is done outside the main event loop?
+- How exactly does an handler function get executed in the main thread after its async operation is done outside the main execution context?
 - If JS runs on a single thread, what thread does an async operation run on?
 - When a function is called/completed, it reference gets popped out of the call stack. How does JavaScript knows if an async task is completed? What is used to identify its reference?
 
