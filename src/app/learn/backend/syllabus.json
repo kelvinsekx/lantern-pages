@@ -64,5 +64,10 @@
     "title": "Push Notifications",
     "description": "Send real-time notifications to user devices",
     "code": "BAC012"
+  },
+  {
+    "title": "Jobs (Background, Cron, Scheduled Tasks)",
+    "description": "Understand why jobs are common, background jobs, cron jobs, and other job types",
+    "code": "BAC014"
   }
 ]
