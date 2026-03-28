@@ -7,17 +7,17 @@ syllabus_code: "BAC006"
 authors: "kelvinsekx"
 ---
 
-Email has become a ubiquitous component of modern application features. As a primary communication channel, nearly every user interaction, from password resets to transaction receipts, triggers an automated email message.
+Email has become an ubiquitous part of modern application. As a primary communication channel, nearly every user interaction, from password resets to transaction receipts, triggers an automated email message.
 
-In this module, we'll explore the lifecycle of internet mails (email), the protocols that carries email from your client to the receivers inbox and choices you face as a developer to implement one that scale in Node and NestJS.
+In this module, we'll explore internet mails (email), its lifecycle, and the protocols that carries them from the senders client to the receivers inbox and choices you face as a developer to implement one that scale in Node and NestJS.
 
 ## The 6 pillars of email delivery
 
 The email ecosystem relies on six critical components I call pillars. Much like a physical postal service, there is a lot happening before your letter or item reaches the intended recipient.
 
-1. User Agent (UA): The interface (Gmail, Outlook) where the sender composes the message before being sent to a sender's email server.
-2. Mail Submission Agent (MSA): The software that receives the mail from the UA, checks for errors before handing it to the transfer agent.
-3. Mail Transfer Agent (MTA): The "sorting facility" that routes the email across the internet to the recipient's server.
+1. **Mail User Agent (MUA)**,commonly known as the email client is the interface (Google Gmail, Microsoft Outlook, Mozilla Thunderbird) where the sender composes the message before being sent to a sender's email server.
+2. Mail Submission Agent (MSA) is a crucial component of email delivery. The software does three (3) things: **accepts the mail from the MUA**, **validate & checks for errors** before **sending mail to the MTA**.
+3. Mail Transfer Agent (MTA) is responsible for the actual transfer of email messages between servers. It routes the email across the internet to the recipient's server.
 4. Receiving MTA: The destination server that accepts the incoming message.
 5. Mail Delivery Agent (MDA): The "local carrier" that places the message into the recipient's specific mailbox.
 6. IMAP/POP3 Protocols: The tools the recipient uses to retrieve the mail from the mailbox.
@@ -27,11 +27,7 @@ These components can be further categorized into two
 - Email Infrastructure: user agents, servers, mailboxes
 - SMTP: simple mail transfer protocol
 
-The user agents are mail readers used for composing, editing, reading email messages like Outlook and Gmail.
-
-The mail servers are where your email account lives, they contain mailboxes that holds incoming messages for user and message queue of outgoing (to be sent) mail messages. For email to be sent from one person to another, we need at least two servers: the sender's mail server and the receiver's mail server.
-
-We've chosen not to go into the details of these systems (Submission Agents, MTAs) but this article will be incomplete without discussing the popular protocol used for sending emails, SMTP.
+We won't go into details with MSAs, MTAs. However, this article will be incomplete without discussing in details some of the protocols used for sending emails.
 
 ## Understanding SMTP
 
@@ -40,3 +36,9 @@ SMTP (Simple Mail Transfer Protocol) is a one way protocol used for sending emai
 To complete the loop, SMTP hands off the message to the MDA, where protocols like IMAP or POP3 allow the end-user to access these messages in their inboxes.
 
 While SMTP remains the backbone of email, many modern developers are shifting toward HTTP-based APIs (like SendGrid or Postmark). These offer better security (hiding your server's IP), easier credential management, and built-in analytics that raw SMTP lacks.
+
+## References
+
+### Footnotes
+
+1. [MUA](https://abusix.com/glossary/mail-user-agent) _Pasted on Tue, March 03, 2026._

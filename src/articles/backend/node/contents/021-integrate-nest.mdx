@@ -8,6 +8,50 @@ authors: "kelvinsekx"
 status: "in-progress"
 ---
 
+## Set Up a NestJS Project
+
+Open your favorite IDE or navigate to the terminal and paste the following command:
+
+After doing this, navigate to your project folder and install the Nodemailer packages, npm i --save @nestjs-modules/mailer nodemailer and types, npm i --save-dev @types/nodemailer.
+
+## How to Configure Nodemailer in Your App
+
+using `mailtrap.io.`
+
+### 1. configure the package
+
+```bash
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+
+@Module({
+  imports: [
+    AuthModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+Do not forget to get the host, port, username and password from your credentials in your inbox on mailtrap.io.
+
+You can create a .env file which would house all your credential details. It is advisable to do so. To be able to load the appropriate .env file in NestJS, install this:
+
+`$ npm i --save @nestjs/config`
+
 ## References
 
 ### Footnotes
