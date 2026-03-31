@@ -8,19 +8,19 @@ authors: "kelvinsekx"
 status: "in-progress"
 ---
 
-## Set Up a NestJS Project
+In this lesson, we will send our first email all from our server with Nodemailer, Mailtrap and of course NestJS.
+
+## Set up a nestJS project
 
 Open your favorite IDE or navigate to the terminal and paste the following command:
 
 After doing this, navigate to your project folder and install the Nodemailer packages, npm i --save @nestjs-modules/mailer nodemailer and types, npm i --save-dev @types/nodemailer.
 
-## How to Configure Nodemailer in Your App
+## Create Mailtrap account and configure it
 
 using `mailtrap.io.`
 
-### 1. configure the package
-
-```bash
+```jsx:components/MyComponent.jsx
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
