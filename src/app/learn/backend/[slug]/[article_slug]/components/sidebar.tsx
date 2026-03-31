@@ -18,7 +18,7 @@ export const ArticleSideBar = async ({
         <div className="border-muted-500 border-b px-5 py-2 text-black-250 w-full text-base text-center flex">
           <div className="space-y-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-1.5 h-6 bg-accent rounded-full" />
+              <div className="w-2 h-2 bg-green-200 rounded-full" />
               <h2 className="font-bold text-foreground uppercase tracking-widest">
                 {category}
               </h2>
