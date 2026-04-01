@@ -52,7 +52,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
-    AuthModule,
+   ...
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
@@ -70,12 +70,107 @@ export class AppModule {}
 
 <Nudge text="Don't forget to get your host, port, username and password from your credentials from mailtrap.io and add to your .env file." />
 
-You can create a .env file which would house all your credential details. It is advisable to do so. To be able to load the appropriate .env file in NestJS, install this:
+The object passed to the `MailerModule.forRoot({..})` is a "transporter" object. This object tells Nodemailer to use Mailtrap's servers instead of a real provider like Gmail.
 
-`$ npm i --save @nestjs/config`
+## Generate a Mail Service to use the transporter
+
+Use the Nest CLI to create a service where your email logic will live:
+`nest generate service mail`.
+
+Inject the MailerService, an out of the box service provided by **@nestjs-modules/mailer**.
+
+```ts:mail.service.ts
+import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+
+@Injectable()
+export class MailService {
+  constructor(private readonly mailerService: MailerService) {}
+
+  async sendWelcomeEmail() {
+    await this.mailerService.sendMail({
+      to: 'your-email@gmail.com',
+      subject: 'Welcome to our App',
+      text: 'Thank you!',
+    });
+  }
+}
+
+```
+
+## Call your MailService in the controller
+
+Inject your MailService into any controller or other service where you need to trigger an email
+
+```ts:app.controller.ts
+...
+@Get()
+async sayHello() {
+  await this.mailService.sendWelcomeEmail();
+  return {success: true}
+}
+```
+
+Now run the app, **npm run start:dev** and call the endpoint `curl localhost:3000`.
+
+If you get a 500 server error and see this on your server terminal you are on track.
+
+```bash
+Error: connect ECONNREFUSED 127.0.0.1:587
+ at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+errno: -111,
+code: 'ESOCKET',
+syscall: 'connect',
+address: '127.0.0.1',
+port: 587,
+command: 'CONN'
+```
+
+This error is to tell us that our process.env variables are not working.
+
+## How to use .env variables
+
+1. Install Nestjs config module `npm i --save @nestjs/config`
+2. paste `import { ConfigModule } from '@nestjs/config';` top of your module
+3. lastly add `ConfigModule.forRoot()` as first item on your module imports. See below
+
+```app.module.ts
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailService } from './mail/mail.service';
+...
+
+@Module({
+  imports: [
+    ConfigModule.forRoot(),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      },
+    }),
+ ...
+})
+export class AppModule {}
+```
+
+Run the app, **npm run start:dev** and call the endpoint `curl localhost:3000` again. Everything should work fine now.
+
+<AsideNote>
+  If see this `Error: Invalid login: 535 5.7.0 Invalid credentials`, then you
+  need to cross check your variables in .env file with that mailtrap provided
+  you.
+</AsideNote>
 
 ## References
 
 ### Footnotes
 
 1. [How to Send Emails With Nodemailer in NestJS](https://www.freecodecamp.org/news/how-to-use-nodemailer-in-nestjs/) _Pasted on Sat, Nov 01, 2025._
+1. [NestJS - How to use .env variables in main app module](https://stackoverflow.com/a/65174072/11467665) _Pasted on Wed, April 04, 2026._

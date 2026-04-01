@@ -38,10 +38,11 @@ Follow these steps:
    Go to your browser. Visit `localhost:3000` where you should see an "Hello World!" on screen.
 
 <LongAside subject="If port 3000 is in use, customize to a different port number">
-  On some rare cases, you may want to customize the default port for reasons
-  like port:3000 been used by another program. Go to the `main.ts` file in the
-  src directory. Change the port from 3000 to a preferred port of yours say
-  8686.
+ ```bash
+   ERROR [NestApplication] Error: listen EADDRINUSE: address already in use :::3000
+ ```
+  On rare cases, you may want to customize the default port for reasons
+  like an Error on starting the nest server, port:3000 been used by another program. Go to the `main.ts` file in the src directory. Change the port from 3000 to a preferred port of yours say 8686.
 </LongAside>
 
 ## Existing structures in a nest application
