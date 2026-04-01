@@ -12,18 +12,42 @@ In this lesson, we will send our first email all from our server with Nodemailer
 
 ## Set up a nestJS project
 
-Open your favorite IDE or navigate to the terminal and paste the following command:
+Open your favorite IDE or navigate to the terminal to start a new nestJS project or an existing one (if you have been following prior lessons).
 
-After doing this, navigate to your project folder and install the Nodemailer packages, npm i --save @nestjs-modules/mailer nodemailer and types, npm i --save-dev @types/nodemailer.
+[See the lesson on creating a nestjs server](/learn/backend/node/008-webservers-with-nest), if you will be creating a new project.
 
-## Create Mailtrap account and configure it
+Now that you have your project setup, install these Nodemailer packages,
 
-using `mailtrap.io.`
+```bash
+$ npm i --save @nestjs-modules/mailer nodemailer
+$ npm i --save-dev @types/nodemailer
+```
 
-```jsx:components/MyComponent.jsx
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+## Create mailtrap account and configure
+
+Go to https://mailtrap.io.
+
+If you never created account with them:
+
+1. Visit [mailtrap.io/home](https://mailtrap.io/home) and sign up.
+2. Complete Onboarding: Provide your name and intended use. When prompted with "Which product(s) do you plan to use?", ensure you select **Email Sandbox**.
+3. Select Node.js as your preferred stack. This helps Mailtrap tailor the setup instructions for you.
+4. From your dashboard, click "Start Testing" under the Email Sandbox section. This will take you to your "Inboxes."
+5. In the Integration tab, ensure the **SMTP** option is selected. You will see your specific host, port, username, and password.
+6. Secure Your Credentials: Copy these values into your `.env` file using the following format:
+   ```bash
+   MAIL_HOST=sandbox.smtp.mailtrap.io
+   MAIL_PORT=2525
+   MAIL_USER=your_username_here
+   MAIL_PASS=your_password_here
+   ```
+
+## Setup the MailerModule the nestjs way
+
+In line with NestJS way, we have to register the MailerModule somewhere in the trees of existing module. This time we are choosing `app.module.ts`, in its imports array add the `MailerModule.forRoot({...})` function as shown in the example below.
+
+```ts:app.module.ts
+...
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 
@@ -40,13 +64,12 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  ...
 })
 export class AppModule {}
 ```
 
-Do not forget to get the host, port, username and password from your credentials in your inbox on mailtrap.io.
+<Nudge text="Don't forget to get your host, port, username and password from your credentials from mailtrap.io and add to your .env file." />
 
 You can create a .env file which would house all your credential details. It is advisable to do so. To be able to load the appropriate .env file in NestJS, install this:
 
