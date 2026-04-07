@@ -20,8 +20,8 @@ export default async function Page(props: { params: Params }) {
       "backend",
       slug,
       "contents",
-      "000-welcome.mdx"
-    )}`
+      "000-welcome.mdx",
+    )}`,
   );
 
   const options: MDXRemoteOptions = {

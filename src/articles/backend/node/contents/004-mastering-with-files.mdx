@@ -7,9 +7,9 @@ syllabus_code: "BAC001"
 authors: "kelvinsekx"
 ---
 
-To help us cement concepts like async, event loop, process.argv from preceeding lessons, we would learn and build simple programs around files. At the end of this lesson, you should have mastered file operations such as reading, writing to files ( and directory).
+To help us cement concepts like [async](), [event loop](), [process.argv]() from preceeding lessons, we would learn and build simple programs around files. At the end of this lesson, you should have mastered file operations such as reading, writing to files and directory.
 
-One of the important targets of read and write operations is the file system. The use of files and file system can be seen everywhere, for instance when you upload files ( images, documents, audios, videos), the server is responsible for processing and storing them and managing their permissions. With how popular tasks like these are, it is only important to thoroughly understand them.
+One of the popular targets of read and write operations is the file system. The use of files and file system can be seen everywhere, from when uploading files ( images, documents, audios, videos) to saving a PDF document, installing an app or open a photo from downloads. Even if you don't notice, you're interacting with a file system all the time, it is only important that we thoroughly understand them.
 
 <LessonObjectives
   contents={[
@@ -21,51 +21,97 @@ One of the important targets of read and write operations is the file system. Th
   ]}
 />
 
+There are two main built-in modules for handling files in Node, `fs` complemented by `path`. Aside these two, other useful Node.js modules for working with files include `os`, `url`, `stream`, `zlib`, `cryprto`, `buffer`, `child_process` and `readline`. Our focus will be on `fs` and `path` before covering the rest in later in this lesson.
+
 ## Asynchronous and synchronous functions
 
-There are broadly two ways for handling file operations: Async and Sync. Both versions exist out of the box from Node. In version 10+ of Node, they added a promise-based API too. While the Sync versions returns a value, the Async's are handled with callbacks ( or promises).
+Usually working with `fs` and `path` for the first time can feel like a lot. There are many methods for doing same thing: `fs.readFile()`, `fs.readFileSync()` and `fs.promises.readFile()`. There are usually multiple variants of an operation in these modules, but thankfully are broadly categorized into two:
+
+- **Async** [, nonblocking, callback-based, and asynchronous such as `fs.readFile()` & `fs.promises.readFile()`]
+- **Sync** [, synchronous blocking variant such as `fs.readFileSync()`]
+
+Both versions exist out of the box from Node. In version 10+, they added a promise-based API too ( that of likes of `fs.promises.readFile()`). While the Sync versions returns a value, the Async's are handled with callbacks ( or promises).
 
 ## Actions with files and directories
 
-There are **core actions** that can be performed on files and directories like [Create](), [Read](), [Write](), [Update]() and [Watch](). Others are Delete ( to remove files and directories), Rename ( to change the name of a file or directory), Move ( to move a file or directory to another location), Copy ( to duplicate a file).
+There are **common actions** that are performed on files and directories such as [Create](), [Read](), [Write](), [Update]() and [Watch](). Others are Delete, Rename, Move, Copy.
 
-**Auxiliary actions** are for getting files information such as to check existence ( verifies if a file or directory exists), confirm if you have permissions to a certain action and get stat ( get details of a file like size, creation date, modification date).
+**Auxiliary actions** are for getting more information about the file or directory such as to check existence, confirm if you have permissions to a certain action, get stat ( size, creation date, modification date) etc
 
-## Auxiliary Actions
+### Read
 
-For this lesson, we would categorize auxiliary operations as tasks that check for existence of files, permissions and get stats.
+Node allows you to a read file all at once or in stream ( in bytes). There is a classic low level way [, method, API] of reading a file and high level alternatives for doing them.
 
-If you have a logic to be based on some characteristics of a file, you can **use the `fs.stat` to get stats about a file**. It returns an object with details of the file. A few properties from the fs.stat object are `stats.size` that returns the size of the file in bytes; `stats.mtime` that returns the last modification time of the file; `stats.birthtime` returns the creation time of the file; `stats.isFile()` returns true if the file is a regular file; `stats.isDirectory()` returns true if the file is a directory.
+The low level API (`fs.read`) helps you understand and appreciate how their high level counterparts work (`fs.readFile` & `fs.createReadStream`).
 
-**To check if a file exist**, you don't need any special method. Instead attempt the operation and then cater for the absence of the file in the error block. This style of exception handling is called "Easier to Ask for Forgiveness than Permission (EAFP)"
+1. Read all at once
 
-<LongAside subject="EAFP vs LBYL">
-LBYL (Look Before You Leap) vs EAFP (Easier to Ask for Forgiveness than Permission) are contrasting idioms with regards to error checking before code execution.
+Ensure on the same directory you have the `read-file-as-txt.js` also has a `msg.txt` file. Our goal is to read the `msg.txt` all at once and print to the std out after we are done.
 
-EAFP is preferred for file operations because it avoids race
-conditions. A race condition can occur when you check if a file exits, and
-then before you can perform your action, another process deletes the file. In
-this scenario, your program would think the action still exists and would
-attempt the action resulting in an error. By directly attempting the action
-and handling the error, you ensure the atomicity and avoid this potential
-issue.
+This approach is perfect for small files (or directories).
 
-LBYL is the opposite of EAFP where you check for a condition before performing the original action. E.g check if a file exist before reading its content.
+```js:read-file-as-txt.js
+fs.readFile('msg.txt', 'utf8', (err, data)=> {
+  if(err){
+    console.error('Error reading file:', err.message);
+    return;
+  }
 
-</LongAside>
+  console.log(data);
+})
 
-## Read
+```
 
-There is a classic low level way of reading a file. It is not used for simple reading but understanding how it works can help you appreciate easier methods like `fs.readFile` and `fs.createReadStream` used for reading small and larger files respectively. These easier methods open the file, operate it and then close it for you.
+Key notes:
 
-We are going to start off reading a file using `fs.read` that can be elaborated as `fs.read(fd, buffer, offset, length, position, callback)`. With this method, we'll dablle into details from opening, to operating and closing the file.
+- The second property of the readFile function `(path, **encoding [, utf8]**, callback)` is important to turn the returned value to string. If not,i.e you did `readFile(path, callback)`, JavaScript returns a Buffer.
+- In most cases,the first argument for methods in the `fs` module is the file path.
+
+We can rewrite the callback style to use its promise variant.
+
+```js:read-file-as-txt.promises.js
+const fs = require('fs/promises');
+
+async function main(){
+  try {
+    // see the second parameter is the encoding that converts our Buffer to string
+    const content = await fs.readFile('msg.txt', 'utf8');
+    console.log(content);
+  }catch(err){
+    console.error('Failed:', err.message);
+  }
+}
+```
+
+Our last example will show how to read a directory, wrapping up reading a file/directory all at once. This example combines reading a directory before reading the files inside it while excluding sub-directories.
+
+```js:read-all-files-in-dir.js
+const fs = require('fs/promises');
+const path = require('path');
+
+async function readAllFilesInFolder(folderPath){
+  const linkPaths = await fs.readdir(folderPath);
+  for(const lPath of linkPaths){
+    const lStats = await fs.lstat(lPath), isFile = lStats.isFile();
+    if(!isFile)continue
+    const content = await fs.readFile(lPath, 'utf8');
+    console.log(content +`\n****${lPath}******\n`)
+  }
+}
+
+readAllFilesInFolder('./');
+```
+
+#### Playground with the low level API
+
+We are going to move into reading a file using **fs.read** that can be elaborated as `fs.read(fd, buffer, offset, length, position, callback)`. With this method, we'll dablle into details from opening, to operating and closing the file.
 
 To use `fs.read`:
 
 1. You first need to open the file, and
 2. You must close it with fs.close
 
-```bash
+```js:low-level-read-api.js
 import fs from 'fs';
 
 const filename = 'note.txt'
@@ -89,23 +135,9 @@ fs.open(filename, (err, fd)=> {
 })
 ```
 
-Like it was previously mentioned, `fs.read` is a verbose and low level method that shouldn't be used except you know what are doing. The code above can be rewritten with `fs.readFile` or `fs.createReadStream`. It is less verbose and simple.
+Like it was previously mentioned, `fs.read` is a verbose and low level method that shouldn't be used except you know what are doing. The code above can be rewritten with `fs.readFile` or `fs.createReadStream`, less verbose and simple.
 
-```bash
-// using fs.readFile
-import fs from 'node:fs'
-
-const filename = 'note.txt'
-fs.readFile(filename, (err, content)=> {
-  if(err) throw err;
-  console.log({
-    content: content.toString()
-  })
-})
-```
-
-```bash
-// using fs.createReadStream
+```js:read-stream.js
 import fs from 'node:fs'
 
 const filename = process.argv[2];
@@ -116,7 +148,7 @@ fsStream.on('error', err => { throw err })
 
 ## Write | Update | Create | Watch
 
-Similar to how we accomplished the read style, **the simplest and common way to write a file** is to use the `fs.writeFile(path, data, [encoding], (err))` or synchronously with `fs.writeFileSync(filename, [data, ...options])` and there is the stream counterpart with `fs.createWriteStream`. Like `fs.read`, we have `fs.write`. We are going to neglect them in this lesson but you can go learn more about them yourself.
+Similar to what we established with the read section, **the simplest way to write a file** is to use the high level APIs `fs.writeFile(path, data, [encoding], (err))`, `fs.writeFileSync(filename, [data, ...options])`, `fs.createWriteStream` instead of low level APIs like `fs.write`. Going forward, We are going to neglect these low level APIs. You can go learn more about them by yourself.
 
 In Node.js, **"updating" a file** can mean many things:
 
@@ -162,6 +194,29 @@ fs.writeFile("fileName", "New Content", (err) => {
   console.log("File written successfully");
 });
 ```
+
+## Auxiliary Actions
+
+For this lesson, we would categorize auxiliary operations as tasks that check for existence of files, permissions and get stats.
+
+If you have a logic to be based on some characteristics of a file, you can **use the `fs.stat` to get stats about a file**. It returns an object with details of the file. A few properties from the fs.stat object are `stats.size` that returns the size of the file in bytes; `stats.mtime` that returns the last modification time of the file; `stats.birthtime` returns the creation time of the file; `stats.isFile()` returns true if the file is a regular file; `stats.isDirectory()` returns true if the file is a directory.
+
+**To check if a file exist**, you don't need any special method. Instead attempt the operation and then cater for the absence of the file in the error block. This style of exception handling is called "Easier to Ask for Forgiveness than Permission (EAFP)"
+
+<LongAside subject="EAFP vs LBYL">
+LBYL (Look Before You Leap) vs EAFP (Easier to Ask for Forgiveness than Permission) are contrasting idioms with regards to error checking before code execution.
+
+EAFP is preferred for file operations because it avoids race
+conditions. A race condition can occur when you check if a file exits, and
+then before you can perform your action, another process deletes the file. In
+this scenario, your program would think the action still exists and would
+attempt the action resulting in an error. By directly attempting the action
+and handling the error, you ensure the atomicity and avoid this potential
+issue.
+
+LBYL is the opposite of EAFP where you check for a condition before performing the original action. E.g check if a file exist before reading its content.
+
+</LongAside>
 
 #### Pros
 

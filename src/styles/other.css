@@ -646,13 +646,6 @@ pre > code {
   min-width: 100%;
 }
 
-:not(pre) > code {
-  padding-inline: 2px;
-  background-color: var(--inline-code);
-  color: var(--ifm-color-emphasis-800);
-  font-weight: 600;
-}
-
 .code-line {
   padding-left: 12px;
   padding-right: 12px;
