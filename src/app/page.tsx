@@ -76,7 +76,7 @@ Home.Main = function Main() {
                 {
                   "sekx__signup_cta--form-wrapper--on-blur":
                     !focused && inputText,
-                }
+                },
               )}
             >
               <label

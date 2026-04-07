@@ -116,13 +116,13 @@ export default async function ListSyllabusPage() {
                       </p>
 
                       {/* Links */}
-                      <div className="space-y-2">
+                      <div className="space-y-1">
                         {stageContent.length > 0 ? (
                           stageContent.map((post) => (
                             <Link
                               key={post.slug}
                               href={post.slug}
-                              className="items-center gap-2 font-medium hover:gap-3 transition-all duration-200 group/link block"
+                              className="items-center gap-2 font-medium  transition-all  hover:ring-2 hover:ring-[#93C5FD] active:ring-2 active:ring-[#93C5FD] focus-visible:ring-2 focus-visible:ring-[#93C5FD]  duration-200 group/link block p-1"
                             >
                               {post.metadata.short_title || post.metadata.title}
                             </Link>

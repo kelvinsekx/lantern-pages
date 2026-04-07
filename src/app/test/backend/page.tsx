@@ -296,7 +296,7 @@ export default function TestPage() {
                     "cursor-pointer border rounded-md border-muted text-green-500 flex items-center",
                     {
                       "bg-red-400": selectedOption == OPTION_CONFIG.labels[i],
-                    }
+                    },
                   )}
                 >
                   <span
@@ -304,7 +304,7 @@ export default function TestPage() {
                       "h-10 w-10 mr-4 inline-flex items-center justify-center  rounded-md font-semibold text-2xl border-2",
                       {
                         "bg-muted": selectedOption == OPTION_CONFIG.labels[i],
-                      }
+                      },
                     )}
                   >
                     {OPTION_CONFIG.labels[i]}
@@ -368,7 +368,7 @@ QuizzSandbox.SideBar = function SideBar() {
 };
 
 QuizzSandbox.QuestionInterface = function QuestionInterface<
-  T extends ReactNode
+  T extends ReactNode,
 >({ question }: { question: T }) {
   return (
     <div className="h-7/10 p-8 text-lg">
