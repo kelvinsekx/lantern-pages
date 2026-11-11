@@ -12,6 +12,7 @@ type Metadata = {
   /** id of the Node article this one is the counterpart of (non-node tracks) */
   node_equivalent?: string;
   authors: string;
+  /** "stub" | "in-progress" | "un-published"; empty means published. Non-published are hidden outside dev. */
   status: string;
 };
 
@@ -114,7 +115,7 @@ function getMDXData(dir: string, whichPost: string) {
     const { metadata, content, status } = readMDXFile(path.join(dir, file));
     if (
       process.env.NODE_ENV !== "development" &&
-      (status == "in-progress" || status == "un-published")
+      (status == "stub" || status == "in-progress" || status == "un-published")
     )
       continue;
     const slug =
