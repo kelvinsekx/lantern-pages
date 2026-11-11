@@ -90,6 +90,7 @@ function parseFrontmatter(fileContent: string) {
 }
 
 function getMDXFiles(dir: fs.PathLike) {
+  if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
 }
 
@@ -174,13 +175,17 @@ export function formatDate(date: string, includeRelative = false) {
   return `${fullDate} (${formattedDate})`;
 }
 
-export const getSourceSync = (filename: string): string | undefined => {
+export const getSourceSync = (
+  filename: string,
+  track: string,
+): string | undefined => {
+  if (!/^[a-z0-9-]+$/i.test(track)) return;
   const sourcePath = path.join(
     process.cwd(),
     "src",
     "articles",
     "backend",
-    "node",
+    track,
     "contents",
     filename + ".mdx",
   );
@@ -190,6 +195,7 @@ export const getSourceSync = (filename: string): string | undefined => {
 
 export const getPostInformation = async (
   filename: `${string}.md` | `${string}.mdx`,
+  track: string,
 ): Promise<{
   content: {
     metadata: Metadata;
@@ -197,7 +203,7 @@ export const getPostInformation = async (
   };
   format: "md" | "mdx" | "detect" | null | undefined;
 }> => {
-  const source = getSourceSync(filename);
+  const source = getSourceSync(filename, track);
 
   if (!source)
     return {
@@ -210,3 +216,50 @@ export const getPostInformation = async (
     format: "mdx",
   };
 };
+
+export type Track = {
+  slug: string;
+  title: string;
+  pathLabel: string;
+  tagline: string;
+  intro: string;
+  cta: string;
+};
+
+export type SyllabusStage = {
+  title: string;
+  description: string;
+  code: string;
+};
+
+const BACKEND_DIR = path.join(process.cwd(), "src", "articles", "backend");
+
+function readJson<T>(file: string): T | undefined {
+  if (!fs.existsSync(file)) return;
+  return JSON.parse(fs.readFileSync(file, "utf-8")) as T;
+}
+
+/** Every folder under articles/backend that has a track.json is a track. */
+export function getTracks(): Track[] {
+  return fs
+    .readdirSync(BACKEND_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => getTrack(d.name))
+    .filter((t): t is Track => !!t);
+}
+
+export function getTrack(slug: string): Track | undefined {
+  // slug comes from the URL; only accept plain folder names
+  if (!/^[a-z0-9-]+$/i.test(slug)) return;
+  const meta = readJson<Omit<Track, "slug">>(
+    path.join(BACKEND_DIR, slug, "track.json"),
+  );
+  return meta && { slug, ...meta };
+}
+
+export function getSyllabus(track: string): SyllabusStage[] {
+  return (
+    readJson<SyllabusStage[]>(path.join(BACKEND_DIR, track, "syllabus.json")) ??
+    []
+  );
+}
