@@ -1,0 +1,73 @@
+[
+  {
+    "title": "Introduction to backend development",
+    "description": "An overview and introduction to coding in Node",
+    "code": "BAC001"
+  },
+  {
+    "title": "Authentication (custom, social logins)",
+    "description": "Implement secure user authentication methods",
+    "code": "BAC003"
+  },
+  {
+    "title": "Database persistency (relational & non-relational)",
+    "description": "Learn to persist data over http",
+    "code": "BAC002"
+  },
+  {
+    "title": "Email",
+    "description": "Integrate email sending and receiving functionality",
+    "code": "BAC006"
+  },
+  {
+    "title": "Caching",
+    "description": "Improve performance with data caching strategies",
+    "code": "BAC013"
+  },
+  {
+    "title": "Hosting (cdn, https, domains, networking)",
+    "description": "Learn how to deploy and host your backend services",
+    "code": "BAC004"
+  },
+  {
+    "title": "Blob storage (file uploads, urls, cdn-backed)",
+    "description": "Store and serve user-uploaded files efficiently",
+    "code": "BAC005"
+  },
+
+  {
+    "title": "Payments",
+    "description": "Process payments and handle financial transactions",
+    "code": "BAC007"
+  },
+  {
+    "title": "Monitoring",
+    "description": "Track system performance and detect issues",
+    "code": "BAC008"
+  },
+  {
+    "title": "Analytics",
+    "description": "Collect and analyze user behavior data",
+    "code": "BAC009"
+  },
+  {
+    "title": "Dev tools (CI/CD, staging)",
+    "description": "Set up development workflows and deployment pipelines",
+    "code": "BAC010"
+  },
+  {
+    "title": "Secrets",
+    "description": "Manage sensitive configuration and API keys securely",
+    "code": "BAC011"
+  },
+  {
+    "title": "Push Notifications",
+    "description": "Send real-time notifications to user devices",
+    "code": "BAC012"
+  },
+  {
+    "title": "Jobs (Background, Cron, Scheduled Tasks)",
+    "description": "Understand why jobs are common, background jobs, cron jobs, and other job types",
+    "code": "BAC014"
+  }
+]

@@ -31,7 +31,7 @@ export default async function BlogPage({ params }: { params: Params }) {
   const {
     content: { metadata, content },
     format,
-  } = await getPostInformation((await params).article_slug);
+  } = await getPostInformation(article_slug, slug);
 
   const posts = await getBlogPosts(slug);
   const relatedPosts = posts.filter(

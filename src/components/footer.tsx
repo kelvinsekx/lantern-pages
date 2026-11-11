@@ -22,7 +22,14 @@ export const Footer = () => {
                   <LinkGroupSubTitle>Backend development</LinkGroupSubTitle>
                   <ul>
                     <li>
-                      <LinkGroupItem href="/learn/backend">Node</LinkGroupItem>
+                      <LinkGroupItem href="/learn/backend/node">
+                        Node
+                      </LinkGroupItem>
+                    </li>
+                    <li>
+                      <LinkGroupItem href="/learn/backend/dotnet">
+                        C# / .NET
+                      </LinkGroupItem>
                     </li>
                   </ul>
                 </LinkGroup>
