@@ -2,6 +2,7 @@ import cuid2 from "@paralleldrive/cuid2";
 
 import { getBlogPosts, getSyllabus, type Track } from "@/utilities/mdx-utils";
 import Link from "next/link";
+import { StatusBadge } from "@/components/status-badge";
 import { ShowProgressOrLogout } from "@/components/progress-or-logout";
 
 export async function TrackIndex({ track }: { track: Track }) {
@@ -124,6 +125,7 @@ export async function TrackIndex({ track }: { track: Track }) {
                               className="items-center gap-2 font-medium  transition-all  hover:ring-2 hover:ring-[#93C5FD] active:ring-2 active:ring-[#93C5FD] focus-visible:ring-2 focus-visible:ring-[#93C5FD]  duration-200 group/link block p-1"
                             >
                               {post.metadata.short_title || post.metadata.title}
+                              <StatusBadge status={post.metadata.status} />
                             </Link>
                           ))
                         ) : (

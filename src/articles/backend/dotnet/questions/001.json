@@ -1,0 +1,31 @@
+{
+  "1": {
+    "question": ".NET is a programming language",
+    "options": ["Yes", "No"],
+    "type": "polar",
+    "answer": 1
+  },
+  "2": {
+    "question": "C# source code is compiled before it runs",
+    "options": ["Yes", "No"],
+    "type": "polar",
+    "answer": 0
+  },
+  "3": {
+    "question": "`dotnet run` is the closest everyday equivalent of `node index.js`",
+    "options": ["Yes", "No"],
+    "type": "polar",
+    "answer": 0
+  },
+  "4": {
+    "question": "Which options best describe .NET?",
+    "options": [
+      "open source",
+      "cross-platform",
+      "only runs on Windows",
+      "has a garbage collector"
+    ],
+    "type": "multi",
+    "answer": [0, 1, 3]
+  }
+}
