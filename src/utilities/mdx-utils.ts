@@ -133,6 +133,7 @@ function getMDXData(dir: string, whichPost: string) {
 }
 
 export function getBlogPosts(slug: string) {
+  if (!/^[a-z0-9-]+$/i.test(slug)) return [];
   return getMDXData(
     path.join(process.cwd(), "src", "articles", "backend", slug, "contents"),
     slug,
