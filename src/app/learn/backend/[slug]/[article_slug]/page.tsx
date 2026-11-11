@@ -1,6 +1,11 @@
 import { MDXRemote, type MDXRemoteOptions } from "next-mdx-remote-client/rsc";
 import Link from "next/link";
-import { getBlogPosts, getPostInformation } from "@/utilities/mdx-utils";
+import {
+  getBlogPosts,
+  getCounterparts,
+  getPostInformation,
+} from "@/utilities/mdx-utils";
+import { CounterpartLinks } from "@/components/counterpart-links";
 import { plugins, remarkRehypeOptions } from "@/utilities/mdx-plugins";
 
 import { NavigationTop } from "@/components/nav";
@@ -34,6 +39,11 @@ export default async function BlogPage({ params }: { params: Params }) {
   } = await getPostInformation(article_slug, slug);
 
   const posts = await getBlogPosts(slug);
+  const counterparts = getCounterparts(
+    slug,
+    article_slug.replace(/\.mdx?$/, ""),
+    metadata,
+  );
   const relatedPosts = posts.filter(
     (p) => p.metadata.syllabus_code == metadata.syllabus_code,
   );
@@ -78,6 +88,7 @@ export default async function BlogPage({ params }: { params: Params }) {
             <h1 className="text-2xl my-2 md:text-4xl font-normal tracking-tight text-center mt-[2rem]">
               {metadata.title}
             </h1>
+            <CounterpartLinks items={counterparts} />
             <MDXRemote
               source={content}
               options={options}

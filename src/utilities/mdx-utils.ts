@@ -9,6 +9,8 @@ type Metadata = {
   published_date: string;
   last_updated_date: string;
   syllabus_code: string;
+  /** id of the Node article this one is the counterpart of (non-node tracks) */
+  node_equivalent?: string;
   authors: string;
   status: string;
 };
@@ -263,4 +265,38 @@ export function getSyllabus(track: string): SyllabusStage[] {
     readJson<SyllabusStage[]>(path.join(BACKEND_DIR, track, "syllabus.json")) ??
     []
   );
+}
+
+export type Counterpart = { trackTitle: string; title: string; href: string };
+
+/**
+ * Articles in other tracks that cover the same topic. Non-node tracks point
+ * at their Node article via `node_equivalent`; the Node article links back to
+ * every track that points at it. Unpublished articles are never returned.
+ */
+export function getCounterparts(
+  track: string,
+  id: string,
+  metadata: Metadata,
+): Counterpart[] {
+  const toCounterpart = (t: string, p: TPost): Counterpart => ({
+    trackTitle: getTrack(t)?.title ?? t,
+    title: p.metadata.short_title || p.metadata.title,
+    href: p.slug,
+  });
+
+  if (track !== "node") {
+    if (!metadata.node_equivalent) return [];
+    return getBlogPosts("node")
+      .filter((p) => p.id === metadata.node_equivalent)
+      .map((p) => toCounterpart("node", p));
+  }
+
+  return getTracks()
+    .filter((t) => t.slug !== "node")
+    .flatMap((t) =>
+      getBlogPosts(t.slug)
+        .filter((p) => p.metadata.node_equivalent === id)
+        .map((p) => toCounterpart(t.slug, p)),
+    );
 }
