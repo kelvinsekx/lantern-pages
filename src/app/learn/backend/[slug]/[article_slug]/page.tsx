@@ -11,6 +11,7 @@ import { plugins, remarkRehypeOptions } from "@/utilities/mdx-plugins";
 import { NavigationTop } from "@/components/nav";
 import { ArticleSideBar } from "./components/sidebar";
 import { mdx_components } from "@/components/mdxComponents";
+import { MarkAsRead } from "@/components/mark-as-read";
 
 type Params = Promise<{
   slug: string;
@@ -72,6 +73,7 @@ export default async function BlogPage({ params }: { params: Params }) {
   return (
     <div>
       <NavigationTop fixed />
+      <MarkAsRead />
       <div className="flex gap-4 relative">
         <ArticleSideBar
           content={relatedPosts}

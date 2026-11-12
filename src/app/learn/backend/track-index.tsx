@@ -3,7 +3,7 @@ import cuid2 from "@paralleldrive/cuid2";
 import { getBlogPosts, getSyllabus, type Track } from "@/utilities/mdx-utils";
 import Link from "next/link";
 import { StatusBadge } from "@/components/status-badge";
-import { ShowProgressOrLogout } from "@/components/progress-or-logout";
+import { ProgressCard } from "@/components/progress-card";
 
 export async function TrackIndex({ track }: { track: Track }) {
   const syllabus = getSyllabus(track.slug);
@@ -52,7 +52,7 @@ export async function TrackIndex({ track }: { track: Track }) {
             </div>
           </div>
           <div>
-            <ShowProgressOrLogout />
+            <ProgressCard paths={sortedPosts.map((p) => p.slug)} />
           </div>
         </div>
       </div>

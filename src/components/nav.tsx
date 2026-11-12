@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Signin from "./sign-in";
 
 export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
   return (
@@ -15,9 +14,6 @@ export const NavigationTop = ({ fixed = false }: { fixed?: boolean }) => {
           <Link href="/">
             <b className="text-xl tracking-widest">Lantern Pages</b>
           </Link>
-        </div>
-        <div>
-          <Signin />
         </div>
       </div>
     </nav>
