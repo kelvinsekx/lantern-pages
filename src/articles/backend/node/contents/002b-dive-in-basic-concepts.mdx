@@ -21,15 +21,15 @@ This module may feel way longer compared to previously completed ones. Please do
 
 ## Console.log out
 
-`console.log` in node is a web syntatic wrapper. It is a convenience alternative to `process.stdout.write()` function.
+`console.log` in node is a web syntatic wrapper. It is a convenience alternative to the primitive `process.stdout.write()` function.
 
-The console is a **global instance** configured to write to node's standard out among other things. Because of being global, the `.log()` function can be used without importing it from `node:console`.
+The console is a **global instance** configured to write to node's standard out among other things. This allows the use `.log()` property without importing `node:console` at the top of the file.
 
 `console.log` is used for debugging or display a record to the client.
 
 <AsideNote>
-  {`If process.stdout, process.stderr confuse you, don't mind it. You will see
-  more lengthier explanation on them later.`}
+  {`If process.stdout confuse you, don't mind it. You will see
+  more lengthier explanation later.`}
 </AsideNote>
 
 Let's run some examples in the REPL.
@@ -47,7 +47,7 @@ kelvin
 true
 ```
 
-In subsequent examples and the rest of the course, I'll skip these terminal details and jump straight at the sample code with their expected outputs so that the example above is rewritten with fewer lines.
+In subsequent examples and the rest of the course, I'll skip these terminal details and jump straight at the sample code and their expected outputs so that the example above is rewritten with fewer lines.
 
 ```bash
 
@@ -113,7 +113,7 @@ $ node argv1.js
     | --inspect | Enable the debugger                         |
     | --require | preload a module before running your script |
 
-    If you want to access all arguments including those used by node, you can use `process.execArgv`.
+    If you want to access all arguments including those used by node, use `process.execArgv`.
     </LongAside>
 
   </li>
