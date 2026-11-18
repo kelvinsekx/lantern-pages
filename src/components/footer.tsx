@@ -35,8 +35,21 @@ export const Footer = () => {
                 </LinkGroup>
 
                 <LinkGroup>
-                  <LinkGroupSubTitle>Mother tongues</LinkGroupSubTitle>
-                  <LinkGroupItem>Itsekiri</LinkGroupItem>
+                  <LinkGroupSubTitle>Learn a Nigerian mother tongue</LinkGroupSubTitle>
+                  <ul>
+                    {["Yoruba", "Igbo", "Hausa", "Itsekiri"].map((lang) => (
+                      <li key={lang}>
+                        <a
+                          href="https://vanacular.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm tracking-normal"
+                        >
+                          {lang}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </LinkGroup>
               </div>
             </>
